@@ -3,8 +3,8 @@
   // you can use this to manipulate the document head in any components,
   // they will be rendered correctly in the html results with vite-ssg
   useHead({
-    title: 'Rapide-et-furieux',
-    meta: [{ name: 'description', content: 'Opinionated Vite Starter Template' }],
+    title: 'Vista',
+    meta: [{ name: 'description', content: 'Subjective-logic-based expression platform' }],
   })
 </script>
 
