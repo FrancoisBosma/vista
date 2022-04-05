@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+. "$(dirname "$0")/common.sh"
+
+cd app/
+echo "[HUSKY] running commitlint"
+pnpm exec commitlint --edit $1
+pnpm lint:i18n

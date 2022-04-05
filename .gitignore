@@ -1,0 +1,28 @@
+# MAC stuff
+**/.DS_Store
+
+# Editor stuff
+# NB: puposefully keep `.vscode`
+**/.idea/
+**/*.suo
+**/*.ntvs*
+**/*.njsproj
+**/*.sln
+**/*.sw*
+
+# Delphi/Xset
+**/*.local
+
+# Logs
+**/*.log
+
+# Builds
+**/.vite-ssg-dist
+**/.vite-ssg-temp
+app/src/generated_global_components.d.ts
+**/dist
+**/dist-ssr
+**/node_modules
+**/pnpm-lock.yaml
+**/yarn.lock
+**/package-lock.json
