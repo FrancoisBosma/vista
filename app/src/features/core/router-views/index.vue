@@ -4,8 +4,11 @@ meta:
   layout: HomeLayout
 </route>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const router = useRouter()
+  const { t } = useI18n()
+</script>
 
 <template>
-  <h1>Hello</h1>
+  <a @click="router.push('/blueprint')"> {{ t('Go to Blueprint') }} </a>
 </template>
