@@ -11,9 +11,7 @@ meta:
 <template>
   <div class="bp-container">
     <Grid />
-    <div class="bp-content">
-      <TileList />
-    </div>
+    <TileList class="bp-content" />
   </div>
 </template>
 
