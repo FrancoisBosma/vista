@@ -1,4 +1,4 @@
 import Grid from './Grid'
-import TileList from './TileList'
+import ConceptComposition from './ConceptComposition'
 
-export { Grid, TileList }
+export { Grid, ConceptComposition }
