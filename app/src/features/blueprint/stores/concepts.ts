@@ -1,7 +1,8 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import type { Concept } from '@SRC/types'
 
 export const useConceptStore = defineStore('concepts', () => {
-  const helloWorld = {
+  const helloWorld: Concept = {
     title: 'Hello World!',
     subTiles: [
       {
