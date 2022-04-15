@@ -1,4 +1,4 @@
 import Grid from './Grid'
-import ConceptComposition from './ConceptComposition'
+import Concept from './Concept'
 
-export { Grid, ConceptComposition }
+export { Grid, Concept }

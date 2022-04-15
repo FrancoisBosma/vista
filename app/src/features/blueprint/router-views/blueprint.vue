@@ -5,13 +5,13 @@ meta:
 </route>
 
 <script setup lang="ts">
-  import { ConceptComposition, Grid } from '../components'
+  import { Concept, Grid } from '../components'
 </script>
 
 <template>
   <div class="bp-container">
     <Grid />
-    <ConceptComposition class="bp-content" />
+    <Concept class="bp-content" />
   </div>
 </template>
 
