@@ -1,8 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import type { Concept } from '@SRC/types'
 
 export const useConceptStore = defineStore('concepts', () => {
-  const helloWorld: Concept = {
+  const helloWorld = ref({
     title: 'Hello World!',
     subTiles: [
       {
@@ -32,7 +31,7 @@ export const useConceptStore = defineStore('concepts', () => {
       },
       { title: 'last leaf', subTiles: [] },
     ],
-  }
+  })
 
   return {
     helloWorld,
