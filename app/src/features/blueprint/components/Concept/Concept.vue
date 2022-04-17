@@ -2,7 +2,6 @@
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
-  // import { generalPressEventFormatting } from '@GLOBAL/functions/coordinates'
   import type { Dictionary } from '@SRC/types'
 
   const concepts = useConceptStore()

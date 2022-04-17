@@ -49,8 +49,6 @@
 //   return output
 // }
 // screen touch vs click
-// export const generalPressEventFormatting = (e: TouchEvent | MouseEvent) =>
-//   e instanceof TouchEvent ? e.changedTouches[0] : e
 // export const getCoordinatesRelativeToElement = (absoluteCoordinates, elementAbsoluteCoordinates, dimensionAxes) =>
 //   objectMap(dimensionAxes, (value, key) => absoluteCoordinates[key] - elementAbsoluteCoordinates[key], true)
 // export const getSpatialData = (localStore, bpRef, event) => {
