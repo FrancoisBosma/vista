@@ -1,7 +1,7 @@
 :root {
   --red: #d41413;
 }
-:root {
+/* :root {
   --important: var(--red);
   --cta: #b10dc9;
   --emphasis: #2997fe;
@@ -12,18 +12,18 @@
   --foreground-for-stronger-background: var(--background-extreme);
   --foreground-contrast: #b7b7b7;
   --foreground: #181410;
-}
+} */
 
 :root.dark {
-  --important: var(--red);
+  /* --important: var(--red);
   --cta: #50f148;
+  --info: #fcd34d; */
   --emphasis: #d97706;
-  --info: #fcd34d;
-  --background: #222;
-  --background-stronger: #121212;
-  --background-extreme: #1d1d1b;
-  --foreground-for-stronger-background: #f8f8f880;
-  --foreground-contrast: #484848;
+  --background: #212B3B;
+  --background-stronger: #1A202C;
+  /* --background-extreme: #1d1d1b;
+  --foreground-for-stronger-background: #f8f8f880; */
+  --foreground-contrast: #2D3748;
   --foreground: #f8f8f8;
 }
 
