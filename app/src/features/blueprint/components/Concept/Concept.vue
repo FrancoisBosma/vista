@@ -35,9 +35,7 @@
   const isEmpty = ref(false)
   const isClickable = computed(() => !isEmpty.value && !click.value.shouldBlock)
   const toggleTile = () => {
-    if (!isClickable.value) {
-      return
-    }
+    if (!isClickable.value) return
     isOpen.value = !isOpen.value
     // resetIsHovered()
   }
