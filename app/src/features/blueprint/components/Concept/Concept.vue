@@ -11,7 +11,7 @@
 
   const isOpen = ref(false)
   const click = ref({ pressDownCoords: { x: undefined, y: undefined }, shouldBlock: false } as Dictionary<any>)
-  const isEmpty = ref(false)
+  const isEmpty = computed(() => !concept.subTiles.length)
   const isClickable = computed(() => !isEmpty.value && !click.value.shouldBlock)
   const toggleTile = () => {
     if (!isClickable.value) return
