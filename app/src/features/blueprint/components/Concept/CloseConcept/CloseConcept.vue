@@ -3,13 +3,13 @@
 </script>
 
 <template>
-  <div class="close-tile">
+  <div class="close-concept">
     <span>{{ title }}</span>
   </div>
 </template>
 
 <style scoped lang="postcss">
-  .close-tile {
+  .close-concept {
     @apply w-max border rounded-10px px-3rem py-1rem;
     background-color: v-bind('`var(${isEmpty ? "--background-stronger": "--foreground-contrast"})`');
     box-shadow: v-bind('`${isHovered && !isEmpty ? "0 0 3px var(--emphasis)" : "0 1px 3px rgba(0, 0, 0, 0.5)"}`');
