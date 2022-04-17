@@ -50,7 +50,7 @@
     @mouseleave="handlePressUp"
   >
     <keep-alive>
-      <CloseConcept v-if="!isOpen" v-bind="concept" :is-hovered="isHovered" />
+      <CloseConcept v-if="!isOpen" v-bind="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
       <OpenConcept v-else />
     </keep-alive>
   </div>
