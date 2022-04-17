@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { objectMap } from '@GLOBAL/functions/objects'
-import type { ComputedRef, Ref } from 'vue'
+// import { objectMap } from '@GLOBAL/functions/objects'
+import type { /* ComputedRef, */ Ref } from 'vue'
 
 type Axis = string
 interface Dimension {
@@ -16,13 +16,13 @@ export const useUiStore = defineStore('ui', () => {
     width: { axis: 'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
     height: { axis: 'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
   })
-  const axes: ComputedRef<{ [x: string]: Axis }> = computed(() =>
-    objectMap(dimensions.value, (dim: Dimension) => dim.axis)
-  )
+  // const axes: ComputedRef<{ [x: string]: Axis }> = computed(() =>
+  //   objectMap(dimensions.value, (dim: Dimension) => dim.axis)
+  // )
 
   return {
     dimensions,
-    axes,
+    // axes,
   }
 })
 
