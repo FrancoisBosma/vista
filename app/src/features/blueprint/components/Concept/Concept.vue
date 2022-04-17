@@ -9,16 +9,18 @@
 
   const concept = concepts.helloWorld
 
-  const isOpen = ref(false)
-  const click = ref({ pressDownCoords: { x: undefined, y: undefined }, shouldBlock: false } as Dictionary<any>)
   const isEmpty = computed(() => !concept.subTiles.length)
+  const isOpen = ref(false)
+  const isHovered = ref(false)
+  const click = ref({ pressDownCoords: { x: undefined, y: undefined }, shouldBlock: false } as Dictionary<any>)
+
   const isClickable = computed(() => !isEmpty.value && !click.value.shouldBlock)
+
   const toggleTile = () => {
     if (!isClickable.value) return
     isOpen.value = !isOpen.value
-    // resetIsHovered()
+    isHovered.value = false
   }
-
   const handlePressDown = () => {
     Object.keys(click.value.pressDownCoords).forEach(
       (axis) => (click.value.pressDownCoords[axis] = ui.mouseCoords[axis].value)
@@ -39,6 +41,8 @@
   <div
     class="concept"
     @click.stop="toggleTile"
+    @mouseover.stop="isHovered = !isHovered"
+    @mouseout.stop="isHovered = !isHovered"
     @mousedown="handlePressDown"
     @touchstart="handlePressDown"
     @mouseup="handlePressUp"
@@ -46,7 +50,7 @@
     @mouseleave="handlePressUp"
   >
     <keep-alive>
-      <CloseConcept v-if="!isOpen" v-bind="concept" />
+      <CloseConcept v-if="!isOpen" v-bind="concept" :is-hovered="isHovered" />
       <OpenConcept v-else />
     </keep-alive>
   </div>
