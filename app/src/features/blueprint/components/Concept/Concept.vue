@@ -51,7 +51,7 @@
   >
     <keep-alive>
       <CloseConcept v-if="!isOpen" v-bind="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
-      <OpenConcept v-else />
+      <OpenConcept v-else v-bind="concept" :is-hovered="isHovered" />
     </keep-alive>
   </div>
 </template>
