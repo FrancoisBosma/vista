@@ -18,11 +18,13 @@ export const useUiStore = defineStore('ui', () => {
   })
   const mouseCoords: Dictionary<Ref> = useMouse()
   const isUserPressingDown = ref(false)
+  const gridAmount = ref(2) // N.B: As of now, it only works properly w/ value '2' (zoom, colours, etc)
 
   return {
     dimensions,
     mouseCoords,
     isUserPressingDown,
+    gridAmount,
   }
 })
 
