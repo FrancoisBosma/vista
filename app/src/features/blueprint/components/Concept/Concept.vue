@@ -59,5 +59,6 @@
 <style scoped lang="postcss">
   .concept {
     @apply flex;
+    cursor: v-bind('`${ui.isUserPressingDown ? "inherit": isEmpty ? "auto": "pointer"}`');
   }
 </style>
