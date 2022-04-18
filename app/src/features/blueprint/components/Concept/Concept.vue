@@ -1,15 +1,16 @@
 <script setup lang="ts">
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
-  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
+  import type { Concept } from '@FEATURES/blueprint/stores'
   import type { Dictionary } from '@SRC/types'
 
-  const concepts = useConceptStore()
   const ui = useUiStore()
 
-  const concept = concepts.helloWorld
+  const props = defineProps<{ concept: Concept }>()
+  const { concept } = toRefs(props)
 
-  const isEmpty = computed(() => !concept.subTiles.length)
+  const isEmpty = computed(() => !concept.value.subTiles.length)
   const isOpen = ref(false)
   const isHovered = ref(false)
   const click = ref({ pressDownCoords: { x: undefined, y: undefined }, shouldBlock: false } as Dictionary<any>)
@@ -50,8 +51,8 @@
     @mouseleave="handlePressUp"
   >
     <keep-alive>
-      <CloseConcept v-if="!isOpen" v-bind="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
-      <OpenConcept v-else v-bind="concept" :is-hovered="isHovered" />
+      <CloseConcept v-if="!isOpen" :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
+      <OpenConcept v-else :concept="concept" :is-hovered="isHovered" />
     </keep-alive>
   </div>
 </template>

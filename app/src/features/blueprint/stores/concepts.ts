@@ -1,7 +1,13 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import type { Ref } from 'vue'
+
+export interface Concept {
+  title: String
+  subTiles: Concept[]
+}
 
 export const useConceptStore = defineStore('concepts', () => {
-  const helloWorld = ref({
+  const helloWorld: Ref<Concept> = ref({
     title: 'Hello World!',
     subTiles: [
       {

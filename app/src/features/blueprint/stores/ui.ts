@@ -1,6 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-// import { objectMap } from '@GLOBAL/functions/objects'
-import type { /* ComputedRef, */ Ref } from 'vue'
+import type { Ref } from 'vue'
 import type { Dictionary } from '@SRC/types'
 
 type Axis = string
@@ -17,14 +16,11 @@ export const useUiStore = defineStore('ui', () => {
     width: { axis: 'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
     height: { axis: 'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
   })
-  // const axes: ComputedRef<{ [x: string]: Axis }> = computed(() =>
-  //   objectMap(dimensions.value, (dim: Dimension) => dim.axis)
-  // )
   const mouseCoords: Dictionary<Ref> = useMouse()
   const isUserPressingDown = ref(false)
+
   return {
     dimensions,
-    // axes,
     mouseCoords,
     isUserPressingDown,
   }
