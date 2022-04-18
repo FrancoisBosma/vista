@@ -21,10 +21,12 @@ export const useUiStore = defineStore('ui', () => {
   //   objectMap(dimensions.value, (dim: Dimension) => dim.axis)
   // )
   const mouseCoords: Dictionary<Ref> = useMouse()
+  const isUserPressingDown = ref(false)
   return {
     dimensions,
     // axes,
     mouseCoords,
+    isUserPressingDown,
   }
 })
 

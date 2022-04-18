@@ -6,10 +6,17 @@ meta:
 
 <script setup lang="ts">
   import { Concept, Grid } from '../components'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
+
+  const ui = useUiStore()
+
+  const bp = ref(null)
+  const { pressed } = useMousePressed({ target: bp })
+  watch(pressed, () => (ui.isUserPressingDown = pressed.value))
 </script>
 
 <template>
-  <div class="bp-container">
+  <div ref="bp" class="bp-container">
     <Grid />
     <Concept class="bp-content" />
   </div>
