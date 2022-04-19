@@ -1,4 +1,5 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
+import { nthRoot } from '@GLOBAL/functions/numbers'
 import type { Ref } from 'vue'
 import type { Dictionary } from '@SRC/types'
 
@@ -20,17 +21,25 @@ export const useUiStore = defineStore('ui', () => {
   const isUserPressingDown = ref(false)
   const gridConfig = ref({
     gridAmount: 2, // N.B: As of now, it only works properly w/ value '2' (zoom, colours, etc)
+    middleSizeSquare: {
+      strokeWidth: 1,
+      length: 45, // px
+    },
+    subSquareAmount: 3, // must be an odd nb if we want subsquares to "naturally" replace squares through zooms
     zoom: {
       levelReset: 5,
       strokeStep: 3, // decimal nb, not hexa
     },
   })
 
+  const zoomRate = computed(() => nthRoot(gridConfig.value.subSquareAmount, gridConfig.value.zoom.levelReset))
+
   return {
     dimensions,
     mouseCoords,
     isUserPressingDown,
     gridConfig,
+    zoomRate,
   }
 })
 
