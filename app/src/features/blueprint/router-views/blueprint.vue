@@ -32,5 +32,6 @@ meta:
   }
   .bp-content {
     @apply top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+    z-index: v-bind('2 * ui.gridConfig.zoom.levelReset + 1');
   }
 </style>

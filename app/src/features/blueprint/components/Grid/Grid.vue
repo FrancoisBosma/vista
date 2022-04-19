@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useUiStore } from '@FEATURES/blueprint/stores'
-  import { range, toTheNth } from '@GLOBAL/functions/numbers'
+  import { convertDec2Hex, hexMultiplication, hexSum, range, toTheNth } from '@GLOBAL/functions/numbers'
 
   const props = defineProps<{ gridId: number }>()
   const { gridId } = toRefs(props)
@@ -13,22 +13,37 @@
   )
   const zoomCount = ref(zoomThresholds.value[gridId.value])
 
+  const patternId = computed(() => `bp-grid-${gridId.value}`)
   const zIndex = computed(() => zoomCount.value + config.zoom.levelReset) // 0 -> 2*levelReset
   const isGridVisible = computed(
     () => zoomCount.value > -config.zoom.levelReset && zoomCount.value < config.zoom.levelReset
   )
   const depthFactor = computed(() => toTheNth(ui.zoomRate, zoomCount.value))
   const squareLength = computed(() => config.middleSizeSquare.length * depthFactor.value)
+  const gridPath = computed(() => `M ${squareLength.value} 0 L 0 0 0 ${squareLength.value}`)
+  const strokeColor = computed(() => {
+    const midColor = config.middleSizeSquare.strokeColor
+    let output = '#'
+    range(midColor.length, 1, 2).forEach((i) => {
+      // red, green and blue elements, composed of two-digits hexa numbers
+      const colorEl = midColor.substring(i, i + 2)
+      const relativeDepth = hexMultiplication(convertDec2Hex(zoomCount.value), convertDec2Hex(config.zoom.strokeStep))
+      const updatedColorElement = hexSum(colorEl, relativeDepth)
+      output = output.concat(updatedColorElement)
+    })
+    return output
+  })
+  const strokeWidth = computed(() => config.middleSizeSquare.strokeWidth * depthFactor.value)
 </script>
 
 <template>
   <svg v-show="isGridVisible" class="bp-grid">
     <defs>
-      <pattern :id="`bp-grid-${gridId}`" :height="squareLength" :width="squareLength" patternUnits="userSpaceOnUse">
+      <pattern :id="patternId" :height="squareLength" :width="squareLength" patternUnits="userSpaceOnUse">
         <path :d="gridPath" fill="none" :stroke="strokeColor" :stroke-width="strokeWidth" />
       </pattern>
     </defs>
-    <rect width="100%" height="100%" :fill="patternUrl" />
+    <rect width="100%" height="100%" :fill="`url(#${patternId})`" />
   </svg>
 </template>
 

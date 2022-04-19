@@ -22,6 +22,7 @@ export const useUiStore = defineStore('ui', () => {
   const gridConfig = ref({
     gridAmount: 2, // N.B: As of now, it only works properly w/ value '2' (zoom, colours, etc)
     middleSizeSquare: {
+      strokeColor: '#444444', // N.B: always keep it expressed with 6 digits for color operations
       strokeWidth: 1,
       length: 45, // px
     },
