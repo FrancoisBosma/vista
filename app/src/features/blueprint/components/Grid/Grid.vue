@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useUiStore } from '@FEATURES/blueprint/stores'
-  import { range } from '@GLOBAL/functions/numbers'
+  import { range, toTheNth } from '@GLOBAL/functions/numbers'
 
   const props = defineProps<{ gridId: number }>()
   const { gridId } = toRefs(props)
@@ -12,13 +12,19 @@
     range(config.gridAmount + 1).map((i: number) => config.zoom.levelReset * (2 * (i / config.gridAmount) - 1))
   )
   const zoomCount = ref(zoomThresholds.value[gridId.value])
+
   const zIndex = computed(() => zoomCount.value + config.zoom.levelReset) // 0 -> 2*levelReset
+  const isGridVisible = computed(
+    () => zoomCount.value > -config.zoom.levelReset && zoomCount.value < config.zoom.levelReset
+  )
+  const depthFactor = computed(() => toTheNth(ui.zoomRate, zoomCount.value))
+  const squareLength = computed(() => config.middleSizeSquare.length * depthFactor.value)
 </script>
 
 <template>
   <svg v-show="isGridVisible" class="bp-grid">
     <defs>
-      <pattern :id="patternId" :height="squareLength" :width="squareLength" patternUnits="userSpaceOnUse">
+      <pattern :id="`bp-grid-${gridId}`" :height="squareLength" :width="squareLength" patternUnits="userSpaceOnUse">
         <path :d="gridPath" fill="none" :stroke="strokeColor" :stroke-width="strokeWidth" />
       </pattern>
     </defs>
