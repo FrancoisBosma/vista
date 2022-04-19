@@ -2,8 +2,8 @@
 // export const toTheNth = (base = 0, exponent = 2) => base ** exponent
 // export const floorRoundUp = (nb: number) => ~~nb // A better performing alternative to Math.floor
 // export const nthRoot = (base = 0, exponent = 2) => toTheNth(base, 1 / exponent)
-// export const range = (end: number, start = 0, step = 1) =>
-//   Array.from({ length: Math.ceil((end - start) / step) }, (_, i) => start + i * step)
+export const range = (end: number, start = 0, step = 1) =>
+  Array.from({ length: Math.ceil((end - start) / step) }, (_, i) => start + i * step)
 // export const convertDec2Hex = (nb: number, minStringSize = 2) => {
 //   let output = nb.toString(16)
 //   for (let i = 0; i < minStringSize - output.length; i++) {
