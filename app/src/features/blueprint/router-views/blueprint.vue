@@ -20,7 +20,7 @@ meta:
 
 <template>
   <div ref="bp" class="bp-container">
-    <Grid v-for="n in ui.gridAmount" :key="n" :ref="`grid-${n - 1}`" />
+    <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="`grid-${n - 1}`" :grid-id="n - 1" />
     <Concept class="bp-content" :concept="concept" />
   </div>
 </template>
