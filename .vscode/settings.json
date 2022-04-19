@@ -17,6 +17,7 @@
     "preinstall",
     "reactified",
     "stylelint",
+    "subsquares",
     "unplugin",
     "vars",
     "Vite",
