@@ -1,22 +1,24 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { nthRoot } from '@GLOBAL/functions/numbers'
+import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
 import type { Dictionary } from '@SRC/types'
 
-type Axis = string
+type Axis = 'x' | 'y'
+type DimensionName = 'width' | 'height'
 interface Dimension {
   axis: Axis
   boundingClientRectProperty: string
   boxSizeProperty: string
 }
+type Dimensions = Record<DimensionName, Dimension>
 
 export const useUiStore = defineStore('ui', () => {
-  // N.B: It is considered that the dimension names 'width' and 'height' are to remain forever unchanged.
-  //      Some code logic is thus based on it. Beware.
-  const dimensions: Ref<{ [x: string]: Dimension }> = ref({
-    width: { axis: 'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
-    height: { axis: 'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
+  const dimensions: Ref<Dimensions> = ref({
+    width: { axis: <Axis>'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
+    height: { axis: <Axis>'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
   })
+  const axes = ref(objectMap(dimensions.value, (value: Dimension) => value.axis))
   const mouseCoords: Dictionary<Ref> = useMouse()
   const isUserPressingDown = ref(false)
   const gridConfig = ref({
@@ -32,15 +34,18 @@ export const useUiStore = defineStore('ui', () => {
       strokeStep: 3, // decimal nb, not hexa
     },
   })
+  const zoomTypes = ref({ out: { directionFactor: -1 }, in: { directionFactor: 1 } })
 
   const zoomRate = computed(() => nthRoot(gridConfig.value.subSquareAmount, gridConfig.value.zoom.levelReset))
 
   return {
+    axes,
     dimensions,
     mouseCoords,
     isUserPressingDown,
     gridConfig,
     zoomRate,
+    zoomTypes,
   }
 })
 

@@ -59,7 +59,7 @@
 
 <style scoped lang="postcss">
   .concept {
-    @apply flex;
+    @apply w-max;
     cursor: v-bind('`${ui.isUserPressingDown ? "inherit": isEmpty ? "auto": "pointer"}`');
   }
 </style>

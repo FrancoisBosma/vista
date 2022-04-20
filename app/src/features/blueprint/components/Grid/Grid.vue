@@ -34,6 +34,18 @@
     return output
   })
   const strokeWidth = computed(() => config.middleSizeSquare.strokeWidth * depthFactor.value)
+
+  const updateZoomCount = (zoomFactor = 0) => {
+    zoomCount.value += zoomFactor
+    if (zoomCount.value < -config.zoom.levelReset) {
+      zoomCount.value += 2 * config.zoom.levelReset
+    } else if (zoomCount.value > config.zoom.levelReset) {
+      zoomCount.value -= 2 * config.zoom.levelReset
+    }
+  }
+  const updateAppearance = (zoomFactor = 0) => updateZoomCount(zoomFactor)
+
+  defineExpose(updateAppearance)
 </script>
 
 <template>
