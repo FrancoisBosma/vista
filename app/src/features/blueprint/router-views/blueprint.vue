@@ -111,7 +111,7 @@ meta:
     const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(cursorRelativeCoords, newScaleContent, lastScaleContent)
     updateContentOffsets(extraContentOffsets)
-    // updateBackground(cursorRelativeCoords, zoomFactor)
+    updateBackground(cursorRelativeCoords, zoomFactor)
   }
 </script>
 
