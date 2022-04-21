@@ -5,20 +5,14 @@ meta:
 </route>
 
 <script setup lang="ts">
-  import { Concept, Grid } from '../components'
+  import { Concept, Grid } from '../../components'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { absoluteValue, floorRoundUp, range, toTheNth } from '@GLOBAL/functions/numbers'
   import { objectMap } from '@GLOBAL/functions/objects'
   import type { Ref } from 'vue'
   import type { Dictionary } from '@ROOT/src/types'
   import type { Axis, Dimension, ZoomDirectionFactor } from '@FEATURES/blueprint/stores'
-
-  type Offsets = Record<Dimension, number>
-  type Coordinates = Record<Axis, number>
-  interface GridExposed {
-    updateAppearance: Function
-    squareLength: number
-  }
+  import type { Coordinates, GridExposed, Offsets } from './types'
 
   const concepts = useConceptStore()
   const ui = useUiStore()
