@@ -4,21 +4,28 @@ import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
 import type { Dictionary } from '@SRC/types'
 
-type Axis = 'x' | 'y'
-type DimensionName = 'width' | 'height'
-interface Dimension {
+export type Axis = 'x' | 'y'
+export type Dimension = 'width' | 'height'
+export type Axes = Record<Dimension, Axis>
+export interface DimensionProperties {
   axis: Axis
   boundingClientRectProperty: string
   boxSizeProperty: string
 }
-type Dimensions = Record<DimensionName, Dimension>
+export type Dimensions = Record<Dimension, DimensionProperties>
+export type Zoom = 'out' | 'in'
+export type ZoomDirectionFactor = -1 | 1
+export interface ZoomProperties {
+  directionFactor: ZoomDirectionFactor
+}
+export type ZoomTypes = Record<Zoom, ZoomProperties>
 
 export const useUiStore = defineStore('ui', () => {
   const dimensions: Ref<Dimensions> = ref({
     width: { axis: <Axis>'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
     height: { axis: <Axis>'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
   })
-  const axes = ref(objectMap(dimensions.value, (value: Dimension) => value.axis))
+  const axes: Ref<Axes> = ref(objectMap(dimensions.value, (value: DimensionProperties) => value.axis))
   const mouseCoords: Dictionary<Ref> = useMouse()
   const isUserPressingDown = ref(false)
   const gridConfig = ref({
@@ -34,10 +41,11 @@ export const useUiStore = defineStore('ui', () => {
       strokeStep: 3, // decimal nb, not hexa
     },
   })
-  const zoomTypes = ref({ out: { directionFactor: -1 }, in: { directionFactor: 1 } })
-
+  const zoomTypes: Ref<ZoomTypes> = ref({
+    out: { directionFactor: <ZoomDirectionFactor>-1 },
+    in: { directionFactor: <ZoomDirectionFactor>1 },
+  })
   const zoomRate = computed(() => nthRoot(gridConfig.value.subSquareAmount, gridConfig.value.zoom.levelReset))
-
   return {
     axes,
     dimensions,

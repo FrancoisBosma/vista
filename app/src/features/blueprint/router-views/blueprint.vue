@@ -11,10 +11,13 @@ meta:
   import { objectMap } from '@GLOBAL/functions/objects'
   import type { Ref } from 'vue'
   import type { Dictionary } from '@ROOT/src/types'
+  import type { Axis, Dimension, ZoomDirectionFactor } from '@FEATURES/blueprint/stores'
 
-  interface Offsets extends Dictionary<number> {
-    width: number
-    height: number
+  type Offsets = Record<Dimension, number>
+  type Coordinates = Record<Axis, number>
+  interface GridExposed {
+    updateAppearance: Function
+    squareLength: number
   }
 
   const concepts = useConceptStore()
@@ -37,15 +40,16 @@ meta:
 
   const computeLengthDelta = (newScale: number, lastScale: number, length: number) =>
     (newScale / lastScale - 1) * length
-  const computeZoomedContentOffsets = (zoomRelCoords, newScale: number, lastScale: number) => {
-    const output = {}
+  const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, newScale: number, lastScale: number): Offsets => {
+    const output: Dictionary<number> = {}
     const { axes } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const contentToZoomCenterDistance = bpInfo[dim].value / 2 + contentOffsets.value[dim] - zoomRelCoords[axis]
+      const contentToZoomCenterDistance =
+        bpInfo[dim].value / 2 + contentOffsets.value[dim as Dimension] - zoomRelCoords[axis]
       const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToZoomCenterDistance)
       output[dim] = extraContentOffset
     })
-    return output
+    return output as Offsets
   }
   const computeExtraOffset = (extraOffsetToBe: number, oldOffset: number, limit: number) => {
     const offsetTest = oldOffset + extraOffsetToBe
@@ -59,16 +63,20 @@ meta:
     }
     return extraOffsetToBe
   }
-  const computeZoomedGridOffsets = (zoomRelCoords, zoomFactor, biggestSquareLength: number) => {
-    const output = {}
+  const computeZoomedGridOffsets = (
+    zoomRelCoords: Coordinates,
+    zoomFactor: ZoomDirectionFactor,
+    biggestSquareLength: number
+  ): Offsets => {
+    const output: Dictionary<number> = {}
     const { axes, zoomRate } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const svgToZoomCenterDistance = bgOffsets.value[dim] + zoomRelCoords[axis]
+      const svgToZoomCenterDistance = bgOffsets.value[dim as Dimension] + zoomRelCoords[axis]
       const lengthDelta = (toTheNth(zoomRate, zoomFactor) - 1) * svgToZoomCenterDistance
-      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets.value[dim], biggestSquareLength)
+      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets.value[dim as Dimension], biggestSquareLength)
       output[dim] = extraOffset
     })
-    return output
+    return output as Offsets
   }
   const applyForEveryGrid = (fn: Function) => {
     const outputs: ReturnType<any>[] = []
@@ -78,34 +86,35 @@ meta:
     return outputs
   }
   const getCurrentBiggestSquareLength = () => {
-    const squareLengths = applyForEveryGrid((grid) => grid.squareLength)
+    const squareLengths = applyForEveryGrid((grid: GridExposed) => grid.squareLength)
     return Math.max(...squareLengths)
   }
-  const updateContentScale = (zoomFactor) => {
+  const updateContentScale = (zoomFactor: ZoomDirectionFactor) => {
     const lastScaleContent = contentScale.value
     contentScale.value *= toTheNth(ui.zoomRate, zoomFactor)
     return { lastScaleContent, newScaleContent: contentScale.value }
   }
   const updateContentOffsets = (extraOffsets: Offsets) =>
-    Object.keys(extraOffsets).forEach((dim) => {
+    (Object.keys(extraOffsets) as Dimension[]).forEach((dim) => {
       contentOffsets.value[dim] += extraOffsets[dim]
     })
   const updateBackgroundOffsets = (extraOffsets: Offsets) =>
-    Object.keys(extraOffsets).forEach((dim) => {
+    (Object.keys(extraOffsets) as Dimension[]).forEach((dim) => {
       bgOffsets.value[dim] += extraOffsets[dim]
     })
-  const updateGridsAppearance = (zoomFactor) => {
-    applyForEveryGrid((grid) => grid.updateAppearance(zoomFactor))
+  const updateGridsAppearance = (zoomFactor: ZoomDirectionFactor) => {
+    applyForEveryGrid((grid: GridExposed) => grid.updateAppearance(zoomFactor))
     return getCurrentBiggestSquareLength()
   }
-  const updateBackground = (zoomRelativeCoords, zoomFactor) => {
+  const updateBackground = (zoomRelativeCoords: Coordinates, zoomFactor: ZoomDirectionFactor) => {
     const currentBiggestSquareLength = updateGridsAppearance(zoomFactor)
     const extraOffsets = computeZoomedGridOffsets(zoomRelativeCoords, zoomFactor, currentBiggestSquareLength)
     updateBackgroundOffsets(extraOffsets)
   }
   const handleZoom = (event: WheelEvent) => {
-    const zoomFactor = event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
-    const zoomRelativeCoords = objectMap(ui.axes, (axis) => event[axis] - bpInfo[axis].value, true)
+    const zoomFactor: ZoomDirectionFactor =
+      event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
+    const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
     // Calling update methods ...
     const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
