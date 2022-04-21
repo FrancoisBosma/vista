@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { convertDec2Hex, hexMultiplication, hexSum, range, toTheNth } from '@GLOBAL/functions/numbers'
+  import type { ZoomDirectionFactor } from '@FEATURES/blueprint/stores'
 
   const props = defineProps<{ gridId: number }>()
   const { gridId } = toRefs(props)
@@ -35,7 +36,7 @@
   })
   const strokeWidth = computed(() => config.middleSizeSquare.strokeWidth * depthFactor.value)
 
-  const updateZoomCount = (zoomFactor = 0) => {
+  const updateZoomCount = (zoomFactor: ZoomDirectionFactor) => {
     zoomCount.value += zoomFactor
     if (zoomCount.value < -config.zoom.levelReset) {
       zoomCount.value += 2 * config.zoom.levelReset
@@ -43,7 +44,7 @@
       zoomCount.value -= 2 * config.zoom.levelReset
     }
   }
-  const updateAppearance = (zoomFactor = 0) => updateZoomCount(zoomFactor)
+  const updateAppearance = (zoomFactor: ZoomDirectionFactor) => updateZoomCount(zoomFactor)
 
   defineExpose({ updateAppearance, squareLength })
 </script>
