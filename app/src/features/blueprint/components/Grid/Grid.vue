@@ -45,7 +45,7 @@
   }
   const updateAppearance = (zoomFactor = 0) => updateZoomCount(zoomFactor)
 
-  defineExpose(updateAppearance)
+  defineExpose({ updateAppearance })
 </script>
 
 <template>

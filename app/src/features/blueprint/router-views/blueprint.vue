@@ -23,7 +23,7 @@ meta:
   const concept = concepts.helloWorld
 
   const bp = ref(null)
-  const gridRefs = ref([])
+  const gridRefs = ref<Object[]>([])
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
   const bpInfo = useElementBounding(bp) as Dictionary<Ref<number>>
   const bgOffsets: Ref<Offsets> = ref({
@@ -111,14 +111,14 @@ meta:
     const newScaleContent = contentScale.value // updated in the 'updateContentScale' call above
     const extraContentOffsets = computeZoomedContentOffsets(cursorRelativeCoords, newScaleContent, lastScaleContent)
     updateContentOffsets(extraContentOffsets)
-    updateBackground(cursorRelativeCoords, zoomFactor)
+    // updateBackground(cursorRelativeCoords, zoomFactor)
   }
 </script>
 
 <template>
   <div ref="bp" class="blueprint" @wheel.stop.prevent="handleZoom">
     <div class="bp-background">
-      <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" ref="gridRefs" :grid-id="n - 1" />
+      <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
     </div>
     <Concept class="bp-content" :concept="concept" />
   </div>
@@ -126,7 +126,7 @@ meta:
 
 <style scoped lang="postcss">
   .blueprint {
-    @apply relative w-full h-full;
+    @apply relative w-full h-full overflow-hidden;
     .bp-background {
       @apply absolute w-full h-full children:(absolute);
       cursor: v-bind('`${isUserPressingDown ? "grabbing ": "grab"}`');
@@ -137,7 +137,10 @@ meta:
     }
     .bp-content {
       @apply relative top-1/2 left-1/2;
-      transform: v-bind('`translate(calc(-50% + ${contentOffsets.width}px), calc(-50% + ${contentOffsets.height}px))`');
+      transform: v-bind(
+        '`translate(calc(-50% + ${contentOffsets.width}px), calc(-50% + ${contentOffsets.height}px)) \
+      scale(${contentScale})`'
+      );
       z-index: v-bind('2 * ui.gridConfig.zoom.levelReset + 1');
     }
   }
