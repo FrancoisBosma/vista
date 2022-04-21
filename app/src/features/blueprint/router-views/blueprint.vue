@@ -37,12 +37,12 @@ meta:
 
   const computeLengthDelta = (newScale: number, lastScale: number, length: number) =>
     (newScale / lastScale - 1) * length
-  const computeZoomedContentOffsets = (cursorRelCoords, newScale: number, lastScale: number) => {
+  const computeZoomedContentOffsets = (zoomRelCoords, newScale: number, lastScale: number) => {
     const output = {}
     const { axes } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const contentToCursor = bpInfo[dim].value / 2 + contentOffsets.value[dim] - cursorRelCoords[axis]
-      const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToCursor)
+      const contentToZoomCenterDistance = bpInfo[dim].value / 2 + contentOffsets.value[dim] - zoomRelCoords[axis]
+      const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToZoomCenterDistance)
       output[dim] = extraContentOffset
     })
     return output
@@ -59,13 +59,13 @@ meta:
     }
     return extraOffsetToBe
   }
-  const computeZoomedGridOffsets = (cursorRelCoords, zoomFactor, biggerSquareLength: number) => {
+  const computeZoomedGridOffsets = (zoomRelCoords, zoomFactor, biggestSquareLength: number) => {
     const output = {}
     const { axes, zoomRate } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const svgToCursorLength = bgOffsets.value[dim] + cursorRelCoords[axis]
-      const lengthDelta = (toTheNth(zoomRate, zoomFactor) - 1) * svgToCursorLength
-      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets.value[dim], biggerSquareLength)
+      const svgToZoomCenterDistance = bgOffsets.value[dim] + zoomRelCoords[axis]
+      const lengthDelta = (toTheNth(zoomRate, zoomFactor) - 1) * svgToZoomCenterDistance
+      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets.value[dim], biggestSquareLength)
       output[dim] = extraOffset
     })
     return output
@@ -98,20 +98,19 @@ meta:
     applyForEveryGrid((grid) => grid.updateAppearance(zoomFactor))
     return getCurrentBiggestSquareLength()
   }
-  const updateBackground = (cursorRelativeCoords, zoomFactor) => {
+  const updateBackground = (zoomRelativeCoords, zoomFactor) => {
     const currentBiggestSquareLength = updateGridsAppearance(zoomFactor)
-    const extraOffsets = computeZoomedGridOffsets(cursorRelativeCoords, zoomFactor, currentBiggestSquareLength)
+    const extraOffsets = computeZoomedGridOffsets(zoomRelativeCoords, zoomFactor, currentBiggestSquareLength)
     updateBackgroundOffsets(extraOffsets)
   }
   const handleZoom = (event: WheelEvent) => {
     const zoomFactor = event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
-    const eventAbsCoords = objectMap(ui.axes, (axis) => event[axis])
-    const cursorRelativeCoords = objectMap(ui.axes, (dim, axes) => eventAbsCoords[axes] - bpInfo[dim].value, true)
+    const zoomRelativeCoords = objectMap(ui.axes, (axis) => event[axis] - bpInfo[axis].value, true)
     // Calling update methods ...
     const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
-    const extraContentOffsets = computeZoomedContentOffsets(cursorRelativeCoords, newScaleContent, lastScaleContent)
+    const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
     updateContentOffsets(extraContentOffsets)
-    updateBackground(cursorRelativeCoords, zoomFactor)
+    updateBackground(zoomRelativeCoords, zoomFactor)
   }
 </script>
 
