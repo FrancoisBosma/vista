@@ -82,7 +82,9 @@ meta:
     return Math.max(...squareLengths)
   }
   const updateContentScale = (zoomFactor) => {
+    const lastScaleContent = contentScale.value
     contentScale.value *= toTheNth(ui.zoomRate, zoomFactor)
+    return { lastScaleContent, newScaleContent: contentScale.value }
   }
   const updateContentOffsets = (extraOffsets: Offsets) =>
     Object.keys(extraOffsets).forEach((dim) => {
@@ -104,11 +106,9 @@ meta:
   const handleZoom = (event: WheelEvent) => {
     const zoomFactor = event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
     const eventAbsCoords = objectMap(ui.axes, (axis) => event[axis])
-    const cursorRelativeCoords = objectMap(ui.axes, (_, axes) => eventAbsCoords[axes] - bpInfo[axes].value, true)
+    const cursorRelativeCoords = objectMap(ui.axes, (dim, axes) => eventAbsCoords[axes] - bpInfo[dim].value, true)
     // Calling update methods ...
-    const lastScaleContent = contentScale.value
-    updateContentScale(zoomFactor)
-    const newScaleContent = contentScale.value // updated in the 'updateContentScale' call above
+    const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(cursorRelativeCoords, newScaleContent, lastScaleContent)
     updateContentOffsets(extraContentOffsets)
     // updateBackground(cursorRelativeCoords, zoomFactor)
