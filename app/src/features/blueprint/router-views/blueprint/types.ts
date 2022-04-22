@@ -3,7 +3,8 @@ import type { FullGestureState, StateKey } from '@vueuse/gesture'
 import type { Dictionary } from '@ROOT/src/types'
 import type { Ref } from 'vue'
 
-export type Offsets = Record<Dimension, number>
+export type Offset = number
+export type Offsets = Record<Dimension, Offset>
 export type Coordinates = Record<Axis, number>
 export interface GridExposed {
   updateAppearance: Function

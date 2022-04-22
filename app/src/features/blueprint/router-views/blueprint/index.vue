@@ -40,7 +40,14 @@ meta:
     getCurrentBiggestSquareLength,
     computeExtraOffset,
   })
-  const { handleDrag } = setDragHandling({ updateContentOffsets })
+  const { handleDrag } = setDragHandling({
+    gridRefs,
+    bgOffsets,
+    updateContentOffsets,
+    updateBackgroundOffsets,
+    getCurrentBiggestSquareLength,
+    computeExtraOffset,
+  })
 
   watch(isUserPressingDown, () => (ui.isUserPressingDown = isUserPressingDown.value))
 </script>
