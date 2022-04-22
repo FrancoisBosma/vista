@@ -10,7 +10,7 @@
   const config = ui.gridConfig
 
   const zoomThresholds = ref(
-    range(config.gridAmount + 1).map((i: number) => config.zoom.levelReset * (2 * (i / config.gridAmount) - 1))
+    range(config.gridAmount + 1).map((i) => config.zoom.levelReset * (2 * (i / config.gridAmount) - 1))
   )
   const zoomCount = ref(zoomThresholds.value[gridId.value])
 
