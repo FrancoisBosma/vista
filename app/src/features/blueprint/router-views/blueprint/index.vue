@@ -11,7 +11,7 @@ meta:
   import type { Ref } from 'vue'
   import type { Dictionary } from '@ROOT/src/types'
   import type { Dimension } from '@FEATURES/blueprint/stores'
-  import type { Offsets } from './types'
+  import type { DragState, Offsets } from './types'
 
   const concepts = useConceptStore()
   const ui = useUiStore()
@@ -50,10 +50,14 @@ meta:
     gridRefs,
     contentScale,
   })
+
+  const handleDrag = ({ delta }: DragState) => {
+    updateContentOffsets({ width: delta[0], height: delta[1] })
+  }
 </script>
 
 <template>
-  <div ref="bp" class="blueprint" @wheel.stop.prevent="handleZoom">
+  <div ref="bp" v-drag="handleDrag" class="blueprint" @wheel.stop.prevent="handleZoom">
     <div class="bp-background">
       <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
     </div>
