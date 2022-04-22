@@ -1,31 +1,38 @@
-import { absoluteValue, floorRoundUp, range, toTheNth } from '@GLOBAL/functions/numbers'
+import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
-import type { Axis, Dimension, ZoomDirectionFactor, useUiStore } from '@FEATURES/blueprint/stores'
+import type { setCommonHandling } from './'
 import type { Ref } from 'vue'
+import type { Axis, Dimension, ZoomDirectionFactor, useUiStore } from '@FEATURES/blueprint/stores'
 import type { Dictionary } from '@ROOT/src/types'
-import type { Coordinates, GridExposed, Offsets } from '../types'
+import type { BlueprintInfo, Coordinates, GridExposed, GridRefs, Offsets } from '../types'
 
-interface zoomSetterArguments {
+interface ZoomSetterArguments {
   ui: ReturnType<typeof useUiStore>
-  updateContentOffsets: (extraOffsets: Offsets) => void
-  updateBackgroundOffsets: (extraOffsets: Offsets) => void
-  bpInfo: Dictionary<Ref<number>>
   contentOffsets: Ref<Offsets>
   bgOffsets: Ref<Offsets>
-  gridRefs: Ref<Object[]>
-  contentScale: Ref<number>
+  bpInfo: BlueprintInfo
+  gridRefs: GridRefs
+  updateContentOffsets: ReturnType<typeof setCommonHandling>['updateContentOffsets']
+  updateBackgroundOffsets: ReturnType<typeof setCommonHandling>['updateBackgroundOffsets']
+  applyForEveryGrid: ReturnType<typeof setCommonHandling>['applyForEveryGrid']
+  getCurrentBiggestSquareLength: ReturnType<typeof setCommonHandling>['getCurrentBiggestSquareLength']
+  computeExtraOffset: ReturnType<typeof setCommonHandling>['computeExtraOffset']
 }
 
 export default function setZoomHandling({
   ui,
-  updateContentOffsets,
-  updateBackgroundOffsets,
-  bpInfo,
   contentOffsets,
   bgOffsets,
+  bpInfo,
   gridRefs,
-  contentScale,
-}: zoomSetterArguments) {
+  updateContentOffsets,
+  updateBackgroundOffsets,
+  applyForEveryGrid,
+  getCurrentBiggestSquareLength,
+  computeExtraOffset,
+}: ZoomSetterArguments) {
+  const contentScale = ref(1)
+
   const computeLengthDelta = (newScale: number, lastScale: number, length: number) =>
     (newScale / lastScale - 1) * length
   const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, newScale: number, lastScale: number): Offsets => {
@@ -38,18 +45,6 @@ export default function setZoomHandling({
       output[dim] = extraContentOffset
     })
     return output as Offsets
-  }
-  const computeExtraOffset = (extraOffsetToBe: number, oldOffset: number, limit: number) => {
-    const offsetTest = oldOffset + extraOffsetToBe
-    if (offsetTest < 0) {
-      const adjustmentFactor = absoluteValue(floorRoundUp(offsetTest / limit)) + (offsetTest % limit ? 1 : 0)
-      return extraOffsetToBe + limit * adjustmentFactor
-    }
-    if (offsetTest >= limit) {
-      const adjustmentFactor = floorRoundUp(offsetTest / limit)
-      return extraOffsetToBe - limit * adjustmentFactor
-    }
-    return extraOffsetToBe
   }
   const computeZoomedGridOffsets = (
     zoomRelCoords: Coordinates,
@@ -66,25 +61,14 @@ export default function setZoomHandling({
     })
     return output as Offsets
   }
-  const applyForEveryGrid = (fn: Function) => {
-    const outputs: ReturnType<any>[] = []
-    range(ui.gridConfig.gridAmount).forEach((i) => {
-      outputs.push(fn(gridRefs.value[i]))
-    })
-    return outputs
-  }
-  const getCurrentBiggestSquareLength = () => {
-    const squareLengths = applyForEveryGrid((grid: GridExposed) => grid.squareLength)
-    return Math.max(...squareLengths)
-  }
   const updateContentScale = (zoomFactor: ZoomDirectionFactor) => {
     const lastScaleContent = contentScale.value
     contentScale.value *= toTheNth(ui.zoomRate, zoomFactor)
     return { lastScaleContent, newScaleContent: contentScale.value }
   }
   const updateGridsAppearance = (zoomFactor: ZoomDirectionFactor) => {
-    applyForEveryGrid((grid: GridExposed) => grid.updateAppearance(zoomFactor))
-    return getCurrentBiggestSquareLength()
+    applyForEveryGrid(gridRefs, (grid: GridExposed) => grid.updateAppearance(zoomFactor))
+    return getCurrentBiggestSquareLength(gridRefs)
   }
   const updateBackground = (zoomRelativeCoords: Coordinates, zoomFactor: ZoomDirectionFactor) => {
     const currentBiggestSquareLength = updateGridsAppearance(zoomFactor)
@@ -103,6 +87,7 @@ export default function setZoomHandling({
   }
 
   return {
+    contentScale,
     handleZoom,
   }
 }

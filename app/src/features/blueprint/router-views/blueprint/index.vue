@@ -7,53 +7,42 @@ meta:
 <script setup lang="ts">
   import { Concept, Grid } from '../../components'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
-  import setZoomHandling from './composables/zoom'
-  import type { Ref } from 'vue'
-  import type { Dictionary } from '@ROOT/src/types'
-  import type { Dimension } from '@FEATURES/blueprint/stores'
-  import type { DragState, Offsets } from './types'
+  import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
+  import type { BlueprintInfo, GridRefs } from './types'
 
-  const concepts = useConceptStore()
   const ui = useUiStore()
-
+  const concepts = useConceptStore()
   const concept = concepts.helloWorld
 
   const bp = ref(null)
-  const gridRefs: Ref<Object[]> = ref([])
+  const gridRefs: GridRefs = ref([])
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
-  const bpInfo = useElementBounding(bp) as Dictionary<Ref<number>>
-  const bgOffsets = ref({
-    width: ui.gridConfig.middleSizeSquare.length / 2,
-    height: ui.gridConfig.middleSizeSquare.length / 2,
-  } as Offsets)
-  const contentOffsets = ref({ width: 0, height: 0 } as Offsets)
-  const contentScale = ref(1)
+  const bpInfo = useElementBounding(bp) as BlueprintInfo
 
-  watch(isUserPressingDown, () => (ui.isUserPressingDown = isUserPressingDown.value))
-
-  const updateContentOffsets = (extraOffsets: Offsets) =>
-    (Object.keys(extraOffsets) as Dimension[]).forEach((dim) => {
-      contentOffsets.value[dim] += extraOffsets[dim]
-    })
-  const updateBackgroundOffsets = (extraOffsets: Offsets) =>
-    (Object.keys(extraOffsets) as Dimension[]).forEach((dim) => {
-      bgOffsets.value[dim] += extraOffsets[dim]
-    })
-
-  const { handleZoom } = setZoomHandling({
-    ui,
+  const {
+    bgOffsets,
+    contentOffsets,
     updateContentOffsets,
     updateBackgroundOffsets,
-    bpInfo,
+    applyForEveryGrid,
+    getCurrentBiggestSquareLength,
+    computeExtraOffset,
+  } = setCommonHandling({ ui })
+  const { contentScale, handleZoom } = setZoomHandling({
+    ui,
     contentOffsets,
     bgOffsets,
+    bpInfo,
     gridRefs,
-    contentScale,
+    updateContentOffsets,
+    updateBackgroundOffsets,
+    applyForEveryGrid,
+    getCurrentBiggestSquareLength,
+    computeExtraOffset,
   })
+  const { handleDrag } = setDragHandling({ updateContentOffsets })
 
-  const handleDrag = ({ delta }: DragState) => {
-    updateContentOffsets({ width: delta[0], height: delta[1] })
-  }
+  watch(isUserPressingDown, () => (ui.isUserPressingDown = isUserPressingDown.value))
 </script>
 
 <template>
