@@ -12,7 +12,7 @@
   const zoomThresholds = ref(
     range(config.gridAmount + 1).map((i) => config.zoom.levelReset * (2 * (i / config.gridAmount) - 1))
   )
-  const zoomCount = ref(zoomThresholds.value[gridId.value])
+  const zoomCount = ref(zoomThresholds.value[gridId.value] + 2)
 
   const patternId = computed(() => `bp-grid-${gridId.value}`)
   const zIndex = computed(() => zoomCount.value + config.zoom.levelReset) // 0 -> 2*levelReset
