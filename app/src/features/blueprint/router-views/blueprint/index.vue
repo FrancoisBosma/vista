@@ -64,9 +64,9 @@ meta:
 <style scoped lang="postcss">
   .blueprint {
     @apply relative w-full h-full overflow-hidden;
+    cursor: v-bind('`${isUserPressingDown ? "grabbing ": "grab"}`');
     .bp-background {
       @apply absolute w-full h-full children:(absolute);
-      cursor: v-bind('`${isUserPressingDown ? "grabbing ": "grab"}`');
       left: v-bind('`-${bgOffsets.width}px`');
       width: v-bind('`calc(100% + ${bgOffsets.width}px)`');
       top: v-bind('`-${bgOffsets.height}px`');

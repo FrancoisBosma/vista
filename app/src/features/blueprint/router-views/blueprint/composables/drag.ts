@@ -1,7 +1,8 @@
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
 import type { setCommonHandling } from './'
-import type { DragState, GridRefs, Offset, Offsets } from '../types'
+import type { GridRefs, Offset, Offsets } from '../types'
+import type { DragState } from '@SRC/types'
 import type { Dimension } from '@FEATURES/blueprint/stores'
 
 interface DragSetterArguments {

@@ -1,11 +1,8 @@
 <script setup lang="ts">
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
-  import { useUiStore } from '@FEATURES/blueprint/stores'
   import type { Concept } from '@FEATURES/blueprint/stores'
-  import type { Dictionary } from '@SRC/types'
-
-  const ui = useUiStore()
+  import type { DragState, TapState } from '@SRC/types'
 
   const props = defineProps<{ concept: Concept }>()
   const { concept } = toRefs(props)
@@ -13,42 +10,30 @@
   const isEmpty = computed(() => !concept.value.subTiles.length)
   const isOpen = ref(false)
   const isHovered = ref(false)
-  const click = ref({ pressDownCoords: { x: undefined, y: undefined }, shouldBlock: false } as Dictionary<any>)
-
-  const isClickable = computed(() => !isEmpty.value && !click.value.shouldBlock)
 
   const toggleTile = () => {
-    if (!isClickable.value) return
     isOpen.value = !isOpen.value
     isHovered.value = false
   }
-  const handlePressDown = () => {
-    Object.keys(click.value.pressDownCoords).forEach(
-      (axis) => (click.value.pressDownCoords[axis] = ui.mouseCoords[axis].value)
-    )
-    click.value.shouldBlock = false
-  }
-  const handlePressUp = () => {
-    Object.keys(click.value.pressDownCoords).forEach((axis) => {
-      if (ui.mouseCoords[axis].value !== click.value.pressDownCoords[axis]) {
-        click.value.shouldBlock = true
-      }
-      click.value.pressDownCoords[axis] = undefined
-    })
+
+  const tapState = ref('idle' as TapState)
+  const cursor = computed(() => (tapState.value === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
+  const handleDrag = ({ first, last, tap, direction }: DragState) => {
+    if (last) {
+      tapState.value = 'idle'
+      const tapped = tap && direction.every((nb) => nb === 0)
+      if (tapped && isHovered.value) toggleTile()
+    } else if (first) tapState.value = 'dragStart'
+    else tapState.value = 'dragged'
   }
 </script>
 
 <template>
   <div
+    v-drag="handleDrag"
     class="concept"
-    @click.stop="toggleTile"
     @mouseover.stop="isHovered = !isHovered"
     @mouseout.stop="isHovered = !isHovered"
-    @mousedown="handlePressDown"
-    @touchstart="handlePressDown"
-    @mouseup="handlePressUp"
-    @touchend="handlePressUp"
-    @mouseleave="handlePressUp"
   >
     <keep-alive>
       <CloseConcept v-if="!isOpen" :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
@@ -60,6 +45,7 @@
 <style scoped lang="postcss">
   .concept {
     @apply w-max;
-    cursor: v-bind('`${ui.isUserPressingDown ? "inherit": isEmpty ? "auto": "pointer"}`');
+    cursor: v-bind('cursor');
+    /* cursor: v-bind('`${ui.isUserPressingDown ? "inherit": isEmpty ? "auto": "pointer"}`'); */
   }
 </style>
