@@ -46,6 +46,5 @@
   .concept {
     @apply w-max;
     cursor: v-bind('cursor');
-    /* cursor: v-bind('`${ui.isUserPressingDown ? "inherit": isEmpty ? "auto": "pointer"}`'); */
   }
 </style>
