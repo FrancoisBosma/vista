@@ -22,7 +22,7 @@
     if (last) {
       tapState.value = 'idle'
       const tapped = tap && direction.every((nb) => nb === 0)
-      if (tapped && isHovered.value) toggleTile()
+      if (tapped && !isEmpty.value && isHovered.value) toggleTile()
     } else if (first) tapState.value = 'dragStart'
     else tapState.value = 'dragged'
   }
