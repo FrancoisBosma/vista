@@ -2,23 +2,8 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { nthRoot } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
-import type { Dictionary } from '@SRC/types'
-
-export type Axis = 'x' | 'y'
-export type Dimension = 'width' | 'height'
-export type Axes = Record<Dimension, Axis>
-export interface DimensionProperties {
-  axis: Axis
-  boundingClientRectProperty: string
-  boxSizeProperty: string
-}
-export type Dimensions = Record<Dimension, DimensionProperties>
-export type Zoom = 'out' | 'in'
-export type ZoomDirectionFactor = -1 | 1
-export interface ZoomProperties {
-  directionFactor: ZoomDirectionFactor
-}
-export type ZoomTypes = Record<Zoom, ZoomProperties>
+import type { Dictionary, DragStatus } from '@SRC/types'
+import type { Axes, Axis, DimensionProperties, Dimensions, ZoomDirectionFactor, ZoomTypes } from './'
 
 export const useUiStore = defineStore('ui', () => {
   const dimensions: Ref<Dimensions> = ref({
@@ -45,6 +30,7 @@ export const useUiStore = defineStore('ui', () => {
     in: { directionFactor: <ZoomDirectionFactor>1 },
   })
   const zoomRate = computed(() => nthRoot(gridConfig.value.subSquareAmount, gridConfig.value.zoom.levelReset))
+  const dragState = ref('idle' as DragStatus)
   return {
     axes,
     dimensions,
@@ -52,6 +38,7 @@ export const useUiStore = defineStore('ui', () => {
     gridConfig,
     zoomRate,
     zoomTypes,
+    dragState,
   }
 })
 

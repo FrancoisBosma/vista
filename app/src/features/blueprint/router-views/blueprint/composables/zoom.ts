@@ -2,9 +2,18 @@ import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { setCommonHandling } from './'
 import type { Ref } from 'vue'
-import type { Axis, Dimension, ZoomDirectionFactor, useUiStore } from '@FEATURES/blueprint/stores'
+import type {
+  Axis,
+  BlueprintInfo,
+  Coordinates,
+  Dimension,
+  GridExposed,
+  GridRefs,
+  Offsets,
+  ZoomDirectionFactor,
+  useUiStore,
+} from '@FEATURES/blueprint/stores'
 import type { Dictionary } from '@ROOT/src/types'
-import type { BlueprintInfo, Coordinates, GridExposed, GridRefs, Offsets } from '../types'
 
 interface ZoomSetterArguments {
   ui: ReturnType<typeof useUiStore>

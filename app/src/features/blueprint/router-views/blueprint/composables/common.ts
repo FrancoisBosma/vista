@@ -1,6 +1,5 @@
 import { absoluteValue, floorRoundUp, range } from '@GLOBAL/functions/numbers'
-import type { Dimension, useUiStore } from '@FEATURES/blueprint/stores'
-import type { GridExposed, GridRefs, Offsets } from '../types'
+import type { Dimension, GridExposed, GridRefs, Offsets, useUiStore } from '@FEATURES/blueprint/stores'
 
 interface CommonSetterArguments {
   ui: ReturnType<typeof useUiStore>

@@ -8,7 +8,7 @@ meta:
   import { Concept, Grid } from '../../components'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
-  import type { BlueprintInfo, GridRefs } from './types'
+  import type { BlueprintInfo, GridRefs } from '@FEATURES/blueprint/stores'
 
   const ui = useUiStore()
   const concepts = useConceptStore()
@@ -41,6 +41,7 @@ meta:
     computeExtraOffset,
   })
   const { handleDrag } = setDragHandling({
+    ui,
     gridRefs,
     bgOffsets,
     updateContentOffsets,

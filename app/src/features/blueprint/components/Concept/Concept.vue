@@ -1,39 +1,54 @@
 <script setup lang="ts">
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
-  import type { Concept } from '@FEATURES/blueprint/stores'
-  import type { DragState, TapState } from '@SRC/types'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
+  import type { Concept, Coordinates } from '@FEATURES/blueprint/stores'
+
+  const ui = useUiStore()
 
   const props = defineProps<{ concept: Concept }>()
   const { concept } = toRefs(props)
 
-  const isEmpty = computed(() => !concept.value.subTiles.length)
   const isOpen = ref(false)
   const isHovered = ref(false)
+  const click = ref({
+    tapCoords: { x: 0, y: 0 } as Coordinates,
+    isBlocked: false,
+  })
+  const isEmpty = computed(() => !concept.value.subTiles.length)
+  const cursor = computed(() => (ui.dragState === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
 
   const toggleTile = () => {
     isOpen.value = !isOpen.value
     isHovered.value = false
   }
-
-  const tapState = ref('idle' as TapState)
-  const cursor = computed(() => (tapState.value === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
-  const handleDrag = ({ first, last, tap, direction }: DragState) => {
-    if (last) {
-      tapState.value = 'idle'
-      const tapped = tap && direction.every((nb) => nb === 0)
-      if (tapped && !isEmpty.value && isHovered.value) toggleTile()
-    } else if (first) tapState.value = 'dragStart'
-    else tapState.value = 'dragged'
+  const handleClick = () => {
+    if (isEmpty.value) return
+    toggleTile()
+  }
+  const handlePressDown = ({ x, y }: MouseEvent) => {
+    click.value.tapCoords.x = x
+    click.value.tapCoords.y = y
+    click.value.isBlocked = false
+  }
+  const handlePressUp = ({ x, y }: MouseEvent) => {
+    if (click.value.tapCoords.x !== x || click.value.tapCoords.y !== y) click.value.isBlocked = true
+    click.value.tapCoords.x = 0
+    click.value.tapCoords.y = 0
   }
 </script>
 
 <template>
   <div
-    v-drag="handleDrag"
     class="concept"
     @mouseover.stop="isHovered = !isHovered"
     @mouseout.stop="isHovered = !isHovered"
+    @mousedown="handlePressDown"
+    @touchstart="handlePressDown"
+    @mouseup="handlePressUp"
+    @touchend="handlePressUp"
+    @mouseleave="handlePressUp"
+    @click.stop="handleClick"
   >
     <keep-alive>
       <CloseConcept v-if="!isOpen" :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
