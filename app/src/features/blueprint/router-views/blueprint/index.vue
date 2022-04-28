@@ -48,8 +48,6 @@ meta:
     getCurrentBiggestSquareLength,
     computeExtraOffset,
   })
-
-  watch(isUserPressingDown, () => (ui.isUserPressingDown = isUserPressingDown.value))
 </script>
 
 <template>

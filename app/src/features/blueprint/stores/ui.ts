@@ -27,7 +27,6 @@ export const useUiStore = defineStore('ui', () => {
   })
   const axes: Ref<Axes> = ref(objectMap(dimensions.value, (value: DimensionProperties) => value.axis))
   const mouseCoords: Dictionary<Ref> = useMouse()
-  const isUserPressingDown = ref(false)
   const gridConfig = ref({
     gridAmount: 2, // N.B: As of now, it only works properly w/ value '2' (zoom, colours, etc)
     middleSizeSquare: {
@@ -50,7 +49,6 @@ export const useUiStore = defineStore('ui', () => {
     axes,
     dimensions,
     mouseCoords,
-    isUserPressingDown,
     gridConfig,
     zoomRate,
     zoomTypes,
