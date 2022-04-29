@@ -2,6 +2,7 @@
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
   import { useUiStore } from '@FEATURES/blueprint/stores'
+  import { genericTapCoords } from '@GLOBAL/functions/coordinates'
   import type { Concept, Coordinates } from '@FEATURES/blueprint/stores'
 
   const ui = useUiStore()
@@ -27,12 +28,14 @@
     if (!isClickable.value) return
     toggleTile()
   }
-  const handlePressDown = ({ x, y }: MouseEvent) => {
+  const handleTapDown = (e: MouseEvent | TouchEvent) => {
+    const { x, y } = genericTapCoords(e)
     click.value.tapCoords.x = x
     click.value.tapCoords.y = y
     click.value.isBlocked = false
   }
-  const handlePressUp = ({ x, y }: MouseEvent) => {
+  const handleTapUp = (e: MouseEvent | TouchEvent) => {
+    const { x, y } = genericTapCoords(e)
     if (click.value.tapCoords.x !== x || click.value.tapCoords.y !== y) click.value.isBlocked = true
     click.value.tapCoords.x = 0
     click.value.tapCoords.y = 0
@@ -44,11 +47,11 @@
     class="concept"
     @mouseover.stop="isHovered = !isHovered"
     @mouseout.stop="isHovered = !isHovered"
-    @mousedown="handlePressDown"
-    @touchstart="handlePressDown"
-    @mouseup="handlePressUp"
-    @touchend="handlePressUp"
-    @mouseleave="handlePressUp"
+    @mousedown="handleTapDown"
+    @touchstart="handleTapDown"
+    @mouseup="handleTapUp"
+    @touchend="handleTapUp"
+    @mouseleave="handleTapUp"
     @click.stop="handleClick"
   >
     <keep-alive>
