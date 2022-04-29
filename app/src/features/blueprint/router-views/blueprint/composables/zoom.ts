@@ -1,7 +1,8 @@
 import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
-import type { setCommonHandling } from './'
+import type { setCommonHandling } from '.'
 import type { Ref } from 'vue'
+import type { PinchState } from '@SRC/types'
 import type {
   Axis,
   BlueprintInfo,
@@ -84,19 +85,42 @@ export default function setZoomHandling({
     const extraOffsets = computeZoomedGridOffsets(zoomRelativeCoords, zoomFactor, currentBiggestSquareLength)
     updateBackgroundOffsets(extraOffsets)
   }
-  const handleZoom = (event: WheelEvent) => {
-    const zoomFactor: ZoomDirectionFactor =
-      event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
-    const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
-    // Calling update methods ...
+  // const handleZoom = (event: WheelEvent) => {
+  //   const zoomFactor: ZoomDirectionFactor =
+  //     event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
+  //  const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
+  //   // Calling update methods ...
+  //   const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
+  //   const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
+  //   updateContentOffsets(extraContentOffsets)
+  //   updateBackground(zoomRelativeCoords, zoomFactor)
+  // }
+  const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates) => {
     const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
     updateContentOffsets(extraContentOffsets)
     updateBackground(zoomRelativeCoords, zoomFactor)
   }
+  const handleWheel = (event: WheelEvent) => {
+    const zoomFactor: ZoomDirectionFactor =
+      event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
+    const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
+    applyZoom(zoomFactor, zoomRelativeCoords)
+  }
+  const handlePinch = ({ origin, offset }: PinchState) => {
+    const zoomFactor: ZoomDirectionFactor =
+      offset[0] >= 1 ? ui.zoomTypes.in.directionFactor : ui.zoomTypes.out.directionFactor
+    const zoomRelativeCoords: Coordinates = objectMap(
+      ui.axes,
+      (axis: Axis, dim: Dimension, i: number) => origin[i] - bpInfo[axis].value,
+      true
+    )
+    applyZoom(zoomFactor, zoomRelativeCoords)
+  }
 
   return {
     contentScale,
-    handleZoom,
+    handleWheel,
+    handlePinch,
   }
 }

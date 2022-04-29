@@ -5,3 +5,4 @@ export type UserModule = (ctx: ViteSSGContext) => void
 export type Dictionary<T> = Record<string, T>
 export type DragState = FullGestureState<StateKey<'drag'>>
 export type DragStatus = 'idle' | 'dragStart' | 'dragged'
+export type PinchState = FullGestureState<StateKey<'pinch'>>

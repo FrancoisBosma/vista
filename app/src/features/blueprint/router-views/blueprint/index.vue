@@ -28,7 +28,7 @@ meta:
     getCurrentBiggestSquareLength,
     computeExtraOffset,
   } = setCommonHandling({ ui })
-  const { contentScale, handleZoom } = setZoomHandling({
+  const { contentScale, handleWheel, handlePinch } = setZoomHandling({
     ui,
     contentOffsets,
     bgOffsets,
@@ -52,7 +52,13 @@ meta:
 </script>
 
 <template>
-  <div ref="bp" v-drag="handleDrag" class="blueprint" @wheel.stop.prevent="handleZoom">
+  <div
+    ref="bp"
+    v-drag="handleDrag"
+    v-pinch.stop.prevent="handlePinch"
+    class="blueprint"
+    @wheel.stop.prevent="handleWheel"
+  >
     <div class="bp-background">
       <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
     </div>
