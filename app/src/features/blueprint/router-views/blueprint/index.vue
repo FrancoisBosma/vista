@@ -50,6 +50,7 @@ meta:
     computeExtraOffset,
   })
 
+  // Disable default zooming, e.g. from pinching
   useHead({
     meta: [
       {
