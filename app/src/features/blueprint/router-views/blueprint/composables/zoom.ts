@@ -85,16 +85,6 @@ export default function setZoomHandling({
     const extraOffsets = computeZoomedGridOffsets(zoomRelativeCoords, zoomFactor, currentBiggestSquareLength)
     updateBackgroundOffsets(extraOffsets)
   }
-  // const handleZoom = (event: WheelEvent) => {
-  //   const zoomFactor: ZoomDirectionFactor =
-  //     event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
-  //  const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
-  //   // Calling update methods ...
-  //   const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
-  //   const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
-  //   updateContentOffsets(extraContentOffsets)
-  //   updateBackground(zoomRelativeCoords, zoomFactor)
-  // }
   const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates) => {
     const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
