@@ -2,7 +2,7 @@ import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { setCommonHandling } from '.'
 import type { Ref } from 'vue'
-import type { PinchState } from '@SRC/types'
+import type { Dictionary, PinchState } from '@SRC/types'
 import type {
   Axis,
   BlueprintInfo,
@@ -14,7 +14,6 @@ import type {
   ZoomDirectionFactor,
   useUiStore,
 } from '@FEATURES/blueprint/stores'
-import type { Dictionary } from '@ROOT/src/types'
 
 interface ZoomSetterArguments {
   ui: ReturnType<typeof useUiStore>

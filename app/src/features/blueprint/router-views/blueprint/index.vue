@@ -66,7 +66,6 @@ meta:
     ref="bp"
     v-drag="handleDrag"
     v-pinch.stop.prevent="handlePinch"
-    :pinch-options="{ threshold: [1000, 1000] }"
     class="blueprint"
     @wheel.stop.prevent="handleWheel"
   >
