@@ -96,9 +96,7 @@ export default function setZoomHandling({
     const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
     applyZoom(zoomFactor, zoomRelativeCoords)
   }
-  const handlePinch = ({ origin, offset, event }: PinchState) => {
-    event?.preventDefault()
-    event?.stopPropagation()
+  const throttledPinch = useThrottleFn((origin, offset) => {
     const scaleFactor = offset[0]
     if (scaleFactor === 1) return
     const zoomFactor: ZoomDirectionFactor =
@@ -109,6 +107,11 @@ export default function setZoomHandling({
       true
     )
     applyZoom(zoomFactor, zoomRelativeCoords)
+  }, 100)
+  const handlePinch = ({ origin, offset, event }: PinchState) => {
+    event?.preventDefault()
+    event?.stopPropagation()
+    throttledPinch(origin, offset)
   }
 
   return {
