@@ -107,7 +107,7 @@ export default function setZoomHandling({
       true
     )
     applyZoom(zoomFactor, zoomRelativeCoords)
-  }, 100)
+  }, 250)
   const handlePinch = ({ origin, offset, event }: PinchState) => {
     event?.preventDefault()
     event?.stopPropagation()
