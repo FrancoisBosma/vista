@@ -22,8 +22,9 @@
     isOpen.value = !isOpen.value
     isHovered.value = false
   }
+  const isClickable = computed(() => !(isEmpty.value || click.value.isBlocked))
   const handleClick = () => {
-    if (isEmpty.value) return
+    if (!isClickable.value) return
     toggleTile()
   }
   const handlePressDown = ({ x, y }: MouseEvent) => {
