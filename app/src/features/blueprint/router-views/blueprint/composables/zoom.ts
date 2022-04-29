@@ -97,7 +97,9 @@ export default function setZoomHandling({
     const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
     applyZoom(zoomFactor, zoomRelativeCoords)
   }
-  const handlePinch = ({ origin, offset }: PinchState) => {
+  const handlePinch = ({ origin, offset, event }: PinchState) => {
+    event?.preventDefault()
+    event?.stopPropagation()
     const scaleFactor = offset[0]
     if (scaleFactor === 1) return
     const zoomFactor: ZoomDirectionFactor =
