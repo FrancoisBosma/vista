@@ -5,8 +5,12 @@ meta:
 </route>
 
 <script setup lang="ts">
+  import { testRequest } from '@FEATURES/core/api-requests/test'
+
   const router = useRouter()
   const { t } = useI18n()
+
+  const { data, isFinished } = testRequest()
 </script>
 
 <template>
