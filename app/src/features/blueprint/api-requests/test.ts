@@ -8,18 +8,13 @@ export const testRequest = () =>
         getConcept(name: "Communication") {
           arguments {name capacity}
           composition {
-            subConcepts {name}
+            subConcepts {concept {name} x y}
             connections {
               sourceSCIndex
               sourceSCArgumentType {name}
               targetConceptType
               targetConceptIndex
-              targetConceptArgumentIndex
-            }
-            coordinates {
-              sourceSCIndex
-              x
-              y
+              targetConceptArgumentType {name}
             }
           }
         }

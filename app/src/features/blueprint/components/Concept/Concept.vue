@@ -3,7 +3,7 @@
   import OpenConcept from './OpenConcept'
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { genericTapCoords } from '@GLOBAL/functions/coordinates'
-  import type { Concept, Coordinates } from '@FEATURES/blueprint/stores'
+  import type { Concept, Coordinates } from '@FEATURES/blueprint/types'
 
   const ui = useUiStore()
 

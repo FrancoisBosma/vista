@@ -5,14 +5,21 @@ meta:
 </route>
 
 <script setup lang="ts">
-  import { Concept, Grid } from '../../components'
-  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
+  import { Concept as ConceptSFC, Grid } from '../../components'
+  import { /* useConceptStore,  */ useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
-  import type { BlueprintInfo, GridRefs } from '@FEATURES/blueprint/stores'
+  import { testRequest } from '@FEATURES/blueprint/api-requests/test'
+  import type { BlueprintInfo, Concept, GridRefs } from '@FEATURES/blueprint/types'
 
   const ui = useUiStore()
-  const concepts = useConceptStore()
-  const concept = concepts.helloWorld
+  // const concepts = useConceptStore()
+  // const concept = concepts.helloWorld
+  const { data, isFinished } = testRequest()
+  const concept: Concept = null
+  whenever(isFinished, () => {
+    console.log('AAA', data.value)
+  })
+  //
 
   const bp = ref(null)
   const gridRefs: GridRefs = ref([])
@@ -72,7 +79,7 @@ meta:
     <div class="bp-background">
       <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
     </div>
-    <Concept class="bp-content" :concept="concept" />
+    <ConceptSFC class="bp-content" :concept="concept" />
   </div>
 </template>
 
