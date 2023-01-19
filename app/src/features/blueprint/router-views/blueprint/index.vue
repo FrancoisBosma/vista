@@ -15,9 +15,10 @@ meta:
   // const concepts = useConceptStore()
   // const concept = concepts.helloWorld
   const { data, isFinished } = testRequest()
-  const concept: Concept = null
+  const concept: Concept = { name: 'Loading', arguments: [] }
   whenever(isFinished, () => {
     console.log('AAA', data.value)
+    // TODO: update concept
   })
   //
 

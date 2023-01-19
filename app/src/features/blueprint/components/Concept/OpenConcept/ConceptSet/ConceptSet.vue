@@ -1,16 +1,16 @@
 <script setup lang="ts">
-  import type { Concept as ConceptType } from '@FEATURES/blueprint/stores'
+  import type { SubConcept } from '@FEATURES/blueprint/types'
 
   // Lazy loading necessary because of the mutual nesting of OpenTile and TileList
   const Concept = defineAsyncComponent(() => import('../..'))
 
-  defineProps<{ conceptSet: ConceptType[] }>()
+  defineProps<{ conceptSet: SubConcept[] | undefined }>()
 </script>
 
 <template>
-  <div class="concept-set">
-    <template v-for="(concept, index) in conceptSet" :key="index">
-      <Concept :concept="concept" />
+  <div v-if="conceptSet" class="concept-set">
+    <template v-for="(subConcept, index) in conceptSet" :key="index">
+      <Concept :concept="subConcept.concept" />
       <div v-if="index !== conceptSet.length - 1" class="concept_link" />
     </template>
   </div>

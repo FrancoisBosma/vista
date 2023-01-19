@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  import type { Concept } from '@FEATURES/blueprint/stores'
+  import type { Concept } from '@FEATURES/blueprint/types'
 
   defineProps<{ concept: Concept; isHovered: Boolean; isEmpty: Boolean }>()
 </script>
 
 <template>
   <div class="close-concept">
-    <span>{{ concept.title }}</span>
+    <span>{{ concept.name }}</span>
   </div>
 </template>
 

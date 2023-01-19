@@ -16,7 +16,7 @@
     tapCoords: { x: 0, y: 0 } as Coordinates,
     isBlocked: false,
   })
-  const isEmpty = computed(() => !concept.value.subTiles.length)
+  const isEmpty = computed(() => !concept.value.composition?.subConcepts.length)
   const cursor = computed(() => (ui.dragState === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
 
   const toggleTile = () => {
@@ -56,7 +56,7 @@
   >
     <keep-alive>
       <CloseConcept v-if="!isOpen" :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
-      <OpenConcept v-else :concept="concept" :is-hovered="isHovered" />
+      <OpenConcept v-else :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
     </keep-alive>
   </div>
 </template>

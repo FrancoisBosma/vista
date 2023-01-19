@@ -1,7 +1,7 @@
 export type Concept = {
   name: string
-  arguments: ConceptArgumentType
-  composition: ConceptComposition
+  arguments: ConceptArgumentType[]
+  composition?: ConceptComposition
 }
 
 export type ConceptArgumentType = {
@@ -24,6 +24,6 @@ export type SubConceptConnection = {
   sourceSCIndex: number
   sourceSCArgumentType: ConceptArgumentType
   targetConceptType: 'Self' | 'SC' | 'Argument' | 'SCArgument'
-  targetConceptIndex: number
-  targetConceptArgumentType: ConceptArgumentType
+  targetConceptIndex?: number
+  targetConceptArgumentType?: ConceptArgumentType
 }

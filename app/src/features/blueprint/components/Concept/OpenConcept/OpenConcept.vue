@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import ConceptSet from './ConceptSet'
-  import type { Concept } from '@FEATURES/blueprint/stores'
+  import type { Concept } from '@FEATURES/blueprint/types'
 
   defineProps<{ concept: Concept; isHovered: Boolean }>()
 </script>
 
 <template>
   <div class="open-concept">
-    <ConceptSet :concept-set="concept.subTiles" />
+    <ConceptSet :concept-set="concept.composition?.subConcepts" />
   </div>
 </template>
 
