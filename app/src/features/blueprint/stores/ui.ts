@@ -3,7 +3,14 @@ import { nthRoot } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
 import type { Dictionary, DragStatus } from '@SRC/types'
-import type { Axes, Axis, DimensionProperties, Dimensions, ZoomDirectionFactor, ZoomTypes } from './'
+import type {
+  Axes,
+  Axis,
+  DimensionProperties,
+  Dimensions,
+  ZoomDirectionFactor,
+  ZoomTypes,
+} from '@FEATURES/blueprint/types/'
 
 export const useUiStore = defineStore('ui', () => {
   const dimensions: Ref<Dimensions> = ref({

@@ -15,7 +15,7 @@ export type ConceptComposition = {
 }
 
 export type SubConcept = {
-  concept: Concept
+  concept: Partial<Concept>
   x: number
   y: number
 }

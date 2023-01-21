@@ -6,19 +6,20 @@ meta:
 
 <script setup lang="ts">
   import { Concept as ConceptSFC, Grid } from '../../components'
-  import { /* useConceptStore,  */ useUiStore } from '@FEATURES/blueprint/stores'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
-  import { testRequest } from '@FEATURES/blueprint/api-requests/test'
+  import { conceptRequest } from '@FEATURES/blueprint/api-requests/backend'
   import type { BlueprintInfo, Concept, GridRefs } from '@FEATURES/blueprint/types'
 
   const ui = useUiStore()
-  // const concepts = useConceptStore()
-  // const concept = concepts.helloWorld
-  const { data, isFinished } = testRequest()
-  const concept: Concept = { name: 'Loading', arguments: [] }
+  const conceptName = 'Communication'
+  const { data, getData, isFinished } = conceptRequest(conceptName)
+  const concept = ref({ name: 'Loading', arguments: [] } as Concept)
   whenever(isFinished, () => {
-    console.log('AAA', data.value)
-    // TODO: update concept
+    concept.value = {
+      name: conceptName,
+      ...getData(data),
+    }
   })
   //
 
