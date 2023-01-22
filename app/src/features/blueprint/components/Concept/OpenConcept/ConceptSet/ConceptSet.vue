@@ -1,16 +1,16 @@
 <script setup lang="ts">
-  import type { SubConcept } from '@FEATURES/blueprint/types'
+  import type { MinimalSubConcept, SubConcept } from '@FEATURES/blueprint/types'
 
   // Lazy loading necessary because of the mutual nesting of OpenTile and TileList
-  const Concept = defineAsyncComponent(() => import('../..'))
+  const ConceptSFC = defineAsyncComponent(() => import('../..'))
 
-  defineProps<{ conceptSet: SubConcept[] | undefined }>()
+  defineProps<{ conceptSet: MinimalSubConcept[] | SubConcept[] | undefined }>()
 </script>
 
 <template>
   <div v-if="conceptSet" class="concept-set">
     <template v-for="(subConcept, index) in conceptSet" :key="index">
-      <Concept :concept="subConcept.concept" />
+      <ConceptSFC :concept="subConcept.concept" />
       <div v-if="index !== conceptSet.length - 1" class="concept_link" />
     </template>
   </div>

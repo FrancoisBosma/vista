@@ -18,14 +18,23 @@
   })
   const isEmpty = computed(() => !concept.value.composition?.subConcepts.length)
   const cursor = computed(() => (ui.dragState === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
+  const isFullyFetched = computed(() => 'arguments' in concept.value)
 
   const toggleTile = () => {
     isOpen.value = !isOpen.value
     isHovered.value = false
   }
   const isClickable = computed(() => !(isEmpty.value || click.value.isBlocked))
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!isClickable.value) return
+    if (!isFullyFetched.value) {
+      // TODO: fetch required data
+      console.log('GOTTA FETCH')
+      const p = await new Promise((resolve) => {
+        setTimeout(() => resolve('DONE'), 1000)
+      })
+      console.log(p)
+    }
     toggleTile()
   }
   const handleTapDown = (e: MouseEvent | TouchEvent) => {

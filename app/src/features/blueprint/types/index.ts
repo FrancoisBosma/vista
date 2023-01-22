@@ -1,2 +1,2 @@
 export * from './grid'
-export * from './concept'
+export * from './Concept'

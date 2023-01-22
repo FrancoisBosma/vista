@@ -5,29 +5,30 @@ meta:
 </route>
 
 <script setup lang="ts">
-  import { Concept as ConceptSFC, Grid } from '../../components'
-  import { useUiStore } from '@FEATURES/blueprint/stores'
+  import { Concept as ConceptSFC, Grid } from '@FEATURES/blueprint/components'
+  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
-  import { conceptRequest } from '@FEATURES/blueprint/api-requests/backend'
+  // import { ApiFetchConcept } from '@FEATURES/blueprint/api-requests/backend'
   import type { BlueprintInfo, Concept, GridRefs } from '@FEATURES/blueprint/types'
 
-  const ui = useUiStore()
+  const concept = ref({ name: 'Loading' } as Concept)
   const conceptName = 'Communication'
-  const { data, getData, isFinished } = conceptRequest(conceptName)
-  const concept = ref({ name: 'Loading', arguments: [] } as Concept)
-  whenever(isFinished, () => {
-    concept.value = {
-      name: conceptName,
-      ...getData(data),
-    }
-  })
-  //
+  // const { getFetchedConcept, isFinished } = ApiFetchConcept(conceptName)
+  // whenever(isFinished, () => {
+  //   concept.value = {
+  //     name: conceptName,
+  //     ...getFetchedConcept(),
+  //   }
+  // })
+  const { fetchConcept } = useConceptStore()
+  fetchConcept(conceptName) // .then((value) => )
 
   const bp = ref(null)
   const gridRefs: GridRefs = ref([])
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
   const bpInfo = useElementBounding(bp) as BlueprintInfo
 
+  const ui = useUiStore()
   const {
     bgOffsets,
     contentOffsets,
