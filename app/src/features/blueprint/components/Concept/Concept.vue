@@ -1,11 +1,12 @@
 <script setup lang="ts">
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
-  import { useUiStore } from '@FEATURES/blueprint/stores'
+  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { genericTapCoords } from '@GLOBAL/functions/coordinates'
   import type { Concept, Coordinates } from '@FEATURES/blueprint/types'
 
   const ui = useUiStore()
+  const { fetchConcept } = useConceptStore()
 
   const props = defineProps<{ concept: Concept }>()
   const { concept } = toRefs(props)
@@ -28,12 +29,13 @@
   const handleClick = async () => {
     if (!isClickable.value) return
     if (!isFullyFetched.value) {
-      // TODO: fetch required data
-      console.log('GOTTA FETCH')
-      const p = await new Promise((resolve) => {
-        setTimeout(() => resolve('DONE'), 1000)
+      fetchConcept(concept.value.name).then((fetchedConcept) => {
+        if (!fetchedConcept) {
+          concept.value.name = "[ERR] Couldn't load"
+          return
+        }
+        concept.value = fetchedConcept
       })
-      console.log(p)
     }
     toggleTile()
   }

@@ -8,20 +8,18 @@ meta:
   import { Concept as ConceptSFC, Grid } from '@FEATURES/blueprint/components'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
-  // import { ApiFetchConcept } from '@FEATURES/blueprint/api-requests/backend'
   import type { BlueprintInfo, Concept, GridRefs } from '@FEATURES/blueprint/types'
 
   const concept = ref({ name: 'Loading' } as Concept)
   const conceptName = 'Communication'
-  // const { getFetchedConcept, isFinished } = ApiFetchConcept(conceptName)
-  // whenever(isFinished, () => {
-  //   concept.value = {
-  //     name: conceptName,
-  //     ...getFetchedConcept(),
-  //   }
-  // })
   const { fetchConcept } = useConceptStore()
-  fetchConcept(conceptName) // .then((value) => )
+  fetchConcept(conceptName).then((fetchedConcept) => {
+    if (!fetchedConcept) {
+      concept.value.name = "[ERR] Couldn't load"
+      return
+    }
+    concept.value = fetchedConcept
+  })
 
   const bp = ref(null)
   const gridRefs: GridRefs = ref([])
