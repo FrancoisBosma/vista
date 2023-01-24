@@ -29,6 +29,7 @@ export const useConceptStore = defineStore('Concept', () => {
     fetchConcept,
     fetchedConcepts,
     isConceptFullyFetched,
+    locallySaveConcept,
     tryAndGetAlreadyFetchedConcept,
   }
 })
