@@ -8,16 +8,18 @@ meta:
   import { Concept as ConceptSFC, Grid } from '@FEATURES/blueprint/components'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
+  import { FetchStatus } from '@FEATURES/blueprint/types'
   import type { BlueprintInfo, Concept, GridRefs } from '@FEATURES/blueprint/types'
 
-  const concept = ref({ name: 'Loading' } as Concept)
+  const concept = ref({ fetchStatus: FetchStatus.loading } as Concept)
   const conceptName = 'Communication'
   const { fetchConcept } = useConceptStore()
   fetchConcept(conceptName).then((fetchedConcept) => {
     if (!fetchedConcept) {
-      concept.value.name = "[ERR] Couldn't load"
+      concept.value.fetchStatus = FetchStatus.failure
       return
     }
+    concept.value.fetchStatus = FetchStatus.full
     concept.value = fetchedConcept
   })
 

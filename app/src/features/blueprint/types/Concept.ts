@@ -3,6 +3,7 @@ export type Concept = MinimalConcept | FullConcept
 // Fully filled Concept
 //
 export type FullConcept = {
+  fetchStatus: FetchStatus.full
   name: string
   arguments: ConceptArgumentType[]
   composition?: ConceptComposition
@@ -16,7 +17,7 @@ export type ConceptComposition = {
   connections: SubConceptConnection[]
 }
 export type SubConcept = {
-  concept: Concept
+  concept: MinimalConcept
   x: number
   y: number
 }
@@ -31,6 +32,7 @@ export type SubConceptConnection = {
 // Minimally filled Concept
 //
 export type MinimalConcept = {
+  fetchStatus?: FetchStatus
   name: FullConcept['name']
   composition?: {
     subConcepts: MinimalSubConcept[]
@@ -38,4 +40,13 @@ export type MinimalConcept = {
 }
 export type MinimalSubConcept = {
   concept: Pick<FullConcept, 'name'>
+}
+//
+// Fetch status
+//
+export enum FetchStatus {
+  failure,
+  loading,
+  minimal,
+  full,
 }

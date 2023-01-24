@@ -1,4 +1,5 @@
 import { useAxios } from '@vueuse/integrations/useAxios'
+import { FetchStatus } from '@FEATURES/blueprint/types'
 import type { FullConcept } from '@FEATURES/blueprint/types'
 
 const BACKEND_URL = 'http://localhost:8080/graphql'
@@ -17,6 +18,7 @@ const ApiFetchConcept = <RequestedConcept>(conceptName: string, queryBody: strin
     getFetchedConcept: () => {
       if (!axiosReturn.data.value.data?.[queryName]) return null
       return {
+        fetchStatus: FetchStatus.full,
         name: conceptName,
         ...axiosReturn.data.value.data[queryName],
       } as RequestedConcept

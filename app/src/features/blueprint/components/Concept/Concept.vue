@@ -3,11 +3,13 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { genericTapCoords } from '@GLOBAL/functions/coordinates'
+  import { FetchStatus } from '@FEATURES/blueprint/types'
   import type { Concept, Coordinates } from '@FEATURES/blueprint/types'
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
 
+  // TODO: replace prop w/ conceptName and let this component handle the request
   const props = defineProps<{ concept: Concept }>()
   const { concept } = toRefs(props)
 
@@ -31,9 +33,10 @@
     if (!isFullyFetched.value) {
       fetchConcept(concept.value.name).then((fetchedConcept) => {
         if (!fetchedConcept) {
-          concept.value.name = "[ERR] Couldn't load"
+          concept.value.fetchStatus = FetchStatus.failure
           return
         }
+        concept.value.fetchStatus = FetchStatus.full
         concept.value = fetchedConcept
       })
     }
