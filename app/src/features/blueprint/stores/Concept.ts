@@ -1,10 +1,8 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ApiFetchFullConcept, REQUEST_TIMEOUT } from '@FEATURES/blueprint/api-requests/backend'
+import { ApiFetchFullConcept } from '@FEATURES/blueprint/api-requests/backend'
 import { FetchStatus } from '@FEATURES/blueprint/types'
 import type { Concept, FullConcept } from '@FEATURES/blueprint/types'
 import type { Ref } from 'vue'
-
-type ConceptFetchError = undefined
 
 export const useConceptStore = defineStore('Concept', () => {
   const fetchedConcepts: Ref<Map<Concept['name'], Concept>> = ref(new Map())
@@ -21,17 +19,27 @@ export const useConceptStore = defineStore('Concept', () => {
       })
     })
   }
-  const fetchConcept = async (conceptName: Concept['name']): Promise<Concept | ConceptFetchError> => {
+  const fetchConcept = (conceptName: Concept['name']): Ref<Concept> => {
+    const output = ref({ name: conceptName }) as Ref<Concept>
     const AlreadyFetchedConcept = tryAndGetAlreadyFetchedConcept(conceptName)
-    if (AlreadyFetchedConcept && isConceptFullyFetched(AlreadyFetchedConcept)) return AlreadyFetchedConcept
-    const conceptFetchErrorReturn = () => undefined as ConceptFetchError
+    if (!AlreadyFetchedConcept) locallySaveConcept(conceptName, output.value)
+    else if (isConceptFullyFetched(AlreadyFetchedConcept)) return ref(AlreadyFetchedConcept)
+    else output.value = AlreadyFetchedConcept
+
+    const conceptFetchErrorReturn = () => {
+      output.value.fetchStatus = FetchStatus.failure
+    }
+
+    output.value.fetchStatus = FetchStatus.loading
     const { getFetchedConcept, isFinished, error } = ApiFetchFullConcept(conceptName)
-    await until(isFinished).toBe(true, { timeout: REQUEST_TIMEOUT })
-    if (error.value) return conceptFetchErrorReturn()
-    const requestedConcept = getFetchedConcept()
-    if (!requestedConcept) return conceptFetchErrorReturn()
-    locallySaveConcept(conceptName, requestedConcept)
-    return requestedConcept
+    whenever(isFinished, () => {
+      if (error.value) return conceptFetchErrorReturn()
+      const requestedConcept = getFetchedConcept()
+      if (!requestedConcept) return conceptFetchErrorReturn()
+      locallySaveConcept(conceptName, requestedConcept)
+      output.value = requestedConcept
+    })
+    return output
   }
 
   return {

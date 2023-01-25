@@ -10,7 +10,7 @@
 <template>
   <div v-if="conceptSet" class="concept-set">
     <template v-for="(subConcept, index) in conceptSet" :key="index">
-      <ConceptSFC :concept="subConcept.concept" />
+      <ConceptSFC :concept-name="subConcept.concept.name" />
       <div v-if="index !== conceptSet.length - 1" class="concept_link" />
     </template>
   </div>

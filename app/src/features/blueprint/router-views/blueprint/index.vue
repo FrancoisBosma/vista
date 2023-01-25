@@ -6,22 +6,11 @@ meta:
 
 <script setup lang="ts">
   import { Concept as ConceptSFC, Grid } from '@FEATURES/blueprint/components'
-  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
-  import { FetchStatus } from '@FEATURES/blueprint/types'
-  import type { BlueprintInfo, Concept, GridRefs } from '@FEATURES/blueprint/types'
+  import type { BlueprintInfo, GridRefs } from '@FEATURES/blueprint/types'
 
-  const concept = ref({ fetchStatus: FetchStatus.loading } as Concept)
   const conceptName = 'Communication'
-  const { fetchConcept } = useConceptStore()
-  fetchConcept(conceptName).then((fetchedConcept) => {
-    if (!fetchedConcept) {
-      concept.value.fetchStatus = FetchStatus.failure
-      return
-    }
-    concept.value.fetchStatus = FetchStatus.full
-    concept.value = fetchedConcept
-  })
 
   const bp = ref(null)
   const gridRefs: GridRefs = ref([])
@@ -82,7 +71,7 @@ meta:
     <div class="bp-background">
       <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
     </div>
-    <ConceptSFC class="bp-content" :concept="concept" />
+    <ConceptSFC class="bp-content" :concept-name="conceptName" />
   </div>
 </template>
 

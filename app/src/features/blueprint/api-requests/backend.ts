@@ -12,6 +12,7 @@ const ApiFetchConcept = <RequestedConcept>(conceptName: string, queryBody: strin
     data: {
       query: `{${queryName}(name: "${conceptName}") ${queryBody}}`.replace(/\s+/, ' '),
     },
+    timeout: REQUEST_TIMEOUT,
   })
   return {
     ...axiosReturn,

@@ -3,16 +3,15 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { genericTapCoords } from '@GLOBAL/functions/coordinates'
-  import { FetchStatus } from '@FEATURES/blueprint/types'
   import type { Concept, Coordinates } from '@FEATURES/blueprint/types'
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
 
-  // TODO: replace prop w/ conceptName and let this component handle the request
-  const props = defineProps<{ concept: Concept }>()
-  const { concept } = toRefs(props)
+  const props = defineProps<{ conceptName: Concept['name'] }>()
+  const { conceptName } = toRefs(props)
 
+  const concept = ref(fetchConcept(conceptName.value))
   const isOpen = ref(false)
   const isHovered = ref(false)
   const click = ref({
@@ -21,7 +20,6 @@
   })
   const isEmpty = computed(() => !concept.value.composition?.subConcepts.length)
   const cursor = computed(() => (ui.dragState === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
-  const isFullyFetched = computed(() => 'arguments' in concept.value)
 
   const toggleTile = () => {
     isOpen.value = !isOpen.value
@@ -30,16 +28,6 @@
   const isClickable = computed(() => !(isEmpty.value || click.value.isBlocked))
   const handleClick = async () => {
     if (!isClickable.value) return
-    if (!isFullyFetched.value) {
-      fetchConcept(concept.value.name).then((fetchedConcept) => {
-        if (!fetchedConcept) {
-          concept.value.fetchStatus = FetchStatus.failure
-          return
-        }
-        concept.value.fetchStatus = FetchStatus.full
-        concept.value = fetchedConcept
-      })
-    }
     toggleTile()
   }
   const handleTapDown = (e: MouseEvent | TouchEvent) => {
