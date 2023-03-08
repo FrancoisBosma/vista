@@ -20,13 +20,22 @@ export type SubConcept = {
   concept: MinimalConcept
   x: number
   y: number
+  w: number
+  h: number
 }
 export type SubConceptConnection = {
-  sourceSCIndex: number
-  sourceSCArgumentType: ConceptArgumentType
-  targetConceptType: 'Self' | 'SC' | 'Argument' | 'SCArgument'
-  targetConceptIndex?: number
-  targetConceptArgumentType?: ConceptArgumentType
+  sourceCustomID: String
+  sourceArgumentType: ConceptArgumentType
+  targetConceptType: TargetConceptType
+  targetConceptCustomID?: String // For OtherSubConcept + OtherSubConceptArgument
+  targetConceptArgumentType?: ConceptArgumentType // For OtherSubConceptArgument + OwnerArgument
+}
+
+enum TargetConceptType {
+  Self = 'Self',
+  OtherSubConcept = 'OtherSubConcept',
+  OtherSubConceptArgument = 'OtherSubConceptArgument',
+  OwnerArgument = 'OwnerArgument',
 }
 //
 // Minimally filled Concept

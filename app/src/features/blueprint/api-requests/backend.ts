@@ -36,14 +36,14 @@ export const ApiFetchFullConcept = (conceptName: string) =>
       composition {
         subConcepts {
           concept { name composition { subConcepts { concept {name} } }}
-          x
-          y
+          xy
+          wh
         }
         connections {
-          sourceSCIndex
-          sourceSCArgumentType {name}
+          sourceCustomID
+          sourceArgumentType {name}
           targetConceptType
-          targetConceptIndex
+          targetConceptCustomID
           targetConceptArgumentType {name}
         }
       }
