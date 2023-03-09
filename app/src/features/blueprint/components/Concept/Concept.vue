@@ -11,7 +11,7 @@
   const props = defineProps<{ conceptName: Concept['name'] }>()
   const { conceptName } = toRefs(props)
 
-  const concept = ref(fetchConcept(conceptName.value))
+  const concept = fetchConcept(conceptName.value)
   const isOpen = ref(false)
   const isHovered = ref(false)
   const click = ref({
