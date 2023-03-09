@@ -6,13 +6,13 @@ import type { Ref } from 'vue'
 
 export const useConceptStore = defineStore('Concept', () => {
   const fetchedConcepts: Ref<Map<Concept['name'], Concept>> = ref(new Map())
-  const tryAndGetAlreadyFetchedConcept = (conceptName: Concept['name']) => fetchedConcepts.value.get(conceptName)
+  const getStoreConcept = (conceptName: Concept['name']) => fetchedConcepts.value.get(conceptName)
   const isConceptFullyFetched = (concept: Concept): concept is FullConcept => concept.fetchStatus === FetchStatus.full
-  const locallySaveConcept = (conceptName: Concept['name'], newConcept: Concept) => {
+  const saveStoreConcept = (conceptName: Concept['name'], newConcept: Concept) => {
     fetchedConcepts.value.set(conceptName, newConcept)
     if (!isConceptFullyFetched(newConcept)) return
     newConcept.composition?.subConcepts.forEach((subConcept) => {
-      if (tryAndGetAlreadyFetchedConcept(subConcept.concept.name)) return
+      if (getStoreConcept(subConcept.concept.name)) return
       fetchedConcepts.value.set(subConcept.concept.name, {
         fetchStatus: FetchStatus.minimal,
         ...subConcept.concept,
@@ -21,8 +21,8 @@ export const useConceptStore = defineStore('Concept', () => {
   }
   const fetchConcept = (conceptName: Concept['name']): Ref<Concept> => {
     const output = ref({ name: conceptName }) as Ref<Concept>
-    const AlreadyFetchedConcept = tryAndGetAlreadyFetchedConcept(conceptName)
-    if (!AlreadyFetchedConcept) locallySaveConcept(conceptName, output.value)
+    const AlreadyFetchedConcept = getStoreConcept(conceptName)
+    if (!AlreadyFetchedConcept) saveStoreConcept(conceptName, output.value)
     else if (isConceptFullyFetched(AlreadyFetchedConcept)) return ref(AlreadyFetchedConcept)
     else output.value = AlreadyFetchedConcept
 
@@ -36,7 +36,7 @@ export const useConceptStore = defineStore('Concept', () => {
       if (error.value) return conceptFetchErrorReturn()
       const requestedConcept = getFetchedConcept()
       if (!requestedConcept) return conceptFetchErrorReturn()
-      locallySaveConcept(conceptName, requestedConcept)
+      saveStoreConcept(conceptName, requestedConcept)
       output.value = requestedConcept
     })
     return output
@@ -46,8 +46,8 @@ export const useConceptStore = defineStore('Concept', () => {
     fetchConcept,
     fetchedConcepts,
     isConceptFullyFetched,
-    locallySaveConcept,
-    tryAndGetAlreadyFetchedConcept,
+    saveStoreConcept,
+    getStoreConcept,
   }
 })
 
