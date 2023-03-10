@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ApiFetchFullConcept } from '@FEATURES/blueprint/api-requests/backend'
 import { FetchStatus } from '@FEATURES/blueprint/types'
+import { useQuery } from 'villus'
 import type { Concept, FullConcept } from '@FEATURES/blueprint/types'
 import type { Ref } from 'vue'
 
@@ -21,24 +21,38 @@ export const useConceptStore = defineStore('Concept', () => {
   }
   const fetchConcept = (conceptName: Concept['name']): Ref<Concept> => {
     const output = ref({ name: conceptName }) as Ref<Concept>
-    const AlreadyFetchedConcept = getStoreConcept(conceptName)
-    if (!AlreadyFetchedConcept) saveStoreConcept(conceptName, output.value)
-    else if (isConceptFullyFetched(AlreadyFetchedConcept)) return ref(AlreadyFetchedConcept)
-    else output.value = AlreadyFetchedConcept
-
-    const conceptFetchErrorReturn = () => {
-      output.value.fetchStatus = FetchStatus.failure
-    }
-
-    output.value.fetchStatus = FetchStatus.loading
-    const { getFetchedConcept, isFinished, error } = ApiFetchFullConcept(conceptName)
-    whenever(isFinished, () => {
-      if (error.value) return conceptFetchErrorReturn()
-      const requestedConcept = getFetchedConcept()
-      if (!requestedConcept) return conceptFetchErrorReturn()
+    const conceptQuery = `
+      query ($conceptName: String!) {
+        getConcept(name: $conceptName) {
+          arguments {name capacity}
+          composition {
+            subConcepts {
+              concept { name composition { subConcepts { concept {name} } }}
+              xy
+              wh
+            }
+            connections {
+              sourceCustomID
+              sourceArgumentType {name}
+              targetConceptType
+              targetConceptCustomID
+              targetConceptArgumentType {name}
+            }
+          }
+        }
+      }
+    `
+    useQuery({ query: conceptQuery, variables: { conceptName }, onSuccess(data) {
+      const requestedConcept = {
+        fetchStatus: FetchStatus.full,
+        name: conceptName,
+        ...data.getConcept
+      }
       saveStoreConcept(conceptName, requestedConcept)
       output.value = requestedConcept
-    })
+    }, onError(/* err */) {
+      output.value.fetchStatus = FetchStatus.failure
+    },})
     return output
   }
 
