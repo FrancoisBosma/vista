@@ -13,7 +13,8 @@
       "@ROOT/*": ["./*"],
       "@SRC/*": ["src/*"],
       "@GLOBAL/*": ["src/global/*"],
-      "@FEATURES/*": ["src/features/*"]
+      "@FEATURES/*": ["src/features/*"],
+      "@API/*": ["src/api/*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

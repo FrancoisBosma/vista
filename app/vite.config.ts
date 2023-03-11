@@ -24,6 +24,7 @@ export default defineConfig({
       '@SRC/': `${path.resolve(__dirname, 'src')}/`,
       '@GLOBAL/': `${path.resolve(__dirname, 'src/global')}/`,
       '@FEATURES/': `${path.resolve(__dirname, 'src/features')}/`,
+      '@API/': `${path.resolve(__dirname, 'src/api')}/`,
     },
   },
   plugins: [

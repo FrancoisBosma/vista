@@ -3,7 +3,8 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { genericTapCoords } from '@GLOBAL/functions/coordinates'
-  import type { Concept, Coordinates } from '@FEATURES/blueprint/types'
+  import type { Coordinates } from '@FEATURES/blueprint/types'
+  import type { Concept } from '@API/gql-generated/graphql'
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()

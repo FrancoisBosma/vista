@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import ConceptSet from './ConceptSet'
-  import type { Concept } from '@FEATURES/blueprint/types'
+  import type { Concept } from '@API/gql-generated/graphql'
 
   defineProps<{ concept: Concept; isHovered: Boolean }>()
 </script>

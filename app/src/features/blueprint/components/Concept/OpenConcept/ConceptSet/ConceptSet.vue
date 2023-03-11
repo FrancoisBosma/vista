@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import type { MinimalSubConcept, SubConcept } from '@FEATURES/blueprint/types'
+  import type { SubConcept } from '@API/gql-generated/graphql'
 
   // Lazy loading necessary because of the mutual nesting of OpenTile and TileList
   const ConceptSFC = defineAsyncComponent(() => import('../..'))
 
-  defineProps<{ conceptSet: MinimalSubConcept[] | SubConcept[] | undefined }>()
+  defineProps<{ conceptSet: SubConcept[] | undefined }>()
 </script>
 
 <template>
@@ -20,6 +20,7 @@
   .concept-set {
     @apply flex items-center;
   }
+
   .concept_link {
     @apply w-50px border-dashed border-b-2;
   }
