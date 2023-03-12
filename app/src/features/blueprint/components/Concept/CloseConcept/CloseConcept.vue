@@ -12,9 +12,6 @@
 </script>
 
 <template>
-  <!-- <div class="close-concept">
-    <span>{{ concept.name }}</span>
-  </div> -->
   <p class="close-concept">{{ concept.name }}</p>
 </template>
 
