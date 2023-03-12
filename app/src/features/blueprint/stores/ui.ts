@@ -13,13 +13,13 @@ import type {
 } from '@FEATURES/blueprint/types/'
 
 export const useUiStore = defineStore('ui', () => {
-  const dimensions: Ref<Dimensions> = ref({
+  const dimensions: Dimensions = reactive({
     width: { axis: <Axis>'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
     height: { axis: <Axis>'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
   })
-  const axes: Ref<Axes> = ref(objectMap(dimensions.value, (value: DimensionProperties) => value.axis))
+  const axes: Ref<Axes> = ref(objectMap(dimensions, (value: DimensionProperties) => value.axis))
   const mouseCoords: Dictionary<Ref> = useMouse()
-  const gridConfig = ref({
+  const gridConfig = reactive({
     gridAmount: 2, // N.B: As of now, it only works properly w/ value '2' (zoom, colours, etc)
     middleSizeSquare: {
       strokeColor: '#444444', // N.B: always keep it expressed with 6 digits for color operations
@@ -32,11 +32,11 @@ export const useUiStore = defineStore('ui', () => {
       strokeStep: 3, // decimal nb, not hexa
     },
   })
-  const zoomTypes: Ref<ZoomTypes> = ref({
+  const zoomTypes: ZoomTypes = reactive({
     out: { directionFactor: <ZoomDirectionFactor>-1 },
     in: { directionFactor: <ZoomDirectionFactor>1 },
   })
-  const zoomRate = computed(() => nthRoot(gridConfig.value.subSquareAmount, gridConfig.value.zoom.levelReset))
+  const zoomRate = computed(() => nthRoot(gridConfig.subSquareAmount, gridConfig.zoom.levelReset))
   const dragState = ref('idle' as DragStatus)
   return {
     axes,

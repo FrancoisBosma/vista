@@ -1,7 +1,6 @@
 import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { setCommonHandling } from '.'
-import type { Ref } from 'vue'
 import type { Dictionary, PinchState } from '@SRC/types'
 import type {
   Axis,
@@ -12,13 +11,13 @@ import type {
   GridRefs,
   Offsets,
   ZoomDirectionFactor,
-  useUiStore,
-} from '@FEATURES/blueprint/stores'
+} from '@FEATURES/blueprint/types'
+import type { useUiStore } from '@FEATURES/blueprint/stores'
 
 interface ZoomSetterArguments {
   ui: ReturnType<typeof useUiStore>
-  contentOffsets: Ref<Offsets>
-  bgOffsets: Ref<Offsets>
+  contentOffsets: Offsets
+  bgOffsets: Offsets
   bpInfo: BlueprintInfo
   gridRefs: GridRefs
   updateContentOffsets: ReturnType<typeof setCommonHandling>['updateContentOffsets']
@@ -48,8 +47,7 @@ export default function setZoomHandling({
     const output: Dictionary<number> = {}
     const { axes } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const contentToZoomCenterDistance =
-        bpInfo[dim].value / 2 + contentOffsets.value[dim as Dimension] - zoomRelCoords[axis]
+      const contentToZoomCenterDistance = bpInfo[dim].value / 2 + contentOffsets[dim as Dimension] - zoomRelCoords[axis]
       const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToZoomCenterDistance)
       output[dim] = extraContentOffset
     })
@@ -63,9 +61,9 @@ export default function setZoomHandling({
     const output: Dictionary<number> = {}
     const { axes, zoomRate } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const svgToZoomCenterDistance = bgOffsets.value[dim as Dimension] + zoomRelCoords[axis]
+      const svgToZoomCenterDistance = bgOffsets[dim as Dimension] + zoomRelCoords[axis]
       const lengthDelta = (toTheNth(zoomRate, zoomFactor) - 1) * svgToZoomCenterDistance
-      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets.value[dim as Dimension], biggestSquareLength)
+      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets[dim as Dimension], biggestSquareLength)
       output[dim] = extraOffset
     })
     return output as Offsets

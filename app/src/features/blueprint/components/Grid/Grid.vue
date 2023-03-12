@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { convertDec2Hex, hexMultiplication, hexSum, range, toTheNth } from '@GLOBAL/functions/numbers'
-  import type { ZoomDirectionFactor } from '@FEATURES/blueprint/stores'
+  import type { ZoomDirectionFactor } from '@FEATURES/blueprint/types'
 
   const props = defineProps<{ gridId: number }>()
   const { gridId } = toRefs(props)

@@ -1,24 +1,25 @@
 import { absoluteValue, floorRoundUp, range } from '@GLOBAL/functions/numbers'
-import type { Dimension, GridExposed, GridRefs, Offsets, useUiStore } from '@FEATURES/blueprint/stores'
+import type { Dimension, GridExposed, GridRefs, Offsets } from '@FEATURES/blueprint/types'
+import type { useUiStore } from '@FEATURES/blueprint/stores'
 
 interface CommonSetterArguments {
   ui: ReturnType<typeof useUiStore>
 }
 
 export default function setCommonHandling({ ui }: CommonSetterArguments) {
-  const bgOffsets = ref({
+  const bgOffsets = reactive({
     width: ui.gridConfig.middleSizeSquare.length / 2,
     height: ui.gridConfig.middleSizeSquare.length / 2,
   } as Offsets)
-  const contentOffsets = ref({ width: 0, height: 0 } as Offsets)
+  const contentOffsets = reactive({ width: 0, height: 0 } as Offsets)
 
   const updateContentOffsets = (extraOffsets: Offsets) =>
     (Object.keys(extraOffsets) as Dimension[]).forEach((dim) => {
-      contentOffsets.value[dim] += extraOffsets[dim]
+      contentOffsets[dim] += extraOffsets[dim]
     })
   const updateBackgroundOffsets = (extraOffsets: Offsets) =>
     (Object.keys(extraOffsets) as Dimension[]).forEach((dim) => {
-      bgOffsets.value[dim] += extraOffsets[dim]
+      bgOffsets[dim] += extraOffsets[dim]
     })
   const applyForEveryGrid = (gridRefs: GridRefs, fn: Function) => {
     const outputs: ReturnType<any>[] = []

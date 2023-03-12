@@ -15,9 +15,9 @@ export const useConceptStore = defineStore('Concept', () => {
       fetchedConcepts.value.set(subConcept.concept.name, subConcept.concept)
     })
   }
-  const fetchConcept = (conceptName: Concept['name']): Ref<Concept> => {
+  const fetchConcept = (conceptName: Concept['name']) => {
     const output = ref({ name: conceptName }) as Ref<Concept>
-    useQuery({
+    const { isDone } = useQuery({
       query: ConceptQuery,
       variables: { conceptName },
       onSuccess(data) {
@@ -29,7 +29,7 @@ export const useConceptStore = defineStore('Concept', () => {
         output.value = requestedConcept
       },
     })
-    return output
+    return { concept: output, isDone }
   }
 
   return {
