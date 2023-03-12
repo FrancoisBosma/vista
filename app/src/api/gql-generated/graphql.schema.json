@@ -683,18 +683,6 @@
             "deprecationReason": null
           },
           {
-            "name": "wh",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "xy",
             "description": "",
             "type": {
@@ -5833,18 +5821,6 @@
             "deprecationReason": null
           },
           {
-            "name": "wh",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "xy",
             "description": "",
             "args": [],
@@ -5874,30 +5850,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "whMax",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "whMin",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
@@ -6656,12 +6608,6 @@
             "deprecationReason": null
           },
           {
-            "name": "wh",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "xy",
             "description": "",
             "isDeprecated": false,
@@ -6726,12 +6672,6 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "wh",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "xy",
             "description": "",
             "isDeprecated": false,
@@ -6764,18 +6704,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptCompositionRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "wh",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
               "ofType": null
             },
             "defaultValue": null,
@@ -6835,18 +6763,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptCompositionRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "wh",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
               "ofType": null
             },
             "defaultValue": null,

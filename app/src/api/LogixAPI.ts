@@ -21,7 +21,6 @@ export const ConceptQuery = graphql(`
             }
           }
           xy
-          wh
         }
         connections {
           sourceCustomID

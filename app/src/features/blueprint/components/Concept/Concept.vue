@@ -3,13 +3,13 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { genericTapCoords } from '@GLOBAL/functions/coordinates'
-  import type { Coordinates } from '@FEATURES/blueprint/types'
+  import type { BlueprintBackgroundColor, Coordinates } from '@FEATURES/blueprint/types'
   import type { Concept } from '@API/gql-generated/graphql'
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
 
-  const props = defineProps<{ conceptName: Concept['name'] }>()
+  const props = defineProps<{ blueprintBgColor: BlueprintBackgroundColor; conceptName: Concept['name'] }>()
   const { conceptName } = toRefs(props)
 
   const { concept } = fetchConcept(conceptName.value)
@@ -83,7 +83,13 @@
         :is-hovered="isHovered"
         :is-empty="isEmpty"
       />
-      <OpenConcept v-else :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
+      <OpenConcept
+        v-else
+        :concept="concept"
+        :is-hovered="isHovered"
+        :is-empty="isEmpty"
+        :blueprint-bg-color="blueprintBgColor"
+      />
     </keep-alive>
   </div>
 </template>

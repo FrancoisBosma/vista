@@ -1,4 +1,4 @@
-import Grid from './Grid'
 import Concept from './Concept'
+import Blueprint from './Blueprint'
 
-export { Grid, Concept }
+export { Blueprint, Concept }

@@ -26,3 +26,7 @@ export interface GridExposed {
 
 export type BlueprintInfo = Dictionary<Ref<number>>
 export type GridRefs = Ref<Object[]>
+export enum BlueprintBackgroundColor {
+  normal = 'var(--background)',
+  stronger = 'var(--background-stronger)',
+}
