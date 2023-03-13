@@ -23,7 +23,8 @@ export default function setDragHandling({
   getCurrentBiggestSquareLength,
   computeExtraOffset,
 }: DragSetterArguments) {
-  const handleDrag = ({ delta, first, last }: DragState) => {
+  const handleDrag = ({ delta, first, last, event }: DragState) => {
+    event?.stopPropagation()
     // Offsets
     const contentOffsets = { width: delta[0], height: delta[1] } as Offsets
     updateContentOffsets(contentOffsets)

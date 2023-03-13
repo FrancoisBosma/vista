@@ -68,13 +68,7 @@
 </script>
 
 <template>
-  <div
-    ref="bp"
-    v-drag="handleDrag"
-    v-pinch.stop.prevent="handlePinch"
-    class="blueprint"
-    @wheel.stop.prevent="handleWheel"
-  >
+  <div ref="bp" v-drag="handleDrag" v-pinch="handlePinch" class="blueprint" @wheel.stop.prevent="handleWheel">
     <div class="bp-background">
       <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
     </div>
