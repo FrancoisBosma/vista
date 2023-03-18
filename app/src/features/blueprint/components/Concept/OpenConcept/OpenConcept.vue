@@ -29,7 +29,7 @@
 
 <style scoped lang="postcss">
   .open-concept {
-    @apply border rounded-10px;
+    @apply border rounded-10px overflow-hidden;
     border-color: v-bind('borderColor');
     box-shadow: v-bind('boxShadow');
   }
