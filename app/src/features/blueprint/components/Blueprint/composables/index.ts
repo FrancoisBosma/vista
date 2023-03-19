@@ -1,6 +1,6 @@
 import setCommonHandling from './common'
 import setZoomHandling from './zoom'
 import setDragHandling from './drag'
-import setStyle from './style'
+import setStyleHandling from './style'
 
-export { setCommonHandling, setZoomHandling, setDragHandling, setStyle }
+export { setCommonHandling, setZoomHandling, setDragHandling, setStyleHandling }

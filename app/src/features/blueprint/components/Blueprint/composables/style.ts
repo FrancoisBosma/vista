@@ -8,7 +8,7 @@ type StyleArguments = {
   ui: ReturnType<typeof useUiStore>
 } & ReturnType<typeof setCommonHandling>
 
-export default function setDragHandling({ bp, bgOffsets, contentOffsets, contentScale, ui }: StyleArguments) {
+export default function setStyleHandling({ bp, bgOffsets, contentOffsets, contentScale, ui }: StyleArguments) {
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
   const bpCursor = eagerComputed(() => `${isUserPressingDown.value ? 'grabbing ' : 'grab'}`)
   const bgDimensions = computed(() => ({

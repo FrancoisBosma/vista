@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import Grid from './Grid'
   import { useUiStore } from '@FEATURES/blueprint/stores'
-  import { setCommonHandling, setDragHandling, setStyle, setZoomHandling } from './composables'
+  import { setCommonHandling, setDragHandling, setStyleHandling, setZoomHandling } from './composables'
   import type { BlueprintInfo, GridRefs } from '@FEATURES/blueprint/types'
 
   const props = defineProps<{ bgColor?: string }>()
@@ -15,7 +15,7 @@
   const commonKit = setCommonHandling({ ui })
   const { contentScale, handleWheel, handlePinch } = setZoomHandling({ ui, bpInfo, gridRefs, ...commonKit })
   const { handleDrag } = setDragHandling({ ui, gridRefs, ...commonKit })
-  const styleKit = setStyle({ bp, contentScale, ui, ...commonKit })
+  const styleKit = setStyleHandling({ bp, contentScale, ui, ...commonKit })
 
   // Disable default zooming, e.g. from pinching
   useHead({
