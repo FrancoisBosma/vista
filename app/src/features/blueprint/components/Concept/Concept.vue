@@ -52,15 +52,13 @@
   })
   const closeConceptEl = ref()
   const updateSavedConceptDimensions = () => {
-    const htmlElement = unrefElement(closeConceptEl)?.nextElementSibling
+    const htmlElement = unrefElement(closeConceptEl)
     if (!htmlElement) return
     const { width, height } = htmlElement.getBoundingClientRect()
     savedConceptDimensions.width = `${width}px`
     savedConceptDimensions.height = `${height}px`
   }
-  onMounted(() => {
-    updateSavedConceptDimensions()
-  })
+  watchOnce(closeConceptEl, updateSavedConceptDimensions)
 </script>
 
 <template>
