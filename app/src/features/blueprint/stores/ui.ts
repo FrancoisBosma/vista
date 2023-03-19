@@ -36,7 +36,7 @@ export const useUiStore = defineStore('ui', () => {
     out: { directionFactor: <ZoomDirectionFactor>-1 },
     in: { directionFactor: <ZoomDirectionFactor>1 },
   })
-  const zoomRate = computed(() => nthRoot(gridConfig.subSquareAmount, gridConfig.zoom.levelReset))
+  const zoomRate = ref(nthRoot(gridConfig.subSquareAmount, gridConfig.zoom.levelReset))
   const dragState = ref('idle' as DragStatus)
   return {
     axes,

@@ -14,9 +14,9 @@
   )
   const zoomCount = ref(zoomThresholds.value[gridId.value] + 2)
 
-  const patternId = computed(() => `bp-grid-${gridId.value}`)
+  const patternId = ref(`bp-grid-${gridId.value}`)
   const zIndex = computed(() => zoomCount.value + config.zoom.levelReset) // 0 -> 2*levelReset
-  const isGridVisible = computed(
+  const isGridVisible = eagerComputed(
     () => zoomCount.value > -config.zoom.levelReset && zoomCount.value < config.zoom.levelReset
   )
   const depthFactor = computed(() => toTheNth(ui.zoomRate, zoomCount.value))

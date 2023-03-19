@@ -10,7 +10,7 @@ type StyleArguments = {
 
 export default function setDragHandling({ bp, bgOffsets, contentOffsets, contentScale, ui }: StyleArguments) {
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
-  const bpCursor = computed(() => `${isUserPressingDown.value ? 'grabbing ' : 'grab'}`)
+  const bpCursor = eagerComputed(() => `${isUserPressingDown.value ? 'grabbing ' : 'grab'}`)
   const bgDimensions = computed(() => ({
     left: `-${bgOffsets.width}px`,
     width: `calc(100% + ${bgOffsets.width}px)`,
@@ -21,7 +21,7 @@ export default function setDragHandling({ bp, bgOffsets, contentOffsets, content
     () => `translate(calc(-50% + ${contentOffsets.width}px), \
     calc(-50% + ${contentOffsets.height}px)) scale(${contentScale.value})`
   )
-  const contentZIndex = computed(() => 2 * ui.gridConfig.zoom.levelReset + 1)
+  const contentZIndex = ref(2 * ui.gridConfig.zoom.levelReset + 1)
 
   return reactive({
     bpCursor,

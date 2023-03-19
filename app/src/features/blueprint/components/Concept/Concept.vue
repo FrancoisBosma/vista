@@ -13,7 +13,7 @@
   const { conceptName } = toRefs(props)
 
   const { concept } = fetchConcept(conceptName.value)
-  const isEmpty = computed(() => !concept.value.composition?.subConcepts.length)
+  const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   /** Manipulation */
   const click = reactive({
