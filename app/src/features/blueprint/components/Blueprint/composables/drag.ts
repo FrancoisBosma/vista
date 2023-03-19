@@ -4,15 +4,11 @@ import type { DragState } from '@SRC/types'
 import type { Dimension, GridRefs, Offset, Offsets } from '@FEATURES/blueprint/types'
 import type { useUiStore } from '@FEATURES/blueprint/stores'
 
-interface DragSetterArguments {
+type DragSetterArguments = {
   ui: ReturnType<typeof useUiStore>
   gridRefs: GridRefs
   bgOffsets: Offsets
-  updateContentOffsets: ReturnType<typeof setCommonHandling>['updateContentOffsets']
-  updateBackgroundOffsets: ReturnType<typeof setCommonHandling>['updateBackgroundOffsets']
-  getCurrentBiggestSquareLength: ReturnType<typeof setCommonHandling>['getCurrentBiggestSquareLength']
-  computeExtraOffset: ReturnType<typeof setCommonHandling>['computeExtraOffset']
-}
+} & ReturnType<typeof setCommonHandling>
 
 export default function setDragHandling({
   ui,

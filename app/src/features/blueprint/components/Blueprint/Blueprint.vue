@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import Grid from './Grid'
   import { useUiStore } from '@FEATURES/blueprint/stores'
-  import { setCommonHandling, setDragHandling, setZoomHandling } from './composables'
+  import { setCommonHandling, setDragHandling, setStyle, setZoomHandling } from './composables'
   import type { BlueprintInfo, GridRefs } from '@FEATURES/blueprint/types'
 
   const props = defineProps<{ bgColor?: string }>()
@@ -9,52 +9,13 @@
 
   const bp = ref(null)
   const gridRefs: GridRefs = ref([])
-  const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
   const bpInfo = useElementBounding(bp) as BlueprintInfo
 
   const ui = useUiStore()
-  const {
-    bgOffsets,
-    contentOffsets,
-    updateContentOffsets,
-    updateBackgroundOffsets,
-    applyForEveryGrid,
-    getCurrentBiggestSquareLength,
-    computeExtraOffset,
-  } = setCommonHandling({ ui })
-  const { contentScale, handleWheel, handlePinch } = setZoomHandling({
-    ui,
-    contentOffsets,
-    bgOffsets,
-    bpInfo,
-    gridRefs,
-    updateContentOffsets,
-    updateBackgroundOffsets,
-    applyForEveryGrid,
-    getCurrentBiggestSquareLength,
-    computeExtraOffset,
-  })
-  const bpCursor = computed(() => `${isUserPressingDown.value ? 'grabbing ' : 'grab'}`)
-  const bgDimensions = computed(() => ({
-    left: `-${bgOffsets.width}px`,
-    width: `calc(100% + ${bgOffsets.width}px)`,
-    top: `-${bgOffsets.height}px`,
-    height: `calc(100% + ${bgOffsets.height}px)`,
-  }))
-  const contentTransform = computed(
-    () => `translate(calc(-50% + ${contentOffsets.width}px), \
-    calc(-50% + ${contentOffsets.height}px)) scale(${contentScale.value})`
-  )
-  const contentZIndex = computed(() => 2 * ui.gridConfig.zoom.levelReset + 1)
-  const { handleDrag } = setDragHandling({
-    ui,
-    gridRefs,
-    bgOffsets,
-    updateContentOffsets,
-    updateBackgroundOffsets,
-    getCurrentBiggestSquareLength,
-    computeExtraOffset,
-  })
+  const commonKit = setCommonHandling({ ui })
+  const { contentScale, handleWheel, handlePinch } = setZoomHandling({ ui, bpInfo, gridRefs, ...commonKit })
+  const { handleDrag } = setDragHandling({ ui, gridRefs, ...commonKit })
+  const styleKit = setStyle({ bp, contentScale, ui, ...commonKit })
 
   // Disable default zooming, e.g. from pinching
   useHead({
@@ -81,21 +42,21 @@
 <style scoped lang="postcss">
   .blueprint {
     @apply relative w-full h-full overflow-hidden;
-    cursor: v-bind('bpCursor');
+    cursor: v-bind('styleKit.bpCursor');
     background-color: v-bind('bgColor');
 
     .bp-background {
       @apply absolute w-full h-full children:(absolute);
-      left: v-bind('bgDimensions.left');
-      width: v-bind('bgDimensions.width');
-      top: v-bind('bgDimensions.top');
-      height: v-bind('bgDimensions.height');
+      left: v-bind('styleKit.bgDimensions.left');
+      width: v-bind('styleKit.bgDimensions.width');
+      top: v-bind('styleKit.bgDimensions.top');
+      height: v-bind('styleKit.bgDimensions.height');
     }
 
     .bp-content {
       @apply w-min relative top-1/2 left-1/2;
-      transform: v-bind('contentTransform');
-      z-index: v-bind('contentZIndex');
+      transform: v-bind('styleKit.contentTransform');
+      z-index: v-bind('styleKit.contentZIndex');
     }
   }
 </style>

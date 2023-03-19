@@ -11,7 +11,7 @@ meta:
 </script>
 
 <template>
-  <Blueprint>
+  <Blueprint :bg-color="BlueprintBackgroundColor.normal">
     <Concept :concept-name="conceptName" :blueprint-bg-color="BlueprintBackgroundColor.normal" />
   </Blueprint>
 </template>

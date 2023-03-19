@@ -1,7 +1,7 @@
 import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { setCommonHandling } from '.'
-import type { Dictionary, PinchState } from '@SRC/types'
+import type { PinchState } from '@SRC/types'
 import type {
   Axis,
   BlueprintInfo,
@@ -14,18 +14,11 @@ import type {
 } from '@FEATURES/blueprint/types'
 import type { useUiStore } from '@FEATURES/blueprint/stores'
 
-interface ZoomSetterArguments {
+type ZoomSetterArguments = {
   ui: ReturnType<typeof useUiStore>
-  contentOffsets: Offsets
-  bgOffsets: Offsets
   bpInfo: BlueprintInfo
   gridRefs: GridRefs
-  updateContentOffsets: ReturnType<typeof setCommonHandling>['updateContentOffsets']
-  updateBackgroundOffsets: ReturnType<typeof setCommonHandling>['updateBackgroundOffsets']
-  applyForEveryGrid: ReturnType<typeof setCommonHandling>['applyForEveryGrid']
-  getCurrentBiggestSquareLength: ReturnType<typeof setCommonHandling>['getCurrentBiggestSquareLength']
-  computeExtraOffset: ReturnType<typeof setCommonHandling>['computeExtraOffset']
-}
+} & ReturnType<typeof setCommonHandling>
 
 export default function setZoomHandling({
   ui,
@@ -44,7 +37,7 @@ export default function setZoomHandling({
   const computeLengthDelta = (newScale: number, lastScale: number, length: number) =>
     (newScale / lastScale - 1) * length
   const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, newScale: number, lastScale: number): Offsets => {
-    const output: Dictionary<number> = {}
+    const output: Record<string, number> = {}
     const { axes } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
       const contentToZoomCenterDistance = bpInfo[dim].value / 2 + contentOffsets[dim as Dimension] - zoomRelCoords[axis]
@@ -58,7 +51,7 @@ export default function setZoomHandling({
     zoomFactor: ZoomDirectionFactor,
     biggestSquareLength: number
   ): Offsets => {
-    const output: Dictionary<number> = {}
+    const output: Record<string, number> = {}
     const { axes, zoomRate } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
       const svgToZoomCenterDistance = bgOffsets[dim as Dimension] + zoomRelCoords[axis]

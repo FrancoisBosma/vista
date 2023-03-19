@@ -2,7 +2,7 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { nthRoot } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
-import type { Dictionary, DragStatus } from '@SRC/types'
+import type { DragStatus } from '@SRC/types'
 import type {
   Axes,
   Axis,
@@ -18,7 +18,7 @@ export const useUiStore = defineStore('ui', () => {
     height: { axis: <Axis>'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
   })
   const axes: Ref<Axes> = ref(objectMap(dimensions, (value: DimensionProperties) => value.axis))
-  const mouseCoords: Dictionary<Ref> = useMouse()
+  const mouseCoords: Record<string, Ref> = useMouse()
   const gridConfig = reactive({
     gridAmount: 2, // N.B: As of now, it only works properly w/ value '2' (zoom, colours, etc)
     middleSizeSquare: {
