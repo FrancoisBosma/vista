@@ -23,7 +23,7 @@ export type GridExposed = {
   squareLength: number
 }
 
-export type BlueprintInfo = Record<string, Ref<number>>
+export type BlueprintInfo = ReturnType<typeof useElementBounding>
 export type GridRefs = Ref<Object[]>
 export enum BlueprintBackgroundColor {
   normal = 'var(--background)',
