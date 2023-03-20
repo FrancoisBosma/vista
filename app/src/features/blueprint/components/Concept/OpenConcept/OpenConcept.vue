@@ -32,5 +32,9 @@
     @apply w-full h-full border rounded-10px overflow-hidden;
     border-color: v-bind('borderColor');
     box-shadow: v-bind('boxShadow');
+    /* DELETEME */
+    width: 500px;
+    height: 500px;
+    /*  */
   }
 </style>

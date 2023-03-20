@@ -1,4 +1,4 @@
-import path from 'path'
+import path from 'node:path'
 import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import Pages from 'vite-plugin-pages'
@@ -7,15 +7,10 @@ import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
-import Markdown from 'vite-plugin-md'
 import WindiCSS from 'vite-plugin-windicss'
 import { VitePWA } from 'vite-plugin-pwa'
-import VueI18n from '@intlify/vite-plugin-vue-i18n'
+import VueI18n from '@intlify/unplugin-vue-i18n/vite'
 import Inspect from 'vite-plugin-inspect'
-import Prism from 'markdown-it-prism'
-import LinkAttributes from 'markdown-it-link-attributes'
-
-const markdownWrapperClasses = 'prose prose-sm m-auto text-left'
 
 export default defineConfig({
   resolve: {
@@ -25,16 +20,18 @@ export default defineConfig({
       '@GLOBAL/': `${path.resolve(__dirname, 'src/global')}/`,
       '@FEATURES/': `${path.resolve(__dirname, 'src/features')}/`,
       '@API/': `${path.resolve(__dirname, 'src/api')}/`,
+      // hotfix until the following PR is merged: https://github.com/developit/unfetch/pull/164
+      unfetch: path.resolve(__dirname, 'node_modules/unfetch/dist/unfetch.mjs'),
     },
   },
   plugins: [
     Vue({
-      include: [/\.vue$/, /\.md$/],
+      include: [/\.vue$/],
     }),
 
     // https://github.com/hannoeru/vite-plugin-pages
     Pages({
-      extensions: ['vue', 'md'],
+      extensions: ['vue'],
       pagesDir: [{ dir: 'src/features/**/router-views', baseRoute: '' }],
     }),
 
@@ -58,9 +55,9 @@ export default defineConfig({
       // output
       dts: 'src/generated_global_components.d.ts',
       // targeting (== which files will be considered as components)
-      globs: ['src/global/components/**/*.vue', 'src/global/components/**/!(README).md'],
-      // allow auto import and register components used in markdown
-      include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+      globs: ['src/global/components/**/*.vue'],
+      // allow auto import
+      include: [/\.vue$/, /\.vue\?vue/],
       // custom resolvers
       resolvers: [
         // auto import icons
@@ -78,26 +75,7 @@ export default defineConfig({
     }),
 
     // https://github.com/antfu/vite-plugin-windicss
-    WindiCSS({
-      safelist: markdownWrapperClasses,
-    }),
-
-    // https://github.com/antfu/vite-plugin-md
-    Markdown({
-      headEnabled: true,
-      markdownItSetup(md) {
-        // https://prismjs.com/
-        md.use(Prism)
-        md.use(LinkAttributes, {
-          attrs: {
-            rel: 'noopener',
-            target: '_blank',
-          },
-          pattern: /^https?:\/\//,
-        })
-      },
-      wrapperClasses: markdownWrapperClasses,
-    }),
+    WindiCSS(),
 
     // https://github.com/antfu/vite-plugin-pwa
     VitePWA({

@@ -6,10 +6,10 @@
   import type { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   import type { Concept } from '@API/gql-generated/graphql'
 
-  const { fetchConcept } = useConceptStore()
-
   const props = defineProps<{ blueprintBgColor: BlueprintBackgroundColor; conceptName: Concept['name'] }>()
   const { conceptName } = toRefs(props)
+
+  const { fetchConcept } = useConceptStore()
 
   const { concept } = fetchConcept(conceptName.value)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)

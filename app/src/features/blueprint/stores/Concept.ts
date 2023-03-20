@@ -20,7 +20,7 @@ export const useConceptStore = defineStore('Concept', () => {
     const { isDone } = useQuery({
       query: ConceptQuery,
       variables: { conceptName },
-      onSuccess(data) {
+      onData(data) {
         const requestedConcept = {
           name: conceptName,
           ...data.getConcept,
