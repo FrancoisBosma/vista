@@ -1405,18 +1405,6 @@
             "deprecationReason": null
           },
           {
-            "name": "name",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
             "name": "ownerConcept",
             "description": "",
             "type": {
@@ -2226,18 +2214,6 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "name",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -2488,7 +2464,7 @@
       {
         "kind": "SCALAR",
         "name": "DateTime",
-        "description": "The DateTime scalar type represents date and time as a string in RFC3339 format.\nFor example: \"1985-04-12T23:20:50.52Z\" represents 20 minutes and 50.52 seconds after the 23rd hour of April 12th, 1985 in UTC.",
+        "description": "The DateTime scalar type represents date and time as a string in RFC3339 format.\nFor example: \"1985-04-12T23:20:50.52Z\" represents 20 mins 50.52 secs after the 23rd hour of Apr 12th 1985 in UTC.",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -3122,29 +3098,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "INPUT_OBJECT",
-        "name": "DgraphDefault",
-        "description": "",
-        "fields": null,
-        "inputFields": [
-          {
-            "name": "value",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -8598,40 +8551,6 @@
         ]
       },
       {
-        "name": "default",
-        "description": "",
-        "isRepeatable": false,
-        "locations": [
-          "FIELD_DEFINITION"
-        ],
-        "args": [
-          {
-            "name": "add",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DgraphDefault",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "update",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "DgraphDefault",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ]
-      },
-      {
         "name": "deprecated",
         "description": "The @deprecated directive is used within the type system definition language to indicate deprecated portions of a GraphQL service’s schema, such as deprecated fields on a type or deprecated enum values.",
         "isRepeatable": false,
@@ -8770,20 +8689,7 @@
         "locations": [
           "FIELD_DEFINITION"
         ],
-        "args": [
-          {
-            "name": "interface",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Boolean",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ]
+        "args": []
       },
       {
         "name": "include",

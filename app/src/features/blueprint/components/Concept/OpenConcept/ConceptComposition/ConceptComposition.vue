@@ -5,7 +5,7 @@
   const props = defineProps<{ blueprintBgColor: BlueprintBackgroundColor; concept: Concept }>()
   const { blueprintBgColor } = toRefs(props)
 
-  // Lazy loading necessary because of the mutual nesting of OpenTile and ConceptComposition
+  // Lazy loading necessary because of mutual nesting
   const ConceptSFC = defineAsyncComponent(() => import('@FEATURES/blueprint/components/Concept'))
 </script>
 

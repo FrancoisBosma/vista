@@ -14,7 +14,7 @@ export type Scalars = {
   Float: number;
   /**
    * The DateTime scalar type represents date and time as a string in RFC3339 format.
-   * For example: "1985-04-12T23:20:50.52Z" represents 20 minutes and 50.52 seconds after the 23rd hour of April 12th, 1985 in UTC.
+   * For example: "1985-04-12T23:20:50.52Z" represents 20 mins 50.52 secs after the 23rd hour of Apr 12th 1985 in UTC.
    */
   DateTime: any;
   /**
@@ -214,7 +214,6 @@ export enum ConceptArgumentTypeOrderable {
 
 export type ConceptArgumentTypePatch = {
   capacity?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
   ownerConcept?: InputMaybe<ConceptRef>;
 };
 
@@ -324,7 +323,6 @@ export enum ConceptOrderable {
 export type ConceptPatch = {
   arguments?: InputMaybe<Array<ConceptArgumentTypeRef>>;
   composition?: InputMaybe<ConceptCompositionRef>;
-  name?: InputMaybe<Scalars['String']>;
 };
 
 export type ConceptRef = {
@@ -437,10 +435,6 @@ export type DeleteSubConceptPayloadSubConceptArgs = {
   first?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SubConceptOrder>;
-};
-
-export type DgraphDefault = {
-  value?: InputMaybe<Scalars['String']>;
 };
 
 export enum DgraphIndex {
