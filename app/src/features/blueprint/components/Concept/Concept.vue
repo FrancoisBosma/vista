@@ -16,7 +16,7 @@
   const closeConceptEl = ref()
 
   const { isHovered, handleTapDown, handleTapUp, handleClick, isOpen } = setManipulationHandling({ isEmpty })
-  const { conceptCursor, savedConceptDimensions } = setStyleHandling({ isEmpty, closeConceptEl })
+  const styleKit = setStyleHandling({ isEmpty, closeConceptEl })
 </script>
 
 <template>
@@ -52,8 +52,8 @@
 
 <style scoped lang="postcss">
   .concept {
-    cursor: v-bind('conceptCursor');
-    width: v-bind('savedConceptDimensions.width');
-    height: v-bind('savedConceptDimensions.height');
+    cursor: v-bind('styleKit.conceptCursor');
+    width: v-bind('styleKit.savedConceptDimensions.width');
+    height: v-bind('styleKit.savedConceptDimensions.height');
   }
 </style>
