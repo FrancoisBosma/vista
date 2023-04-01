@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
 export type Axes = Record<Dimension, Axis>
-export type DimensionProperties = {
+export interface DimensionProperties {
   axis: Axis
   boundingClientRectProperty: string
   boxSizeProperty: string
@@ -11,14 +11,14 @@ export type DimensionProperties = {
 export type Dimensions = Record<Dimension, DimensionProperties>
 export type Zoom = 'out' | 'in'
 export type ZoomDirectionFactor = -1 | 1
-export type ZoomProperties = {
+export interface ZoomProperties {
   directionFactor: ZoomDirectionFactor
 }
 export type ZoomTypes = Record<Zoom, ZoomProperties>
 export type Offset = number
 export type Offsets = Record<Dimension, Offset>
 export type Coordinates = Record<Axis, number>
-export type GridExposed = {
+export interface GridExposed {
   updateAppearance: Function
   squareLength: number
 }

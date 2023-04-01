@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 
 const ui = useUiStore()
 
-type StyleArguments = {
+interface StyleArguments {
   isEmpty: ReturnType<typeof eagerComputed<boolean>>
   closeConceptEl: Ref<any>
 }
