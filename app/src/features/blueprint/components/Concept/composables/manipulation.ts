@@ -1,14 +1,14 @@
 import { genericTapCoords } from '@GLOBAL/functions/coordinates'
 import type { Coordinates } from '@FEATURES/blueprint/types'
 
-type ManipulationArguments = {
+interface ManipulationArguments {
   isEmpty: ReturnType<typeof eagerComputed<boolean>>
 }
 
 export default function setManipulationHandling({ isEmpty }: ManipulationArguments) {
   const click = reactive({
     tapCoords: { x: 0, y: 0 } as Coordinates,
-    isBlocked: false,
+    isDragging: false,
   })
   const isOpen = ref(false)
   const isHovered = ref(false)
@@ -16,7 +16,7 @@ export default function setManipulationHandling({ isEmpty }: ManipulationArgumen
     isOpen.value = !isOpen.value
     isHovered.value = false
   }
-  const isClickable = computed(() => !(isEmpty.value || click.isBlocked))
+  const isClickable = computed(() => !(isOpen.value || click.isDragging || isEmpty.value))
   const handleClick = async () => {
     if (!isClickable.value) return
     toggleTile()
@@ -25,11 +25,11 @@ export default function setManipulationHandling({ isEmpty }: ManipulationArgumen
     const { x, y } = genericTapCoords(e)
     click.tapCoords.x = x
     click.tapCoords.y = y
-    click.isBlocked = false
+    click.isDragging = false
   }
   const handleTapUp = (e: MouseEvent | TouchEvent) => {
     const { x, y } = genericTapCoords(e)
-    if (click.tapCoords.x !== x || click.tapCoords.y !== y) click.isBlocked = true
+    if (click.tapCoords.x !== x || click.tapCoords.y !== y) click.isDragging = true
     click.tapCoords.x = 0
     click.tapCoords.y = 0
   }
