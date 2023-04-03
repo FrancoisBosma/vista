@@ -40,7 +40,8 @@ export default function setZoomHandling({
     const output: Record<string, number> = {}
     const { axes } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const contentToZoomCenterDistance = bpInfo[dim].value / 2 + contentOffsets[dim as Dimension] - zoomRelCoords[axis]
+      const contentToZoomCenterDistance =
+        bpInfo[<Dimension>dim].value / 2 + contentOffsets[<Dimension>dim] - zoomRelCoords[axis]
       const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToZoomCenterDistance)
       output[dim] = extraContentOffset
     })
@@ -54,9 +55,9 @@ export default function setZoomHandling({
     const output: Record<string, number> = {}
     const { axes, zoomRate } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
-      const svgToZoomCenterDistance = bgOffsets[dim as Dimension] + zoomRelCoords[axis]
+      const svgToZoomCenterDistance = bgOffsets[<Dimension>dim] + zoomRelCoords[axis]
       const lengthDelta = (toTheNth(zoomRate, zoomFactor) - 1) * svgToZoomCenterDistance
-      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets[dim as Dimension], biggestSquareLength)
+      const extraOffset = computeExtraOffset(lengthDelta, bgOffsets[<Dimension>dim], biggestSquareLength)
       output[dim] = extraOffset
     })
     return output as Offsets
