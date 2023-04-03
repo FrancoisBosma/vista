@@ -3,10 +3,9 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import type { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   import type { Concept } from '@API/gql-generated/graphql'
 
-  const props = defineProps<{ blueprintBgColor: BlueprintBackgroundColor; conceptName: Concept['name'] }>()
+  const props = defineProps<{ conceptName: Concept['name'] }>()
   const { conceptName } = toRefs(props)
 
   const { fetchConcept } = useConceptStore()
@@ -17,6 +16,13 @@
 
   const { isHovered, handleTapDown, handleTapUp, handleClick, isOpen } = setManipulationHandling({ isEmpty })
   const styleKit = setStyleHandling({ isEmpty, closeConceptEl })
+
+  /**
+   * DELETEME
+   *
+   * icons: screen-normal vs fit-screen
+   *
+   */
 </script>
 
 <template>
@@ -39,13 +45,7 @@
         :is-hovered="isHovered"
         :is-empty="isEmpty"
       />
-      <OpenConcept
-        v-else
-        :concept="concept"
-        :is-hovered="isHovered"
-        :is-empty="isEmpty"
-        :blueprint-bg-color="blueprintBgColor"
-      />
+      <OpenConcept v-else :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
     </keep-alive>
   </div>
 </template>

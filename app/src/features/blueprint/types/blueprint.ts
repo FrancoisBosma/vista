@@ -9,12 +9,14 @@ export interface DimensionProperties {
   boxSizeProperty: string
 }
 export type Dimensions = Record<Dimension, DimensionProperties>
+
 export type Zoom = 'out' | 'in'
 export type ZoomDirectionFactor = -1 | 1
 export interface ZoomProperties {
   directionFactor: ZoomDirectionFactor
 }
 export type ZoomTypes = Record<Zoom, ZoomProperties>
+
 export type Offset = number
 export type Offsets = Record<Dimension, Offset>
 export type Coordinates = Record<Axis, number>
@@ -24,8 +26,9 @@ export interface GridExposed {
 }
 
 export type BlueprintInfo = ReturnType<typeof useElementBounding>
-export type GridRefs = Ref<Object[]>
 export enum BlueprintBackgroundColor {
   normal = 'var(--background)',
   stronger = 'var(--background-stronger)',
 }
+export type BlueprintDepth = number
+export type GridRefs = Ref<Object[]>

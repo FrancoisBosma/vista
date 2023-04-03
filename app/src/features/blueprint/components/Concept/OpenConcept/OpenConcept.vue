@@ -1,28 +1,25 @@
 <script setup lang="ts">
   import { Blueprint } from '@FEATURES/blueprint/components'
   import ConceptComposition from './ConceptComposition'
-  import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   import type { Concept } from '@API/gql-generated/graphql'
+  import type { BlueprintDepth } from '@FEATURES/blueprint/types'
 
   const props = defineProps<{
     concept: Concept
     isHovered: Boolean
-    blueprintBgColor: BlueprintBackgroundColor
   }>()
-  const { isHovered, blueprintBgColor } = toRefs(props)
+  const { isHovered } = toRefs(props)
+
+  const depth = inject<BlueprintDepth>('blueprint-depth', 0)
 
   const borderColor = computed(() => `var(${isHovered.value ? '--emphasis' : '--foreground'})`)
   const boxShadow = computed(() => `${isHovered.value ? '0 0 3px var(--emphasis)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`)
-  const nextBgColor =
-    blueprintBgColor.value === BlueprintBackgroundColor.normal
-      ? BlueprintBackgroundColor.stronger
-      : BlueprintBackgroundColor.normal
 </script>
 
 <template>
   <div class="open-concept">
-    <Blueprint v-if="concept.composition" :bg-color="nextBgColor">
-      <ConceptComposition :concept="concept" :blueprint-bg-color="nextBgColor" />
+    <Blueprint v-if="concept.composition" :depth="depth + 1">
+      <ConceptComposition :concept="concept" />
     </Blueprint>
   </div>
 </template>

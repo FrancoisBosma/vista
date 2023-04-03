@@ -6,12 +6,11 @@ meta:
 
 <script setup lang="ts">
   import { Blueprint, Concept } from '@FEATURES/blueprint/components'
-  import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   const conceptName = 'Communication'
 </script>
 
 <template>
-  <Blueprint :bg-color="BlueprintBackgroundColor.normal">
-    <Concept :concept-name="conceptName" :blueprint-bg-color="BlueprintBackgroundColor.normal" />
+  <Blueprint :depth="0">
+    <Concept :concept-name="conceptName" />
   </Blueprint>
 </template>

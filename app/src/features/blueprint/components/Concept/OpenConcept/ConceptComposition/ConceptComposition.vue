@@ -1,9 +1,7 @@
 <script setup lang="ts">
   import type { Concept } from '@API/gql-generated/graphql'
-  import type { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
 
-  const props = defineProps<{ blueprintBgColor: BlueprintBackgroundColor; concept: Concept }>()
-  const { blueprintBgColor } = toRefs(props)
+  defineProps<{ concept: Concept }>()
 
   // Lazy loading necessary because of mutual nesting
   const ConceptSFC = defineAsyncComponent(() => import('@FEATURES/blueprint/components/Concept'))
@@ -14,6 +12,5 @@
     v-for="(subConcept, index) in concept.composition?.subConcepts"
     :key="index"
     :concept-name="subConcept.concept.name"
-    :blueprint-bg-color="blueprintBgColor"
   />
 </template>

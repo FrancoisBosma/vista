@@ -2,10 +2,11 @@
   import Grid from './Grid'
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setStyleHandling, setZoomHandling } from './composables'
-  import type { BlueprintInfo, GridRefs } from '@FEATURES/blueprint/types'
+  import type { BlueprintDepth, BlueprintInfo, GridRefs } from '@FEATURES/blueprint/types'
 
-  const props = defineProps<{ bgColor?: string }>()
-  const { bgColor } = toRefs(props)
+  const props = withDefaults(defineProps<{ depth: BlueprintDepth }>(), { depth: 0 })
+  const { depth } = toRefs(props)
+  provide('blueprint-depth', depth.value)
 
   const bp = ref(null)
   const gridRefs: GridRefs = ref([])
@@ -15,7 +16,7 @@
   const commonKit = setCommonHandling({ ui })
   const { contentScale, handleWheel, handlePinch } = setZoomHandling({ ui, bpInfo, gridRefs, ...commonKit })
   const { handleDrag } = setDragHandling({ ui, gridRefs, ...commonKit })
-  const styleKit = setStyleHandling({ bp, contentScale, ui, ...commonKit })
+  const styleKit = setStyleHandling({ depth, bp, contentScale, ui, ...commonKit })
 
   // Disable default zooming, e.g. from pinching
   useHead({
@@ -43,7 +44,7 @@
   .blueprint {
     @apply relative w-full h-full overflow-hidden;
     cursor: v-bind('styleKit.bpCursor');
-    background-color: v-bind('bgColor');
+    background-color: v-bind('styleKit.bgColor');
 
     .bp-background {
       @apply absolute w-full h-full children:(absolute);
