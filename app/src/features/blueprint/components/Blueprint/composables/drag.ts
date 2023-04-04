@@ -1,17 +1,17 @@
 import { objectMap } from '@GLOBAL/functions/objects'
+import { useUiStore } from '@FEATURES/blueprint/stores'
 import type { setCommonHandling } from './'
 import type { DragState } from '@SRC/types'
-import type { Dimension, GridRefs, Offset, Offsets } from '@FEATURES/blueprint/types'
-import type { useUiStore } from '@FEATURES/blueprint/stores'
+import type { Dimension, Offset, Offsets } from '@FEATURES/blueprint/types'
+
+const ui = useUiStore()
 
 type DragSetterArguments = {
-  ui: ReturnType<typeof useUiStore>
-  gridRefs: GridRefs
+  gridRefs: Ref<(HTMLElement | null)[]>
   bgOffsets: Offsets
 } & ReturnType<typeof setCommonHandling>
 
 export default function setDragHandling({
-  ui,
   gridRefs,
   bgOffsets,
   updateContentOffsets,
@@ -29,7 +29,7 @@ export default function setDragHandling({
     )
     updateBackgroundOffsets(gridOffsets)
     // Drag
-    ui.dragState = last ? 'idle' : first ? 'dragStart' : 'dragged'
+    ui.isDragging = !(first || last)
   }
 
   return {

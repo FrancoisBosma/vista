@@ -3,5 +3,4 @@ import type { FullGestureState, StateKey } from '@vueuse/gesture'
 
 export type UserModule = (ctx: ViteSSGContext) => void
 export type DragState = FullGestureState<StateKey<'drag'>>
-export type DragStatus = 'idle' | 'dragStart' | 'dragged'
 export type PinchState = FullGestureState<StateKey<'pinch'>>

@@ -1,17 +1,18 @@
 import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
+import { useUiStore } from '@FEATURES/blueprint/stores'
 import type { Ref } from 'vue'
 import type { setCommonHandling, setZoomHandling } from './'
-import type { useUiStore } from '@FEATURES/blueprint/stores'
 import type { BlueprintDepth } from '@FEATURES/blueprint/types'
+
+const ui = useUiStore()
 
 type StyleArguments = {
   bp: Ref
   contentScale: ReturnType<typeof setZoomHandling>['contentScale']
   depth: Ref<BlueprintDepth>
-  ui: ReturnType<typeof useUiStore>
 } & ReturnType<typeof setCommonHandling>
 
-export default function setStyleHandling({ bp, bgOffsets, contentOffsets, contentScale, depth, ui }: StyleArguments) {
+export default function setStyleHandling({ bp, bgOffsets, contentOffsets, contentScale, depth }: StyleArguments) {
   const bgColor = depth.value % 2 === 0 ? BlueprintBackgroundColor.normal : BlueprintBackgroundColor.stronger
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
   const bpCursor = eagerComputed(() => `${isUserPressingDown.value ? 'grabbing ' : 'grab'}`)

@@ -2,7 +2,6 @@ import { acceptHMRUpdate, defineStore } from 'pinia'
 import { nthRoot } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import type { Ref } from 'vue'
-import type { DragStatus } from '@SRC/types'
 import type {
   Axes,
   Axis,
@@ -37,7 +36,7 @@ export const useUiStore = defineStore('ui', () => {
     in: { directionFactor: <ZoomDirectionFactor>1 },
   })
   const zoomRate = ref(nthRoot(gridConfig.subSquareAmount, gridConfig.zoom.levelReset))
-  const dragState = ref('idle' as DragStatus)
+  const isDragging = ref(false)
   return {
     axes,
     dimensions,
@@ -45,7 +44,7 @@ export const useUiStore = defineStore('ui', () => {
     gridConfig,
     zoomRate,
     zoomTypes,
-    dragState,
+    isDragging,
   }
 })
 

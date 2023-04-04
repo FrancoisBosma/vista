@@ -1,5 +1,3 @@
-import type { Ref } from 'vue'
-
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
 export type Axes = Record<Dimension, Axis>
@@ -31,4 +29,3 @@ export enum BlueprintBackgroundColor {
   stronger = 'var(--background-stronger)',
 }
 export type BlueprintDepth = number
-export type GridRefs = Ref<Object[]>

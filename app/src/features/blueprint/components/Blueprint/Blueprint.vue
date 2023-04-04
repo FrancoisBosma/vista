@@ -2,21 +2,21 @@
   import Grid from './Grid'
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { setCommonHandling, setDragHandling, setStyleHandling, setZoomHandling } from './composables'
-  import type { BlueprintDepth, BlueprintInfo, GridRefs } from '@FEATURES/blueprint/types'
+  import type { BlueprintDepth, BlueprintInfo } from '@FEATURES/blueprint/types'
 
   const props = withDefaults(defineProps<{ depth: BlueprintDepth }>(), { depth: 0 })
   const { depth } = toRefs(props)
   provide('blueprint-depth', depth.value)
 
-  const bp = ref(null)
-  const gridRefs: GridRefs = ref([])
+  const bp = ref<HTMLElement | null>(null)
+  const gridRefs = ref<(HTMLElement | null)[]>([])
   const bpInfo = useElementBounding(bp) as BlueprintInfo
 
   const ui = useUiStore()
-  const commonKit = setCommonHandling({ ui })
-  const { contentScale, handleWheel, handlePinch } = setZoomHandling({ ui, bpInfo, gridRefs, ...commonKit })
-  const { handleDrag } = setDragHandling({ ui, gridRefs, ...commonKit })
-  const styleKit = setStyleHandling({ depth, bp, contentScale, ui, ...commonKit })
+  const commonKit = setCommonHandling()
+  const { contentScale, handleWheel, handlePinch } = setZoomHandling({ bpInfo, gridRefs, ...commonKit })
+  const { handleDrag } = setDragHandling({ gridRefs, ...commonKit })
+  const styleKit = setStyleHandling({ depth, bp, contentScale, ...commonKit })
 
   // Disable default zooming, e.g. from pinching
   useHead({
@@ -32,7 +32,7 @@
 <template>
   <div ref="bp" v-drag="handleDrag" v-pinch="handlePinch" class="blueprint" @wheel.stop.prevent="handleWheel">
     <div class="bp-background">
-      <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" :ref="(el: any) => gridRefs.push(el)" :grid-id="n - 1" />
+      <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" ref="gridRefs" :grid-id="n - 1" />
     </div>
     <div class="bp-content">
       <slot />

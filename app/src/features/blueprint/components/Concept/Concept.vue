@@ -10,11 +10,11 @@
 
   const { fetchConcept } = useConceptStore()
 
+  const closeConceptEl = ref<HTMLElement | null>(null)
   const { concept } = fetchConcept(conceptName.value)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
-  const closeConceptEl = ref()
 
-  const { isHovered, handleTapDown, handleTapUp, handleClick, isOpen } = setManipulationHandling({ isEmpty })
+  const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
   const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl })
 
   /**
@@ -26,17 +26,7 @@
 </script>
 
 <template>
-  <div
-    class="concept"
-    @mouseover.stop="isHovered = !isHovered"
-    @mouseout.stop="isHovered = !isHovered"
-    @mousedown="handleTapDown"
-    @touchstart="handleTapDown"
-    @mouseup="handleTapUp"
-    @touchend="handleTapUp"
-    @mouseleave="handleTapUp"
-    @click.stop="handleClick"
-  >
+  <div class="concept" @click.stop="handleClick">
     <keep-alive>
       <CloseConcept
         v-if="!isOpen"
@@ -52,12 +42,13 @@
 
 <style scoped lang="postcss">
   .concept {
+    @apply select-none;
     cursor: v-bind('styleKit.conceptCursor');
     width: v-bind('styleKit.savedConceptDimensions.width');
     height: v-bind('styleKit.savedConceptDimensions.height');
 
     & > * {
-      @apply border rounded-10px;
+      @apply border-1 rounded-10px;
       box-shadow: v-bind('styleKit.boxShadow');
     }
   }

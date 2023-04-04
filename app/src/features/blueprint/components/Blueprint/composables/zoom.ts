@@ -1,5 +1,6 @@
 import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
+import { useUiStore } from '@FEATURES/blueprint/stores'
 import type { setCommonHandling } from '.'
 import type { PinchState } from '@SRC/types'
 import type {
@@ -8,20 +9,18 @@ import type {
   Coordinates,
   Dimension,
   GridExposed,
-  GridRefs,
   Offsets,
   ZoomDirectionFactor,
 } from '@FEATURES/blueprint/types'
-import type { useUiStore } from '@FEATURES/blueprint/stores'
+
+const ui = useUiStore()
 
 type ZoomSetterArguments = {
-  ui: ReturnType<typeof useUiStore>
   bpInfo: BlueprintInfo
-  gridRefs: GridRefs
+  gridRefs: Ref<(HTMLElement | null)[]>
 } & ReturnType<typeof setCommonHandling>
 
 export default function setZoomHandling({
-  ui,
   contentOffsets,
   bgOffsets,
   bpInfo,
