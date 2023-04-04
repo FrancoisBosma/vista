@@ -13,7 +13,6 @@
   const depth = inject<BlueprintDepth>('blueprint-depth', 0)
 
   const borderColor = computed(() => `var(${isHovered.value ? '--emphasis' : '--foreground'})`)
-  const boxShadow = computed(() => `${isHovered.value ? '0 0 3px var(--emphasis)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`)
 </script>
 
 <template>
@@ -26,9 +25,8 @@
 
 <style scoped lang="postcss">
   .open-concept {
-    @apply w-full h-full border rounded-10px overflow-hidden;
+    @apply w-full h-full overflow-hidden;
     border-color: v-bind('borderColor');
-    box-shadow: v-bind('boxShadow');
     /* DELETEME */
     width: 500px;
     height: 500px;

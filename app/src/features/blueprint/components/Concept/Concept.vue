@@ -15,7 +15,7 @@
   const closeConceptEl = ref()
 
   const { isHovered, handleTapDown, handleTapUp, handleClick, isOpen } = setManipulationHandling({ isEmpty })
-  const styleKit = setStyleHandling({ isEmpty, closeConceptEl })
+  const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl })
 
   /**
    * DELETEME
@@ -55,5 +55,10 @@
     cursor: v-bind('styleKit.conceptCursor');
     width: v-bind('styleKit.savedConceptDimensions.width');
     height: v-bind('styleKit.savedConceptDimensions.height');
+
+    & > * {
+      @apply border rounded-10px;
+      box-shadow: v-bind('styleKit.boxShadow');
+    }
   }
 </style>

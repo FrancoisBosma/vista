@@ -5,9 +5,6 @@
   const { isHovered, isEmpty } = toRefs(props)
 
   const bgColor = computed(() => `var(${isEmpty.value ? '--background-stronger' : '--foreground-contrast'})`)
-  const boxShadow = computed(
-    () => `${isHovered.value && !isEmpty.value ? '0 0 3px var(--emphasis)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`
-  )
   const borderColor = computed(() => `var(${isHovered.value && !isEmpty.value ? '--emphasis' : '--background'})`)
 </script>
 
@@ -17,9 +14,8 @@
 
 <style scoped lang="postcss">
   .close-concept {
-    @apply border rounded-10px p-1rem whitespace-pre-line;
+    @apply p-1rem whitespace-pre-line;
     background-color: v-bind('bgColor');
-    box-shadow: v-bind('boxShadow');
     border-color: v-bind('borderColor');
   }
 </style>
