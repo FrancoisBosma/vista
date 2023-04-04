@@ -45,7 +45,7 @@
         :is-hovered="isHovered"
         :is-empty="isEmpty"
       />
-      <OpenConcept v-else :concept="concept" :is-hovered="isHovered" :is-empty="isEmpty" />
+      <OpenConcept v-else :concept="concept" :is-empty="isEmpty" />
     </keep-alive>
   </div>
 </template>

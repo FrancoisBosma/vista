@@ -5,7 +5,7 @@
   const { isHovered, isEmpty } = toRefs(props)
 
   const bgColor = computed(() => `var(${isEmpty.value ? '--background-stronger' : '--foreground-contrast'})`)
-  const borderColor = computed(() => `var(${isHovered.value && !isEmpty.value ? '--emphasis' : '--background'})`)
+  const borderColor = computed(() => `var(${isHovered.value && !isEmpty.value ? '--foreground' : '--background'})`)
 </script>
 
 <template>

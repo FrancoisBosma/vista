@@ -12,7 +12,7 @@ interface StyleArguments {
 
 export default function setStyleHandling({ isEmpty, isHovered, closeConceptEl }: StyleArguments) {
   const boxShadow = computed(
-    () => `${isHovered.value && !isEmpty.value ? '0 0 3px var(--emphasis)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`
+    () => `${isHovered.value && !isEmpty.value ? '0 0 3px var(--foreground)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`
   )
   const conceptCursor = computed(() => (ui.dragState === 'dragged' ? 'inherit' : isEmpty.value ? 'auto' : 'pointer'))
   const savedConceptDimensions = reactive({

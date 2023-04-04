@@ -4,15 +4,9 @@
   import type { Concept } from '@API/gql-generated/graphql'
   import type { BlueprintDepth } from '@FEATURES/blueprint/types'
 
-  const props = defineProps<{
-    concept: Concept
-    isHovered: Boolean
-  }>()
-  const { isHovered } = toRefs(props)
+  defineProps<{ concept: Concept }>()
 
   const depth = inject<BlueprintDepth>('blueprint-depth', 0)
-
-  const borderColor = computed(() => `var(${isHovered.value ? '--emphasis' : '--foreground'})`)
 </script>
 
 <template>
@@ -25,8 +19,7 @@
 
 <style scoped lang="postcss">
   .open-concept {
-    @apply w-full h-full overflow-hidden;
-    border-color: v-bind('borderColor');
+    @apply w-full h-full overflow-hidden border-[var(--foreground)];
     /* DELETEME */
     width: 500px;
     height: 500px;
