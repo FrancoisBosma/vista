@@ -19,14 +19,13 @@ export default function setStyleHandling({ isEmpty, isHovered, closeConceptEl }:
     width: 'fit-content',
     height: 'fit-content',
   })
-  const updateSavedConceptDimensions = () => {
+  watchOnce(closeConceptEl, () => {
     const htmlElement = unrefElement(closeConceptEl)
     if (!htmlElement) return
     const { width, height } = htmlElement.getBoundingClientRect()
     savedConceptDimensions.width = `${width}px`
     savedConceptDimensions.height = `${height}px`
-  }
-  watchOnce(closeConceptEl, updateSavedConceptDimensions)
+  })
 
   return reactive({
     boxShadow,
