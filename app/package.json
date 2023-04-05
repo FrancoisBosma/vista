@@ -42,7 +42,6 @@
     "graphql": "^16.6.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.33",
-    "prism-theme-vars": "^0.2.4",
     "unfetch": "^5.0.0",
     "villus": "^3.0.0",
     "vue": "^3.2.47",
