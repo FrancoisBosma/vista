@@ -1,23 +1,34 @@
 <script setup lang="ts">
   import Grid from './Grid'
   import { useUiStore } from '@FEATURES/blueprint/stores'
-  import { setCommonHandling, setDragHandling, setStyleHandling, setZoomHandling } from './composables'
-  import type { BlueprintDepth, BlueprintInfo } from '@FEATURES/blueprint/types'
+  import {
+    setCommonHandling,
+    setDragHandling,
+    setElemBoundingHandling,
+    setStyleHandling,
+    setZoomHandling,
+  } from './composables'
+  import { bpDepthKey } from '@FEATURES/blueprint/components/Blueprint/constants/symbols'
+  import type { BlueprintDepth } from '@FEATURES/blueprint/types'
 
   const props = withDefaults(defineProps<{ depth: BlueprintDepth }>(), { depth: 0 })
   const { depth } = toRefs(props)
-  provide('blueprint-depth', depth.value)
 
   const bp = ref<HTMLElement | null>(null)
-  const gridRefs = ref<(HTMLElement | null)[]>([])
-  const bpInfo = useElementBounding(bp) as BlueprintInfo
+  const gridRefs = ref<Array<HTMLElement | null>>([])
 
   const ui = useUiStore()
-  const commonKit = setCommonHandling()
-  const { contentScale, handleWheel, handlePinch } = setZoomHandling({ bpInfo, gridRefs, ...commonKit })
-  const { handleDrag } = setDragHandling({ gridRefs, ...commonKit })
-  const styleKit = setStyleHandling({ depth, bp, contentScale, ...commonKit })
 
+  const commonKit = setCommonHandling()
+  const { bpBounding, updateBpBounding } = setElemBoundingHandling({ bp, depth })
+  const { contentScale, handleWheel, handlePinch } = setZoomHandling({
+    bpBounding,
+    gridRefs,
+    updateBpBounding,
+    ...commonKit,
+  })
+  const { handleDrag } = setDragHandling({ gridRefs, updateBpBounding, ...commonKit })
+  const styleKit = setStyleHandling({ depth, bp, contentScale, ...commonKit })
   // Disable default zooming, e.g. from pinching
   useHead({
     meta: [
@@ -27,6 +38,8 @@
       },
     ],
   })
+
+  provide(bpDepthKey, depth.value)
 </script>
 
 <template>

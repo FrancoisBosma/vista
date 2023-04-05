@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { Blueprint } from '@FEATURES/blueprint/components'
   import ConceptComposition from './ConceptComposition'
+  import { bpDepthKey } from '@FEATURES/blueprint/components/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
-  import type { BlueprintDepth } from '@FEATURES/blueprint/types'
 
   defineProps<{ concept: Concept }>()
 
-  const depth = inject<BlueprintDepth>('blueprint-depth', 0)
+  const depth = inject(bpDepthKey, 0)
 </script>
 
 <template>

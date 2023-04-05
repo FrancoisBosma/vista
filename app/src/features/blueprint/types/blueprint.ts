@@ -23,7 +23,7 @@ export interface GridExposed {
   squareLength: number
 }
 
-export type BlueprintInfo = ReturnType<typeof useElementBounding>
+export type BlueprintBounding = ReturnType<typeof useElementBounding>
 export enum BlueprintBackgroundColor {
   normal = 'var(--background)',
   stronger = 'var(--background-stronger)',

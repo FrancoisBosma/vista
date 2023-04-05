@@ -1,6 +1,6 @@
 import { objectMap } from '@GLOBAL/functions/objects'
 import { useUiStore } from '@FEATURES/blueprint/stores'
-import type { setCommonHandling } from './'
+import type { setCommonHandling, setElemBoundingHandling } from './'
 import type { DragState } from '@SRC/types'
 import type { Dimension, Offset, Offsets } from '@FEATURES/blueprint/types'
 
@@ -9,11 +9,13 @@ const ui = useUiStore()
 type DragSetterArguments = {
   gridRefs: Ref<(HTMLElement | null)[]>
   bgOffsets: Offsets
+  updateBpBounding: ReturnType<typeof setElemBoundingHandling>['updateBpBounding']
 } & ReturnType<typeof setCommonHandling>
 
 export default function setDragHandling({
   gridRefs,
   bgOffsets,
+  updateBpBounding,
   updateContentOffsets,
   updateBackgroundOffsets,
   getCurrentBiggestSquareLength,
@@ -30,6 +32,8 @@ export default function setDragHandling({
     updateBackgroundOffsets(gridOffsets)
     // Drag
     ui.isDragging = !(first || last)
+    // Update Blueprint bounding info
+    updateBpBounding()
   }
 
   return {

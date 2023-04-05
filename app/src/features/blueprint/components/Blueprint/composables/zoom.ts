@@ -1,11 +1,11 @@
 import { toTheNth } from '@GLOBAL/functions/numbers'
 import { objectMap } from '@GLOBAL/functions/objects'
 import { useUiStore } from '@FEATURES/blueprint/stores'
-import type { setCommonHandling } from '.'
+import type { setCommonHandling, setElemBoundingHandling } from '.'
 import type { PinchState } from '@SRC/types'
 import type {
   Axis,
-  BlueprintInfo,
+  BlueprintBounding,
   Coordinates,
   Dimension,
   GridExposed,
@@ -16,15 +16,17 @@ import type {
 const ui = useUiStore()
 
 type ZoomSetterArguments = {
-  bpInfo: BlueprintInfo
+  bpBounding: BlueprintBounding
   gridRefs: Ref<(HTMLElement | null)[]>
+  updateBpBounding: ReturnType<typeof setElemBoundingHandling>['updateBpBounding']
 } & ReturnType<typeof setCommonHandling>
 
 export default function setZoomHandling({
   contentOffsets,
   bgOffsets,
-  bpInfo,
+  bpBounding,
   gridRefs,
+  updateBpBounding,
   updateContentOffsets,
   updateBackgroundOffsets,
   applyForEveryGrid,
@@ -40,7 +42,7 @@ export default function setZoomHandling({
     const { axes } = ui
     Object.entries(axes).forEach(([dim, axis]) => {
       const contentToZoomCenterDistance =
-        bpInfo[<Dimension>dim].value / 2 + contentOffsets[<Dimension>dim] - zoomRelCoords[axis]
+        bpBounding[<Dimension>dim].value / 2 + contentOffsets[<Dimension>dim] - zoomRelCoords[axis]
       const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToZoomCenterDistance)
       output[dim] = extraContentOffset
     })
@@ -80,11 +82,16 @@ export default function setZoomHandling({
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
     updateContentOffsets(extraContentOffsets)
     updateBackground(zoomRelativeCoords, zoomFactor)
+    updateBpBounding()
   }
   const handleWheel = (event: WheelEvent) => {
     const zoomFactor: ZoomDirectionFactor =
       event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
-    const zoomRelativeCoords: Coordinates = objectMap(ui.axes, (axis: Axis) => event[axis] - bpInfo[axis].value, true)
+    const zoomRelativeCoords: Coordinates = objectMap(
+      ui.axes,
+      (axis: Axis) => event[axis] - bpBounding[axis].value,
+      true
+    )
     applyZoom(zoomFactor, zoomRelativeCoords)
   }
   const throttledPinch = useThrottleFn((origin, offset) => {
@@ -94,7 +101,7 @@ export default function setZoomHandling({
       scaleFactor > 1 ? ui.zoomTypes.in.directionFactor : ui.zoomTypes.out.directionFactor
     const zoomRelativeCoords: Coordinates = objectMap(
       ui.axes,
-      (axis: Axis, dim: Dimension, i: number) => origin[i] - bpInfo[axis].value,
+      (axis: Axis, dim: Dimension, i: number) => origin[i] - bpBounding[axis].value,
       true
     )
     applyZoom(zoomFactor, zoomRelativeCoords)
