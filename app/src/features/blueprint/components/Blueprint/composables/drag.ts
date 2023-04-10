@@ -33,7 +33,7 @@ export default function setDragHandling({
     // Drag
     ui.isDragging = !(first || last)
     // Update Blueprint bounding info
-    updateBpBounding()
+    if (last) updateBpBounding()
   }
 
   return {
