@@ -3,8 +3,8 @@
   import { convertDec2Hex, hexMultiplication, hexSum, range, toTheNth } from '@GLOBAL/functions/numbers'
   import type { ZoomDirectionFactor } from '@FEATURES/blueprint/types'
 
-  const props = defineProps<{ gridId: number }>()
-  const { gridId } = toRefs(props)
+  const props = defineProps<{ gridId: string; gridIndex: number }>()
+  const { gridId, gridIndex } = toRefs(props)
 
   const ui = useUiStore()
   const config = ui.gridConfig
@@ -12,9 +12,8 @@
   const zoomThresholds = ref(
     range(config.gridAmount + 1).map((i) => config.zoom.levelReset * (2 * (i / config.gridAmount) - 1))
   )
-  const zoomCount = ref(zoomThresholds.value[gridId.value] + 2)
+  const zoomCount = ref(zoomThresholds.value[gridIndex.value] + 2)
 
-  const patternId = ref(`bp-grid-${gridId.value}`)
   const zIndex = computed(() => zoomCount.value + config.zoom.levelReset) // 0 -> 2*levelReset
   const isGridVisible = eagerComputed(
     () => zoomCount.value > -config.zoom.levelReset && zoomCount.value < config.zoom.levelReset
@@ -52,11 +51,11 @@
 <template>
   <svg v-show="isGridVisible" class="bp-grid">
     <defs>
-      <pattern :id="patternId" :height="squareLength" :width="squareLength" patternUnits="userSpaceOnUse">
+      <pattern :id="gridId" :height="squareLength" :width="squareLength" patternUnits="userSpaceOnUse">
         <path :d="gridPath" fill="none" :stroke="strokeColor" :stroke-width="strokeWidth" />
       </pattern>
     </defs>
-    <rect width="100%" height="100%" :fill="`url(#${patternId})`" />
+    <rect width="100%" height="100%" :fill="`url(#${gridId})`" />
   </svg>
 </template>
 
