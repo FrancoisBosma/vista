@@ -20,9 +20,5 @@
 <style scoped lang="postcss">
   .open-concept {
     @apply w-full h-full overflow-hidden border-[var(--foreground)];
-    /* DELETEME */
-    width: 500px;
-    height: 500px;
-    /*  */
   }
 </style>

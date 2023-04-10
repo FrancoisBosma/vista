@@ -44,8 +44,8 @@
   .concept {
     @apply select-none;
     cursor: v-bind('styleKit.conceptCursor');
-    width: v-bind('styleKit.savedConceptDimensions.width');
-    height: v-bind('styleKit.savedConceptDimensions.height');
+    width: v-bind('styleKit.conceptDimensions.width');
+    height: v-bind('styleKit.conceptDimensions.height');
 
     & > * {
       @apply border-1 rounded-10px;
