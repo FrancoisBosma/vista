@@ -1,14 +1,16 @@
 <script setup lang="ts">
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { convertDec2Hex, hexMultiplication, hexSum, range, toTheNth } from '@GLOBAL/functions/numbers'
+  import { generateUuid } from '@GLOBAL/functions/uuid'
   import type { ZoomDirectionFactor } from '@FEATURES/blueprint/types'
 
-  const props = defineProps<{ gridId: string; gridIndex: number }>()
-  const { gridId, gridIndex } = toRefs(props)
+  const props = defineProps<{ gridIndex: number }>()
+  const { gridIndex } = toRefs(props)
 
   const ui = useUiStore()
   const config = ui.gridConfig
 
+  const gridId = generateUuid()
   const zoomThresholds = ref(
     range(config.gridAmount + 1).map((i) => config.zoom.levelReset * (2 * (i / config.gridAmount) - 1))
   )

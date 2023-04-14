@@ -45,13 +45,7 @@
 <template>
   <div ref="bp" v-drag="handleDrag" v-pinch="handlePinch" class="blueprint" @wheel.stop.prevent="handleWheel">
     <div class="bp-background">
-      <Grid
-        v-for="n in ui.gridConfig.gridAmount"
-        :key="n"
-        ref="gridRefs"
-        :grid-id="`bp-grid-${ui.gridConfig.gridAmount * depth + (n - 1)}`"
-        :grid-index="n - 1"
-      />
+      <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" ref="gridRefs" :grid-index="n - 1" />
     </div>
     <div class="bp-content">
       <slot />
