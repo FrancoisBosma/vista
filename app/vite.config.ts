@@ -44,6 +44,7 @@ export default defineConfig({
     AutoImport({
       dts: 'src/generated_auto-imports.d.ts',
       imports: ['@vueuse/core', '@vueuse/head', 'vitest', 'vue', 'vue-i18n', 'vue-router'],
+      dirs: ['src/global/**'],
     }),
 
     // https://github.com/antfu/unplugin-vue-components

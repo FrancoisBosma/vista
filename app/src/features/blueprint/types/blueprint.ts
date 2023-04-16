@@ -1,3 +1,5 @@
+import type { UUID } from '@GLOBAL/functions/uuid'
+
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
 export type Axes = Record<Dimension, Axis>
@@ -20,12 +22,25 @@ export type Offsets = Record<Dimension, Offset>
 export type Coordinates = Record<Axis, number>
 export interface GridExposed {
   updateAppearance: Function
-  squareLength: number
+  squareLength: number | Ref<number>
 }
+export type GridRefs = Ref<Array<GridExposed>>
 
 export type BlueprintBounding = ReturnType<typeof useElementBounding>
 export enum BlueprintBackgroundColor {
   normal = 'var(--background)',
   stronger = 'var(--background-stronger)',
 }
-export type BlueprintDepth = number
+export interface BlueprintNodeElement {
+  uuid: UUID
+}
+export interface BlueprintElement {
+  updateBpBounding: Function
+}
+export interface BlueprintProvideData {
+  contentScale: Ref<number>
+}
+export interface BlueprintNodeProvideData {
+  depth: number
+  id?: UUID
+}

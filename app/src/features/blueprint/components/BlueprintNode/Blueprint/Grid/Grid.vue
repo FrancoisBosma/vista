@@ -1,8 +1,6 @@
 <script setup lang="ts">
   import { useUiStore } from '@FEATURES/blueprint/stores'
-  import { convertDec2Hex, hexMultiplication, hexSum, range, toTheNth } from '@GLOBAL/functions/numbers'
-  import { generateUuid } from '@GLOBAL/functions/uuid'
-  import type { ZoomDirectionFactor } from '@FEATURES/blueprint/types'
+  import type { GridExposed, ZoomDirectionFactor } from '@FEATURES/blueprint/types'
 
   const props = defineProps<{ gridIndex: number }>()
   const { gridIndex } = toRefs(props)
@@ -47,7 +45,7 @@
   }
   const updateAppearance = (zoomFactor: ZoomDirectionFactor) => updateZoomCount(zoomFactor)
 
-  defineExpose({ updateAppearance, squareLength })
+  defineExpose({ updateAppearance, squareLength } satisfies GridExposed)
 </script>
 
 <template>

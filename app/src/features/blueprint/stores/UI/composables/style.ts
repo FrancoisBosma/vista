@@ -1,7 +1,3 @@
-import { acceptHMRUpdate, defineStore } from 'pinia'
-import { nthRoot } from '@GLOBAL/functions/numbers'
-import { objectMap } from '@GLOBAL/functions/objects'
-import type { Ref } from 'vue'
 import type {
   Axes,
   Axis,
@@ -11,7 +7,7 @@ import type {
   ZoomTypes,
 } from '@FEATURES/blueprint/types/'
 
-export const useUiStore = defineStore('ui', () => {
+export default function setStyleHandling() {
   const dimensions: Dimensions = reactive({
     width: { axis: <Axis>'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize' },
     height: { axis: <Axis>'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize' },
@@ -37,15 +33,14 @@ export const useUiStore = defineStore('ui', () => {
   })
   const zoomRate = ref(nthRoot(gridConfig.subSquareAmount, gridConfig.zoom.levelReset))
   const isDragging = ref(false)
+
   return {
-    axes,
     dimensions,
+    axes,
     mouseCoords,
     gridConfig,
-    zoomRate,
     zoomTypes,
+    zoomRate,
     isDragging,
   }
-})
-
-if (import.meta.hot) import.meta.hot.accept(acceptHMRUpdate(useUiStore, import.meta.hot))
+}

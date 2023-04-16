@@ -33,10 +33,10 @@ export const useConceptStore = defineStore('Concept', () => {
   }
 
   return {
-    fetchConcept,
     fetchedConcepts,
-    saveStoreConcept,
     getStoreConcept,
+    saveStoreConcept,
+    fetchConcept,
   }
 })
 

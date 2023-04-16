@@ -14,7 +14,7 @@
 
 <style scoped lang="postcss">
   .close-concept {
-    @apply p-1rem whitespace-pre-line;
+    @apply h-full p-1rem flex justify-center items-center whitespace-pre-line;
     background-color: v-bind('bgColor');
     border-color: v-bind('borderColor');
   }

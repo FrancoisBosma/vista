@@ -1,19 +1,16 @@
 <script setup lang="ts">
-  import { Blueprint } from '@FEATURES/blueprint/components'
+  import { BlueprintNode } from '@FEATURES/blueprint/components'
   import ConceptComposition from './ConceptComposition'
-  import { bpDepthKey } from '@FEATURES/blueprint/components/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
 
   defineProps<{ concept: Concept }>()
-
-  const depth = inject(bpDepthKey, 0)
 </script>
 
 <template>
   <div class="open-concept">
-    <Blueprint v-if="concept.composition" :depth="depth + 1">
+    <BlueprintNode v-if="concept.composition">
       <ConceptComposition :concept="concept" />
-    </Blueprint>
+    </BlueprintNode>
   </div>
 </template>
 

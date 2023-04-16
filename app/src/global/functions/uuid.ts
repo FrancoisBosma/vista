@@ -1,11 +1,11 @@
-type UUID = `id-${number}`
+export type UUID = `uuid-${number}`
 
 const uuidGenerator = (function* () {
   let index = 0
   while (true) {
-    yield `id-${index++}` satisfies UUID
+    yield `uuid-${index++}` satisfies UUID
   }
 })()
-const generateUuid = (): string => uuidGenerator.next().value
+const generateUuid = () => uuidGenerator.next().value
 
 export { generateUuid }

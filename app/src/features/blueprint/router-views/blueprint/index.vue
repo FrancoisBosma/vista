@@ -5,12 +5,22 @@ meta:
 </route>
 
 <script setup lang="ts">
-  import { Blueprint, Concept } from '@FEATURES/blueprint/components'
+  import { BlueprintNode, Concept } from '@FEATURES/blueprint/components'
   const conceptName = 'Communication'
+
+  // Disable default zooming, e.g. from pinching
+  useHead({
+    meta: [
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no',
+      },
+    ],
+  })
 </script>
 
 <template>
-  <Blueprint :depth="0">
+  <BlueprintNode>
     <Concept :concept-name="conceptName" />
-  </Blueprint>
+  </BlueprintNode>
 </template>

@@ -8,38 +8,37 @@
     setStyleHandling,
     setZoomHandling,
   } from './composables'
-  import { bpDepthKey } from '@FEATURES/blueprint/components/Blueprint/constants/symbols'
-  import type { BlueprintDepth } from '@FEATURES/blueprint/types'
+  import {
+    bpNodeProvideKey,
+    bpProvideKey,
+  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
+  import type { BlueprintElement } from '@FEATURES/blueprint/types'
 
-  const props = withDefaults(defineProps<{ depth: BlueprintDepth }>(), { depth: 0 })
-  const { depth } = toRefs(props)
+  const props = withDefaults(defineProps<{ bgColor: BlueprintBackgroundColor }>(), {
+    bgColor: BlueprintBackgroundColor.normal,
+  })
+  const { bgColor } = toRefs(props)
+  const parentBpNodeData = inject(bpNodeProvideKey, { depth: -1, id: undefined })
 
   const bp = ref<HTMLElement | null>(null)
-  const gridRefs = ref<Array<HTMLElement | null>>([])
+  const gridRefs = ref<Array<InstanceType<typeof Grid>>>([])
 
   const ui = useUiStore()
 
   const commonKit = setCommonHandling()
-  const { bpBounding, updateBpBounding } = setElemBoundingHandling({ bp, depth })
+  const { bpBounding, updateBpBounding, updateBpSubtreeBoundings } = setElemBoundingHandling({ bp, parentBpNodeData })
   const { contentScale, handleWheel, handlePinch } = setZoomHandling({
     bpBounding,
     gridRefs,
-    updateBpBounding,
+    updateBpSubtreeBoundings,
     ...commonKit,
   })
-  const { handleDrag } = setDragHandling({ gridRefs, updateBpBounding, ...commonKit })
-  const styleKit = setStyleHandling({ depth, bp, contentScale, ...commonKit })
-  // Disable default zooming, e.g. from pinching
-  useHead({
-    meta: [
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no',
-      },
-    ],
-  })
+  const { handleDrag } = setDragHandling({ gridRefs, updateBpSubtreeBoundings, ...commonKit })
+  const styleKit = setStyleHandling({ bp, ...commonKit })
 
-  provide(bpDepthKey, depth.value)
+  provide(bpProvideKey, { contentScale })
+  defineExpose({ updateBpBounding } satisfies BlueprintElement)
 </script>
 
 <template>
@@ -57,7 +56,7 @@
   .blueprint {
     @apply relative w-full h-full overflow-hidden;
     cursor: v-bind('styleKit.bpCursor');
-    background-color: v-bind('styleKit.bgColor');
+    background-color: v-bind('bgColor');
 
     .bp-background {
       @apply absolute w-full h-full children:(absolute);

@@ -1,5 +1,3 @@
-import { toTheNth } from '@GLOBAL/functions/numbers'
-import { objectMap } from '@GLOBAL/functions/objects'
 import { useUiStore } from '@FEATURES/blueprint/stores'
 import type { setCommonHandling, setElemBoundingHandling } from '.'
 import type { PinchState } from '@SRC/types'
@@ -9,6 +7,7 @@ import type {
   Coordinates,
   Dimension,
   GridExposed,
+  GridRefs,
   Offsets,
   ZoomDirectionFactor,
 } from '@FEATURES/blueprint/types'
@@ -17,8 +16,8 @@ const ui = useUiStore()
 
 type ZoomSetterArguments = {
   bpBounding: BlueprintBounding
-  gridRefs: Ref<(HTMLElement | null)[]>
-  updateBpBounding: ReturnType<typeof setElemBoundingHandling>['updateBpBounding']
+  gridRefs: GridRefs
+  updateBpSubtreeBoundings: ReturnType<typeof setElemBoundingHandling>['updateBpSubtreeBoundings']
 } & ReturnType<typeof setCommonHandling>
 
 export default function setZoomHandling({
@@ -26,7 +25,7 @@ export default function setZoomHandling({
   bgOffsets,
   bpBounding,
   gridRefs,
-  updateBpBounding,
+  updateBpSubtreeBoundings,
   updateContentOffsets,
   updateBackgroundOffsets,
   applyForEveryGrid,
@@ -34,16 +33,16 @@ export default function setZoomHandling({
   computeExtraOffset,
 }: ZoomSetterArguments) {
   const contentScale = ref(1)
-
-  const computeLengthDelta = (newScale: number, lastScale: number, length: number) =>
-    (newScale / lastScale - 1) * length
-  const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, newScale: number, lastScale: number): Offsets => {
+  const computeZoomToApply = (zoomFactor: ZoomDirectionFactor): number => toTheNth(ui.zoomRate, zoomFactor)
+  const computeLengthDelta = (zoomToApply: number, length: number) => (zoomToApply - 1) * length
+  const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, zoomFactor: ZoomDirectionFactor): Offsets => {
     const output: Record<string, number> = {}
     const { axes } = ui
+    const zoomToApply = computeZoomToApply(zoomFactor)
     Object.entries(axes).forEach(([dim, axis]) => {
       const contentToZoomCenterDistance =
         bpBounding[<Dimension>dim].value / 2 + contentOffsets[<Dimension>dim] - zoomRelCoords[axis]
-      const extraContentOffset = computeLengthDelta(newScale, lastScale, contentToZoomCenterDistance)
+      const extraContentOffset = computeLengthDelta(zoomToApply, contentToZoomCenterDistance)
       output[dim] = extraContentOffset
     })
     return output as Offsets
@@ -64,9 +63,8 @@ export default function setZoomHandling({
     return output as Offsets
   }
   const updateContentScale = (zoomFactor: ZoomDirectionFactor) => {
-    const lastScaleContent = contentScale.value
-    contentScale.value *= toTheNth(ui.zoomRate, zoomFactor)
-    return { lastScaleContent, newScaleContent: contentScale.value }
+    const zoomToApply = computeZoomToApply(zoomFactor)
+    contentScale.value *= zoomToApply
   }
   const updateGridsAppearance = (zoomFactor: ZoomDirectionFactor) => {
     applyForEveryGrid(gridRefs, (grid: GridExposed) => grid.updateAppearance(zoomFactor))
@@ -78,11 +76,11 @@ export default function setZoomHandling({
     updateBackgroundOffsets(extraOffsets)
   }
   const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates) => {
-    const { lastScaleContent, newScaleContent } = updateContentScale(zoomFactor)
-    const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, newScaleContent, lastScaleContent)
+    updateContentScale(zoomFactor)
+    const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, zoomFactor)
     updateContentOffsets(extraContentOffsets)
     updateBackground(zoomRelativeCoords, zoomFactor)
-    updateBpBounding()
+    updateBpSubtreeBoundings()
   }
   const handleWheel = (event: WheelEvent) => {
     const zoomFactor: ZoomDirectionFactor =

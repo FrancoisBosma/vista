@@ -1,8 +1,5 @@
-import { absoluteValue, floorRoundUp, range } from '@GLOBAL/functions/numbers'
 import { useUiStore } from '@FEATURES/blueprint/stores'
-import type { Dimension, GridExposed, Offsets } from '@FEATURES/blueprint/types'
-
-type GridRefs = Ref<Array<HTMLElement | null>>
+import type { Dimension, GridExposed, GridRefs, Offsets } from '@FEATURES/blueprint/types'
 
 const ui = useUiStore()
 

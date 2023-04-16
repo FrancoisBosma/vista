@@ -1,4 +1,4 @@
 import Concept from './Concept'
-import Blueprint from './Blueprint'
+import BlueprintNode from './BlueprintNode'
 
-export { Blueprint, Concept }
+export { BlueprintNode, Concept }
