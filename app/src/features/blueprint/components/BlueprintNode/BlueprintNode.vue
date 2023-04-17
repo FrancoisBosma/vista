@@ -17,7 +17,7 @@
 
   watchOnce(bp, () => {
     const parentBpNodeId = parentBpNodeData.id
-    ui.registerNewBlueprintNode(uuid, bp.value as BlueprintElement, parentBpNodeId)
+    ui.registerNewBlueprintNode(uuid, bp.value as unknown as BlueprintElement, parentBpNodeId)
   })
 
   provide(bpNodeProvideKey, { depth, id: uuid })

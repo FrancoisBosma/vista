@@ -35,7 +35,7 @@ export interface BlueprintNodeElement {
   uuid: UUID
 }
 export interface BlueprintElement {
-  updateBpBounding: Function
+  bpBounding: BlueprintBounding
 }
 export interface BlueprintProvideData {
   contentScale: Ref<number>

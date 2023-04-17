@@ -34,7 +34,7 @@ export default function useBlueprintNodeMap() {
     node.children.forEach((childNodeId) => applyDownwards(childNodeId, fn))
   }
   const updateBpSubtree = (nodeId: BpNodeId) => {
-    applyDownwards(nodeId, (nodeWrapper: BpNodeWrapper) => nodeWrapper.bpRef.updateBpBounding())
+    applyDownwards(nodeId, (nodeWrapper: BpNodeWrapper) => nodeWrapper.bpRef.bpBounding.update())
   }
 
   return {

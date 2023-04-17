@@ -27,7 +27,7 @@
   const ui = useUiStore()
 
   const commonKit = setCommonHandling()
-  const { bpBounding, updateBpBounding, updateBpSubtreeBoundings } = setElemBoundingHandling({ bp, parentBpNodeData })
+  const { bpBounding, updateBpSubtreeBoundings } = setElemBoundingHandling({ bp, parentBpNodeData })
   const { contentScale, handleWheel, handlePinch } = setZoomHandling({
     bpBounding,
     gridRefs,
@@ -38,7 +38,7 @@
   const styleKit = setStyleHandling({ bp, ...commonKit })
 
   provide(bpProvideKey, { contentScale })
-  defineExpose({ updateBpBounding } satisfies BlueprintElement)
+  defineExpose({ bpBounding } satisfies BlueprintElement)
 </script>
 
 <template>
