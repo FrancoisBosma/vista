@@ -3,7 +3,8 @@ import setStyleHandling from './composables/style'
 import useBlueprintNodeMap from './composables/blueprintNodeMap'
 
 export const useUiStore = defineStore('UI', () => {
-  const { dimensions, axes, mouseCoords, gridConfig, zoomTypes, zoomRate, isDragging } = setStyleHandling()
+  const { dimensions, axes, mouseCoords, gridConfig, zoomTypes, zoomRate, lastDragDistance, isDragging } =
+    setStyleHandling()
   const { registerNewBlueprintNode, updateBpSubtree } = useBlueprintNodeMap()
 
   return {
@@ -13,6 +14,7 @@ export const useUiStore = defineStore('UI', () => {
     gridConfig,
     zoomRate,
     zoomTypes,
+    lastDragDistance,
     isDragging,
     registerNewBlueprintNode,
     updateBpSubtree,

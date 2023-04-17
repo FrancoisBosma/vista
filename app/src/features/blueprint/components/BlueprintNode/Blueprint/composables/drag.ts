@@ -20,7 +20,7 @@ export default function setDragHandling({
   getCurrentBiggestSquareLength,
   computeExtraOffset,
 }: DragSetterArguments) {
-  const handleDrag = ({ delta, first, last, event }: DragState) => {
+  const handleDrag = ({ delta, first, last, event, distance }: DragState) => {
     event?.stopPropagation()
     // Offsets
     const contentOffsets = { width: delta[0], height: delta[1] } as Offsets
@@ -31,8 +31,11 @@ export default function setDragHandling({
     updateBackgroundOffsets(gridOffsets)
     // Drag
     ui.isDragging = !(first || last)
-    // Update Blueprint bounding info
-    if (last) updateBpSubtreeBoundings()
+    if (first) ui.lastDragDistance = 0
+    if (last) {
+      ui.lastDragDistance = distance
+      updateBpSubtreeBoundings()
+    }
   }
 
   return {

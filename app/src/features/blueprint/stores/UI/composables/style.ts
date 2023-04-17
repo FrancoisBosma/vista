@@ -32,6 +32,7 @@ export default function setStyleHandling() {
     in: { directionFactor: <ZoomDirectionFactor>1 },
   })
   const zoomRate = ref(nthRoot(gridConfig.subSquareAmount, gridConfig.zoom.levelReset))
+  const lastDragDistance = ref(0)
   const isDragging = ref(false)
 
   return {
@@ -41,6 +42,7 @@ export default function setStyleHandling() {
     gridConfig,
     zoomTypes,
     zoomRate,
+    lastDragDistance,
     isDragging,
   }
 }

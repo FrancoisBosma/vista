@@ -16,8 +16,8 @@ export default function setManipulationHandling({ isEmpty, closeConceptEl }: Man
   }
 
   const longPressed = ref(false)
-  onLongPress(closeConceptEl, () => (longPressed.value = true), { modifiers: { stop: true } })
-  const { pressed } = useMousePressed({ drag: false, target: closeConceptEl })
+  onLongPress(closeConceptEl, () => (longPressed.value = true))
+  const { pressed } = useMousePressed({ drag: true, target: closeConceptEl })
   const isClickable = computed(() => !(isOpen.value || ui.isDragging || isEmpty.value))
   const handleOneTap = () => {
     // TODO single-click
@@ -34,6 +34,8 @@ export default function setManipulationHandling({ isEmpty, closeConceptEl }: Man
   }
   const firstClick = useTimeoutFn(() => handleOneTap(), 500, { immediate: false })
   const handleClick = () => {
+    const justFinishedDragging = ui.lastDragDistance
+    if (justFinishedDragging) return firstClick.stop()
     if (!isClickable.value) return
     if (longPressed.value) {
       longPressed.value = false
