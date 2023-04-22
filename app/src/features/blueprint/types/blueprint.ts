@@ -2,11 +2,13 @@ import type { UUID } from '@GLOBAL/functions/uuid'
 
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
+export type OffsetSide = 'left' | 'right' | 'top' | 'bottom'
 export type Axes = Record<Dimension, Axis>
 export interface DimensionProperties {
   axis: Axis
   boundingClientRectProperty: string
   boxSizeProperty: string
+  offsetSide: OffsetSide
 }
 export type Dimensions = Record<Dimension, DimensionProperties>
 
@@ -35,6 +37,7 @@ export interface BlueprintNodeElement {
   uuid: UUID
 }
 export interface BlueprintElement {
+  applyZoom: Function
   bpBounding: BlueprintBounding
 }
 export interface BlueprintProvideData {
@@ -43,4 +46,10 @@ export interface BlueprintProvideData {
 export interface BlueprintNodeProvideData {
   depth: number
   id?: UUID
+}
+export type BpNodeId = BlueprintNodeElement['uuid']
+export interface BpNodeWrapper {
+  bpRef: BlueprintElement
+  childrenIds: Array<BpNodeId>
+  parentId?: BpNodeId
 }

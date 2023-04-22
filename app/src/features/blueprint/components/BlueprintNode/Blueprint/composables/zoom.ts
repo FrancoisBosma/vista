@@ -4,6 +4,7 @@ import type { PinchState } from '@SRC/types'
 import type {
   Axis,
   BlueprintBounding,
+  BlueprintNodeProvideData,
   Coordinates,
   Dimension,
   GridExposed,
@@ -18,6 +19,7 @@ type ZoomSetterArguments = {
   bpBounding: BlueprintBounding
   gridRefs: GridRefs
   updateBpSubtreeBoundings: ReturnType<typeof setElemBoundingHandling>['updateBpSubtreeBoundings']
+  parentBpNodeData: BlueprintNodeProvideData
 } & ReturnType<typeof setCommonHandling>
 
 export default function setZoomHandling({
@@ -25,6 +27,7 @@ export default function setZoomHandling({
   bgOffsets,
   bpBounding,
   gridRefs,
+  parentBpNodeData,
   updateBpSubtreeBoundings,
   updateContentOffsets,
   updateBackgroundOffsets,
@@ -34,7 +37,7 @@ export default function setZoomHandling({
 }: ZoomSetterArguments) {
   const contentScale = ref(1)
   const computeZoomToApply = (zoomFactor: ZoomDirectionFactor): number => toTheNth(ui.zoomRate, zoomFactor)
-  const computeLengthDelta = (zoomToApply: number, length: number) => (zoomToApply - 1) * length
+  const computeLengthDelta = (zoomToApply: number, length: number): number => (zoomToApply - 1) * length
   const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, zoomFactor: ZoomDirectionFactor): Offsets => {
     const output: Record<string, number> = {}
     const { axes } = ui
@@ -62,27 +65,51 @@ export default function setZoomHandling({
     })
     return output as Offsets
   }
-  const updateContentScale = (zoomFactor: ZoomDirectionFactor) => {
+  const updateContentScale = (zoomFactor: ZoomDirectionFactor): void => {
     const zoomToApply = computeZoomToApply(zoomFactor)
     contentScale.value *= zoomToApply
   }
-  const updateGridsAppearance = (zoomFactor: ZoomDirectionFactor) => {
+  const updateGridsAppearance = (zoomFactor: ZoomDirectionFactor): ReturnType<typeof getCurrentBiggestSquareLength> => {
     applyForEveryGrid(gridRefs, (grid: GridExposed) => grid.updateAppearance(zoomFactor))
     return getCurrentBiggestSquareLength(gridRefs)
   }
-  const updateBackground = (zoomRelativeCoords: Coordinates, zoomFactor: ZoomDirectionFactor) => {
+  const updateBackground = (zoomRelativeCoords: Coordinates, zoomFactor: ZoomDirectionFactor): void => {
     const currentBiggestSquareLength = updateGridsAppearance(zoomFactor)
     const extraOffsets = computeZoomedGridOffsets(zoomRelativeCoords, zoomFactor, currentBiggestSquareLength)
     updateBackgroundOffsets(extraOffsets)
   }
-  const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates) => {
+  const isFullyFledged = eagerComputed((): boolean => {
+    const fullyFledgedDimensions = ui.getBlueprintTreeHead()?.bpRef.bpBounding
+    if (!fullyFledgedDimensions) return false
+    return (
+      bpBounding.width.value >= fullyFledgedDimensions.width.value &&
+      bpBounding.height.value >= fullyFledgedDimensions.height.value
+    )
+  })
+  const delegateZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates): void => {
+    const myNode = ui.getBlueprintTreeNode(parentBpNodeData.id!)!
+    const myParentNode = ui.getBlueprintTreeNode(myNode.parentId!)!
+    myParentNode.bpRef.applyZoom(zoomFactor, zoomRelativeCoords)
+  }
+  const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates): void => {
+    if (!isFullyFledged.value) {
+      const zoomParentCoords = objectMap(
+        ui.axes,
+        (axis: Axis, dim: Dimension) => {
+          const offsetSide = ui.dimensions[dim].offsetSide
+          return bpBounding[offsetSide].value + zoomRelativeCoords[<Axis>axis]
+        },
+        true
+      ) as Coordinates
+      return delegateZoom(zoomFactor, zoomParentCoords)
+    }
     updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, zoomFactor)
     updateContentOffsets(extraContentOffsets)
     updateBackground(zoomRelativeCoords, zoomFactor)
     updateBpSubtreeBoundings()
   }
-  const handleWheel = (event: WheelEvent) => {
+  const handleWheel = (event: WheelEvent): void => {
     const zoomFactor: ZoomDirectionFactor =
       event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
     const zoomRelativeCoords: Coordinates = objectMap(
@@ -92,7 +119,7 @@ export default function setZoomHandling({
     )
     applyZoom(zoomFactor, zoomRelativeCoords)
   }
-  const throttledPinch = useThrottleFn((origin, offset) => {
+  const throttledPinch = useThrottleFn((origin, offset): void => {
     const scaleFactor = offset[0]
     if (scaleFactor === 1) return
     const zoomFactor: ZoomDirectionFactor =
@@ -104,7 +131,7 @@ export default function setZoomHandling({
     )
     applyZoom(zoomFactor, zoomRelativeCoords)
   }, 250)
-  const handlePinch = ({ origin, offset, event }: PinchState) => {
+  const handlePinch = ({ origin, offset, event }: PinchState): void => {
     event?.preventDefault()
     event?.stopPropagation()
     throttledPinch(origin, offset)
@@ -112,6 +139,7 @@ export default function setZoomHandling({
 
   return {
     contentScale,
+    applyZoom,
     handleWheel,
     handlePinch,
   }

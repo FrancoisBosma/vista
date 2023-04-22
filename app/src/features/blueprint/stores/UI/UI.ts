@@ -5,7 +5,8 @@ import useBlueprintNodeMap from './composables/blueprintNodeMap'
 export const useUiStore = defineStore('UI', () => {
   const { dimensions, axes, mouseCoords, gridConfig, zoomTypes, zoomRate, lastDragDistance, isDragging } =
     setStyleHandling()
-  const { registerNewBlueprintNode, updateBpSubtree } = useBlueprintNodeMap()
+  const { getBlueprintTreeHead, getBlueprintTreeNode, registerNewBlueprintNode, updateBpSubtree } =
+    useBlueprintNodeMap()
 
   return {
     axes,
@@ -16,6 +17,8 @@ export const useUiStore = defineStore('UI', () => {
     zoomTypes,
     lastDragDistance,
     isDragging,
+    getBlueprintTreeHead,
+    getBlueprintTreeNode,
     registerNewBlueprintNode,
     updateBpSubtree,
   }

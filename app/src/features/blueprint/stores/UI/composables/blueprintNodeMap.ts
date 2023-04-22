@@ -1,43 +1,42 @@
-import type { BlueprintElement, BlueprintNodeElement } from '@FEATURES/blueprint/types/'
-
-type BpNodeId = BlueprintNodeElement['uuid']
-interface BpNodeWrapper {
-  bpRef: BlueprintElement
-  children: Array<BpNodeId>
-}
+import type { BpNodeId, BpNodeWrapper } from '@FEATURES/blueprint/types/'
 
 export default function useBlueprintNodeMap() {
   const blueprintNodeMap = ref(new Map<BpNodeId, BpNodeWrapper>())
-  const registerNewBlueprintNode = (
-    bpNodeId: BpNodeId,
-    bpRef: BpNodeWrapper['bpRef'],
-    parentBpNodeId: BpNodeId | undefined
-  ) => {
-    if (blueprintNodeMap.value.has(bpNodeId)) return printError('BlueprintNode is already part of the tree')
-    const addNewNode = () => blueprintNodeMap.value.set(bpNodeId, { bpRef, children: [] })
-    if (!parentBpNodeId) {
-      if (blueprintNodeMap.value.size)
-        return printError('First BlueprintNode is already part of the tree, did you forget to pass the parent arg ?')
-      return addNewNode()
-    }
-    if (!blueprintNodeMap.value.has(parentBpNodeId)) return printError('Parent BlueprintNode could not be found')
-    if (parentBpNodeId && blueprintNodeMap.value.get(parentBpNodeId)?.children.includes(bpNodeId))
-      return printError('Parent BlueprintNode already references this BpNode')
-    addNewNode()
-    // add new node to its (already existing) parent
-    blueprintNodeMap.value.get(parentBpNodeId)?.children.push(bpNodeId)
+
+  const getBlueprintTreeHead = () => blueprintNodeMap.value.values().next().value as BpNodeWrapper | undefined
+  const getBlueprintTreeNode = (id: BpNodeId) => blueprintNodeMap.value.get(id)
+
+  const _addNewNode = (bpNodeId: BpNodeId, bpRef: BpNodeWrapper['bpRef'], parentBpNodeId?: BpNodeId) => {
+    blueprintNodeMap.value.set(bpNodeId, { bpRef, childrenIds: [], parentId: parentBpNodeId })
+    if (!parentBpNodeId) return
+    blueprintNodeMap.value.get(parentBpNodeId)?.childrenIds.push(bpNodeId)
   }
+  const registerNewBlueprintNode = (bpNodeId: BpNodeId, bpRef: BpNodeWrapper['bpRef'], parentBpNodeId?: BpNodeId) => {
+    if (!blueprintNodeMap.value.size && parentBpNodeId)
+      printError('BP tree is empty, where did you get that parent node ID ?')
+    if (blueprintNodeMap.value.size && !parentBpNodeId)
+      return printError('First BlueprintNode is already part of the tree, did you forget to pass the parent arg ?')
+    if (!parentBpNodeId) return _addNewNode(bpNodeId, bpRef)
+    if (!blueprintNodeMap.value.has(parentBpNodeId)) return printError('Parent BlueprintNode could not be found')
+    if (blueprintNodeMap.value.get(parentBpNodeId)?.childrenIds.includes(bpNodeId))
+      return printError('Parent BlueprintNode already references this BpNode')
+    _addNewNode(bpNodeId, bpRef, parentBpNodeId)
+  }
+
   const applyDownwards = (nodeId: BpNodeId, fn: Function) => {
     const node = blueprintNodeMap.value.get(nodeId)
     if (!node) return
     fn(node)
-    node.children.forEach((childNodeId) => applyDownwards(childNodeId, fn))
+    node.childrenIds.forEach((childNodeId) => applyDownwards(childNodeId, fn))
   }
+
   const updateBpSubtree = (nodeId: BpNodeId) => {
     applyDownwards(nodeId, (nodeWrapper: BpNodeWrapper) => nodeWrapper.bpRef.bpBounding.update())
   }
 
   return {
+    getBlueprintTreeHead,
+    getBlueprintTreeNode,
     registerNewBlueprintNode,
     updateBpSubtree,
   }
