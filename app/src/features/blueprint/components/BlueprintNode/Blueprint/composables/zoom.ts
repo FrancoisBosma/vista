@@ -89,20 +89,20 @@ export default function setZoomHandling({
   const delegateZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates): void => {
     const myNode = ui.getBlueprintTreeNode(parentBpNodeData.id!)!
     const myParentNode = ui.getBlueprintTreeNode(myNode.parentId!)!
-    myParentNode.bpRef.applyZoom(zoomFactor, zoomRelativeCoords)
+    const myParentBPBounding = myParentNode.bpRef.bpBounding
+    const zoomParentCoords = objectMap(
+      ui.axes,
+      (axis: Axis, dim: Dimension) => {
+        const offsetSide = ui.dimensions[dim].offsetSide
+        const dimRelativeToParent = bpBounding[offsetSide].value - myParentBPBounding[offsetSide].value
+        return dimRelativeToParent + zoomRelativeCoords[<Axis>axis]
+      },
+      true
+    ) as Coordinates
+    myParentNode.bpRef.applyZoom(zoomFactor, zoomParentCoords)
   }
   const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates): void => {
-    if (!isFullyFledged.value) {
-      const zoomParentCoords = objectMap(
-        ui.axes,
-        (axis: Axis, dim: Dimension) => {
-          const offsetSide = ui.dimensions[dim].offsetSide
-          return bpBounding[offsetSide].value + zoomRelativeCoords[<Axis>axis]
-        },
-        true
-      ) as Coordinates
-      return delegateZoom(zoomFactor, zoomParentCoords)
-    }
+    if (!isFullyFledged.value) return delegateZoom(zoomFactor, zoomRelativeCoords)
     updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, zoomFactor)
     updateContentOffsets(extraContentOffsets)
