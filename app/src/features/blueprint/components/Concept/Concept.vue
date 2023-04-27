@@ -3,12 +3,10 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import { bpProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
 
   const props = defineProps<{ conceptName: Concept['name'] }>()
   const { conceptName } = toRefs(props)
-  const parentBpData = inject(bpProvideKey, { contentScale: ref(1) })
 
   const { fetchConcept } = useConceptStore()
 
@@ -17,7 +15,7 @@
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
-  const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl, parentBpData })
+  const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl })
 
   /**
    * DELETEME
@@ -48,7 +46,6 @@
     cursor: v-bind('styleKit.cursor');
     width: v-bind('styleKit.dimensions.width');
     height: v-bind('styleKit.dimensions.height');
-    transform: v-bind('styleKit.transform');
 
     & > * {
       @apply border-1 rounded-10px;

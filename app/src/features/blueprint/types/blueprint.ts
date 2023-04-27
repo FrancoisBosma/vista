@@ -40,9 +40,6 @@ export interface BlueprintElement {
   applyZoom: Function
   bpBounding: BlueprintBounding
 }
-export interface BlueprintProvideData {
-  contentScale: Ref<number>
-}
 export interface BlueprintNodeProvideData {
   depth: number
   id?: UUID

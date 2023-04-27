@@ -4,7 +4,6 @@ import type { PinchState } from '@SRC/types'
 import type {
   Axis,
   BlueprintBounding,
-  BlueprintNodeProvideData,
   Coordinates,
   Dimension,
   GridExposed,
@@ -19,7 +18,6 @@ type ZoomSetterArguments = {
   bpBounding: BlueprintBounding
   gridRefs: GridRefs
   updateBpSubtreeBoundings: ReturnType<typeof setElemBoundingHandling>['updateBpSubtreeBoundings']
-  parentBpNodeData: BlueprintNodeProvideData
 } & ReturnType<typeof setCommonHandling>
 
 export default function setZoomHandling({
@@ -27,7 +25,6 @@ export default function setZoomHandling({
   bgOffsets,
   bpBounding,
   gridRefs,
-  parentBpNodeData,
   updateBpSubtreeBoundings,
   updateContentOffsets,
   updateBackgroundOffsets,
@@ -78,31 +75,7 @@ export default function setZoomHandling({
     const extraOffsets = computeZoomedGridOffsets(zoomRelativeCoords, zoomFactor, currentBiggestSquareLength)
     updateBackgroundOffsets(extraOffsets)
   }
-  const isFullyFledged = eagerComputed((): boolean => {
-    const fullyFledgedDimensions = ui.getBlueprintTreeHead()?.bpRef.bpBounding
-    if (!fullyFledgedDimensions) return false
-    return (
-      bpBounding.width.value >= fullyFledgedDimensions.width.value &&
-      bpBounding.height.value >= fullyFledgedDimensions.height.value
-    )
-  })
-  const delegateZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates): void => {
-    const myNode = ui.getBlueprintTreeNode(parentBpNodeData.id!)!
-    const myParentNode = ui.getBlueprintTreeNode(myNode.parentId!)!
-    const myParentBPBounding = myParentNode.bpRef.bpBounding
-    const zoomParentCoords = objectMap(
-      ui.axes,
-      (axis: Axis, dim: Dimension) => {
-        const offsetSide = ui.dimensions[dim].offsetSide
-        const dimRelativeToParent = bpBounding[offsetSide].value - myParentBPBounding[offsetSide].value
-        return dimRelativeToParent + zoomRelativeCoords[<Axis>axis]
-      },
-      true
-    ) as Coordinates
-    myParentNode.bpRef.applyZoom(zoomFactor, zoomParentCoords)
-  }
   const applyZoom = (zoomFactor: ZoomDirectionFactor, zoomRelativeCoords: Coordinates): void => {
-    if (!isFullyFledged.value) return delegateZoom(zoomFactor, zoomRelativeCoords)
     updateContentScale(zoomFactor)
     const extraContentOffsets = computeZoomedContentOffsets(zoomRelativeCoords, zoomFactor)
     updateContentOffsets(extraContentOffsets)
@@ -138,7 +111,6 @@ export default function setZoomHandling({
   }
 
   return {
-    contentScale,
     applyZoom,
     handleWheel,
     handlePinch,

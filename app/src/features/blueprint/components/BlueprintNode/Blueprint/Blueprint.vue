@@ -8,10 +8,7 @@
     setStyleHandling,
     setZoomHandling,
   } from './composables'
-  import {
-    bpNodeProvideKey,
-    bpProvideKey,
-  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   import type { BlueprintElement } from '@FEATURES/blueprint/types'
 
@@ -28,17 +25,15 @@
 
   const commonKit = setCommonHandling()
   const { bpBounding, updateBpSubtreeBoundings } = setElemBoundingHandling({ bp, parentBpNodeData })
-  const { applyZoom, contentScale, handleWheel, handlePinch } = setZoomHandling({
+  const { applyZoom, handleWheel, handlePinch } = setZoomHandling({
     bpBounding,
     gridRefs,
     updateBpSubtreeBoundings,
-    parentBpNodeData,
     ...commonKit,
   })
   const { handleDrag } = setDragHandling({ gridRefs, updateBpSubtreeBoundings, ...commonKit })
   const styleKit = setStyleHandling({ bp, ...commonKit })
 
-  provide(bpProvideKey, { contentScale })
   defineExpose({ applyZoom, bpBounding } satisfies BlueprintElement)
 </script>
 
