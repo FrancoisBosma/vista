@@ -25,14 +25,14 @@
 
   const commonKit = setCommonHandling()
   const { bpBounding, updateBpSubtreeBoundings } = setElemBoundingHandling({ bp, parentBpNodeData })
-  const { applyZoom, handleWheel, handlePinch } = setZoomHandling({
+  const { applyZoom, contentScale, handleWheel, handlePinch } = setZoomHandling({
     bpBounding,
     gridRefs,
     updateBpSubtreeBoundings,
     ...commonKit,
   })
   const { handleDrag } = setDragHandling({ gridRefs, updateBpSubtreeBoundings, ...commonKit })
-  const styleKit = setStyleHandling({ bp, ...commonKit })
+  const styleKit = setStyleHandling({ bp, contentScale, ...commonKit })
 
   defineExpose({ applyZoom, bpBounding } satisfies BlueprintElement)
 </script>

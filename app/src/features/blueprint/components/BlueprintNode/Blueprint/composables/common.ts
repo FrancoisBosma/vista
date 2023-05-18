@@ -8,6 +8,7 @@ export default function setCommonHandling() {
     width: ui.gridConfig.middleSizeSquare.length / 2,
     height: ui.gridConfig.middleSizeSquare.length / 2,
   } as Offsets)
+
   const contentOffsets = reactive({ width: 0, height: 0 } as Offsets)
 
   const updateContentOffsets = (extraOffsets: Offsets) =>

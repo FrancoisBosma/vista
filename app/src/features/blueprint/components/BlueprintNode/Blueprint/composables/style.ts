@@ -1,14 +1,15 @@
 import { useUiStore } from '@FEATURES/blueprint/stores'
 import type { Ref } from 'vue'
-import type { setCommonHandling } from '.'
+import type { setCommonHandling, setZoomHandling } from '.'
 
 const ui = useUiStore()
 
 type StyleArguments = {
   bp: Ref
+  contentScale: ReturnType<typeof setZoomHandling>['contentScale']
 } & ReturnType<typeof setCommonHandling>
 
-export default function setStyleHandling({ bp, bgOffsets, contentOffsets }: StyleArguments) {
+export default function setStyleHandling({ bp, bgOffsets, contentOffsets, contentScale }: StyleArguments) {
   const { pressed: isUserPressingDown } = useMousePressed({ target: bp })
   const bpCursor = eagerComputed(() => `${isUserPressingDown.value ? 'grabbing ' : 'grab'}`)
   const bgDimensions = computed(() => ({
@@ -18,7 +19,8 @@ export default function setStyleHandling({ bp, bgOffsets, contentOffsets }: Styl
     height: `calc(100% + ${bgOffsets.height}px)`,
   }))
   const contentTransform = computed(
-    () => `translate(calc(-50% + ${contentOffsets.width}px), calc(-50% + ${contentOffsets.height}px))`
+    () => `translate(calc(-50% + ${contentOffsets.width}px), calc(-50% + ${contentOffsets.height}px)) \
+    scale(${contentScale.value})`
   )
   const contentZIndex = 2 * ui.gridConfig.zoom.levelReset + 1
 

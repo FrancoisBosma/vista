@@ -111,6 +111,7 @@ export default function setZoomHandling({
   }
 
   return {
+    contentScale,
     applyZoom,
     handleWheel,
     handlePinch,
