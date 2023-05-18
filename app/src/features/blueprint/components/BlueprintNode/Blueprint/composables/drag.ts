@@ -8,32 +8,35 @@ const ui = useUiStore()
 type DragSetterArguments = {
   gridRefs: GridRefs
   bgOffsets: Offsets
+  shouldDelegateTaskToRoot: boolean
   updateBpSubtreeBoundings: ReturnType<typeof setElemBoundingHandling>['updateBpSubtreeBoundings']
 } & ReturnType<typeof setCommonHandling>
 
 export default function setDragHandling({
   gridRefs,
   bgOffsets,
+  shouldDelegateTaskToRoot,
   updateBpSubtreeBoundings,
   updateContentOffsets,
   updateBackgroundOffsets,
   getCurrentBiggestSquareLength,
   computeExtraOffset,
 }: DragSetterArguments) {
-  const handleDrag = ({ delta, first, last, event, distance }: DragState) => {
-    event?.stopPropagation()
+  const handleDrag = (drag: DragState): void => {
+    drag.event?.stopPropagation()
+    if (shouldDelegateTaskToRoot) return ui.getBlueprintTreeRoot()?.bpRef.handleDrag(drag)
     // Offsets
-    const contentOffsets = { width: delta[0], height: delta[1] } as Offsets
+    const contentOffsets = { width: drag.delta[0], height: drag.delta[1] } as Offsets
     updateContentOffsets(contentOffsets)
     const gridOffsets = objectMap(contentOffsets, (offset: Offset, dim: Dimension) =>
       computeExtraOffset(-1 * offset, bgOffsets[dim], getCurrentBiggestSquareLength(gridRefs))
     )
     updateBackgroundOffsets(gridOffsets)
     // Drag
-    ui.isDragging = !(first || last)
-    if (first) ui.lastDragDistance = 0
-    if (last) {
-      ui.lastDragDistance = distance
+    ui.isDragging = !(drag.first || drag.last)
+    if (drag.first) ui.lastDragDistance = 0
+    if (drag.last) {
+      ui.lastDragDistance = drag.distance
       updateBpSubtreeBoundings()
     }
   }

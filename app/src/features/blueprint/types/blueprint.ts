@@ -37,7 +37,9 @@ export interface BlueprintNodeElement {
   uuid: UUID
 }
 export interface BlueprintElement {
-  applyZoom: Function
+  handleWheel: Function
+  handlePinch: Function
+  handleDrag: Function
   bpBounding: BlueprintBounding
 }
 export interface BlueprintNodeProvideData {

@@ -17,6 +17,7 @@ const ui = useUiStore()
 type ZoomSetterArguments = {
   bpBounding: BlueprintBounding
   gridRefs: GridRefs
+  shouldDelegateTaskToRoot: boolean
   updateBpSubtreeBoundings: ReturnType<typeof setElemBoundingHandling>['updateBpSubtreeBoundings']
 } & ReturnType<typeof setCommonHandling>
 
@@ -25,6 +26,7 @@ export default function setZoomHandling({
   bgOffsets,
   bpBounding,
   gridRefs,
+  shouldDelegateTaskToRoot,
   updateBpSubtreeBoundings,
   updateContentOffsets,
   updateBackgroundOffsets,
@@ -83,6 +85,7 @@ export default function setZoomHandling({
     updateBpSubtreeBoundings()
   }
   const handleWheel = (event: WheelEvent): void => {
+    if (shouldDelegateTaskToRoot) return ui.getBlueprintTreeRoot()?.bpRef.handleWheel(event)
     const zoomFactor: ZoomDirectionFactor =
       event.deltaY > 0 ? ui.zoomTypes.out.directionFactor : ui.zoomTypes.in.directionFactor
     const zoomRelativeCoords: Coordinates = objectMap(
@@ -104,15 +107,15 @@ export default function setZoomHandling({
     )
     applyZoom(zoomFactor, zoomRelativeCoords)
   }, 250)
-  const handlePinch = ({ origin, offset, event }: PinchState): void => {
-    event?.preventDefault()
-    event?.stopPropagation()
-    throttledPinch(origin, offset)
+  const handlePinch = (pinch: PinchState): void => {
+    if (shouldDelegateTaskToRoot) return ui.getBlueprintTreeRoot()?.bpRef.handlePinch(pinch)
+    pinch.event?.preventDefault()
+    pinch.event?.stopPropagation()
+    throttledPinch(pinch.origin, pinch.offset)
   }
 
   return {
     contentScale,
-    applyZoom,
     handleWheel,
     handlePinch,
   }

@@ -3,7 +3,7 @@ import type { BpNodeId, BpNodeWrapper } from '@FEATURES/blueprint/types/'
 export default function useBlueprintNodeMap() {
   const blueprintNodeMap = ref(new Map<BpNodeId, BpNodeWrapper>())
 
-  const getBlueprintTreeHead = () => blueprintNodeMap.value.values().next().value as BpNodeWrapper | undefined
+  const getBlueprintTreeRoot = () => blueprintNodeMap.value.values().next().value as BpNodeWrapper | undefined
   const getBlueprintTreeNode = (id: BpNodeId) => blueprintNodeMap.value.get(id)
 
   const _addNewNode = (bpNodeId: BpNodeId, bpRef: BpNodeWrapper['bpRef'], parentBpNodeId?: BpNodeId) => {
@@ -35,7 +35,7 @@ export default function useBlueprintNodeMap() {
   }
 
   return {
-    getBlueprintTreeHead,
+    getBlueprintTreeRoot,
     getBlueprintTreeNode,
     registerNewBlueprintNode,
     updateBpSubtree,
