@@ -3,10 +3,10 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import type { Concept } from '@API/gql-generated/graphql'
+  import type { Concept, SubConcept } from '@API/gql-generated/graphql'
 
-  const props = defineProps<{ conceptName: Concept['name'] }>()
-  const { conceptName } = toRefs(props)
+  const props = defineProps<{ conceptName: Concept['name']; wh?: SubConcept['wh'] }>()
+  const { conceptName, wh } = toRefs(props)
 
   const { fetchConcept } = useConceptStore()
 
@@ -15,7 +15,7 @@
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
-  const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl })
+  const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl, wh })
 
   /**
    * DELETEME

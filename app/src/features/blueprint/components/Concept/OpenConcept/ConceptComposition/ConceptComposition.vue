@@ -12,5 +12,6 @@
     v-for="(subConcept, index) in concept.composition?.subConcepts"
     :key="index"
     :concept-name="subConcept.concept.name"
+    :wh="subConcept.wh"
   />
 </template>
