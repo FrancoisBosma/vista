@@ -21,7 +21,8 @@ export default function setStyleHandling({ isEmpty, isHovered, closeConceptEl, w
     width: 'fit-content',
     height: 'fit-content',
   }) as Record<Dimension, string>
-  if (wh?.value?.split(':').length !== 2) {
+  const dimValues = wh?.value?.split(':')
+  if (dimValues?.length !== 2) {
     watchOnce(closeConceptEl, () => {
       const htmlElement = unrefElement(closeConceptEl)
       if (!htmlElement) return
@@ -30,7 +31,6 @@ export default function setStyleHandling({ isEmpty, isHovered, closeConceptEl, w
       dimensions.height = `${height}px`
     })
   } else {
-    const dimValues = wh.value.split(':')
     dimensions.width = `${dimValues[0]}px`
     dimensions.height = `${dimValues[1]}px`
   }

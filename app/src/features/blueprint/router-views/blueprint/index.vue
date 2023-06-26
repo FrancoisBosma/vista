@@ -21,6 +21,12 @@ meta:
 
 <template>
   <BlueprintNode>
-    <Concept :concept-name="conceptName" />
+    <Concept :concept-name="conceptName" class="initial-concept" />
   </BlueprintNode>
 </template>
+
+<style lang="postcss">
+  .initial-concept {
+    @apply relative transform -translate-x-1/2 -translate-y-1/2;
+  }
+</style>
