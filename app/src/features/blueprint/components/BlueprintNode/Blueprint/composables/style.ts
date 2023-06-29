@@ -18,10 +18,6 @@ export default function setStyleHandling({ bp, bgOffsets, contentOffsets, conten
     top: `-${bgOffsets.height}px`,
     height: `calc(100% + ${bgOffsets.height}px)`,
   }))
-  // const contentTransform = computed(
-  //   () => `translate(calc(-50% + ${contentOffsets.width}px), calc(-50% + ${contentOffsets.height}px)) \
-  //   scale(${contentScale.value})`
-  // )
   const contentTransform = computed(
     () => `translate(${contentOffsets.width}px, ${contentOffsets.height}px) scale(${contentScale.value})`
   )
