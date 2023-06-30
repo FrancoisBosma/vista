@@ -41,6 +41,7 @@ export interface BlueprintElement {
   handlePinch: Function
   handleDrag: Function
   bpBounding: BlueprintBounding
+  contentScale: number
 }
 export interface BlueprintNodeProvideData {
   depth: number

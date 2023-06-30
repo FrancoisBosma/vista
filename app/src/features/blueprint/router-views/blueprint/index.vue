@@ -27,6 +27,6 @@ meta:
 
 <style lang="postcss">
   .initial-concept {
-    @apply relative transform -translate-x-1/2 -translate-y-1/2;
+    @apply transform -translate-x-1/2 -translate-y-1/2;
   }
 </style>

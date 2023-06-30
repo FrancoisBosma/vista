@@ -17,6 +17,7 @@ const ui = useUiStore()
 type ZoomSetterArguments = {
   bpBounding: BlueprintBounding
   gridRefs: GridRefs
+  initialContentScale: Ref<number>
   shouldDelegateTaskToRoot: boolean
   updateBpSubtreeBoundings: ReturnType<typeof setElemBoundingHandling>['updateBpSubtreeBoundings']
 } & ReturnType<typeof setCommonHandling>
@@ -26,6 +27,7 @@ export default function setZoomHandling({
   bgOffsets,
   bpBounding,
   gridRefs,
+  initialContentScale,
   shouldDelegateTaskToRoot,
   updateBpSubtreeBoundings,
   updateContentOffsets,
@@ -35,6 +37,7 @@ export default function setZoomHandling({
   computeExtraOffset,
 }: ZoomSetterArguments) {
   const contentScale = ref(1)
+  watch(initialContentScale, () => (contentScale.value = initialContentScale.value))
   const computeZoomToApply = (zoomFactor: ZoomDirectionFactor): number => toTheNth(ui.zoomRate, zoomFactor)
   const computeLengthDelta = (zoomToApply: number, length: number): number => (zoomToApply - 1) * length
   const computeZoomedContentOffsets = (zoomRelCoords: Coordinates, zoomFactor: ZoomDirectionFactor): Offsets => {

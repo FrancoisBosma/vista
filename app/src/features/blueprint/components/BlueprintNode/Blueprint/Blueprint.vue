@@ -12,10 +12,11 @@
   import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   import type { BlueprintElement } from '@FEATURES/blueprint/types'
 
-  const props = withDefaults(defineProps<{ bgColor: BlueprintBackgroundColor }>(), {
+  const props = withDefaults(defineProps<{ bgColor: BlueprintBackgroundColor; initialContentScale: number }>(), {
     bgColor: BlueprintBackgroundColor.normal,
+    initialContentScale: 1,
   })
-  const { bgColor } = toRefs(props)
+  const { bgColor, initialContentScale } = toRefs(props)
   const parentBpNodeData = inject(bpNodeProvideKey, { depth: -1, id: undefined })
 
   const bp = ref<HTMLElement | null>(null)
@@ -29,6 +30,7 @@
   const { contentScale, handleWheel, handlePinch } = setZoomHandling({
     bpBounding,
     gridRefs,
+    initialContentScale,
     shouldDelegateTaskToRoot,
     updateBpSubtreeBoundings,
     ...commonKit,
@@ -36,7 +38,7 @@
   const { handleDrag } = setDragHandling({ gridRefs, shouldDelegateTaskToRoot, updateBpSubtreeBoundings, ...commonKit })
   const styleKit = setStyleHandling({ bp, contentScale, ...commonKit })
 
-  defineExpose({ handleWheel, handlePinch, handleDrag, bpBounding } satisfies BlueprintElement)
+  defineExpose({ handleWheel, handlePinch, handleDrag, bpBounding, contentScale } satisfies BlueprintElement)
 </script>
 
 <template>
