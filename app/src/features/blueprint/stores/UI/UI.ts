@@ -1,12 +1,23 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import setStyleHandling from './composables/style'
-import useBlueprintNodeMap from './composables/blueprintNodeMap'
+import useBlueprintNodeTree from './composables/blueprintNodeTree'
+import useConcept from './composables/concept'
 
 export const useUiStore = defineStore('UI', () => {
-  const { dimensions, axes, mouseCoords, gridConfig, zoomTypes, zoomRate, lastDragDistance, isDragging } =
-    setStyleHandling()
+  const {
+    dimensions,
+    axes,
+    mouseCoords,
+    gridConfig,
+    zoomTypes,
+    zoomRate,
+    lastDragDistance,
+    isDragging,
+    getBpInitialContentScale,
+  } = setStyleHandling()
   const { getBlueprintTreeRoot, getBlueprintTreeNode, registerNewBlueprintNode, updateBpSubtree } =
-    useBlueprintNodeMap()
+    useBlueprintNodeTree()
+  const { getContentDisplayDimensions, getSubConceptStyle } = useConcept()
 
   return {
     axes,
@@ -19,6 +30,9 @@ export const useUiStore = defineStore('UI', () => {
     isDragging,
     getBlueprintTreeRoot,
     getBlueprintTreeNode,
+    getBpInitialContentScale,
+    getContentDisplayDimensions,
+    getSubConceptStyle,
     registerNewBlueprintNode,
     updateBpSubtree,
   }

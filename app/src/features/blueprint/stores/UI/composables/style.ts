@@ -1,13 +1,19 @@
+import { useUiStore } from '@FEATURES/blueprint/stores'
 import type {
   Axes,
   Axis,
+  BlueprintElement,
+  BpNodeId,
   DimensionProperties,
   Dimensions,
   ZoomDirectionFactor,
   ZoomTypes,
 } from '@FEATURES/blueprint/types/'
+import type { Pair } from '@SRC/types'
+import type { ShallowRef } from 'vue'
 
 export default function setStyleHandling() {
+  const ui = useUiStore()
   const dimensions: Dimensions = {
     width: { axis: <Axis>'x', boundingClientRectProperty: 'width', boxSizeProperty: 'inlineSize', offsetSide: 'left' },
     height: { axis: <Axis>'y', boundingClientRectProperty: 'height', boxSizeProperty: 'blockSize', offsetSide: 'top' },
@@ -35,6 +41,31 @@ export default function setStyleHandling() {
   const lastDragDistance = ref(0)
   const isDragging = ref(false)
 
+  const _getCumulativeContentScale = (bpNodeId: BpNodeId): number => {
+    const contentScales = [1]
+    let _nodeId: BpNodeId | undefined = bpNodeId
+    do {
+      const bpNode = ui.getBlueprintTreeNode(_nodeId!)
+      if (!bpNode) break
+      contentScales.push(resolveUnref(bpNode.bpRef.contentScale))
+      _nodeId = bpNode.parentId
+    } while (_nodeId)
+    return contentScales.reduce((acc, val) => acc * val)
+  }
+  const getBpInitialContentScale = (
+    bp: ShallowRef<BlueprintElement>,
+    contentDimensions: Ref<Pair<number>>,
+    parentBpNodeId: BpNodeId
+  ) => {
+    const cumulativePreviousScale = _getCumulativeContentScale(parentBpNodeId)
+    const containerW = bp.value.bpBounding.width.value / cumulativePreviousScale
+    const containerH = bp.value.bpBounding.height.value / cumulativePreviousScale
+    const extractedContentDimensions = contentDimensions.value.split(':').map((s) => Number(s))
+    const widthNecessaryScale = containerW / extractedContentDimensions[0]
+    const heightNecessaryScale = containerH / extractedContentDimensions[1]
+    return Math.min(widthNecessaryScale, heightNecessaryScale)
+  }
+
   return {
     dimensions,
     axes,
@@ -44,5 +75,6 @@ export default function setStyleHandling() {
     zoomRate,
     lastDragDistance,
     isDragging,
+    getBpInitialContentScale,
   }
 }

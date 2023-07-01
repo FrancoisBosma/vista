@@ -1,16 +1,12 @@
 <script setup lang="ts">
-  import type { Concept, SubConcept } from '@API/gql-generated/graphql'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
+  import type { Concept } from '@API/gql-generated/graphql'
 
   defineProps<{ concept: Concept }>()
+  const ui = useUiStore()
 
   // Lazy loading necessary because of mutual nesting
   const ConceptSFC = defineAsyncComponent(() => import('@FEATURES/blueprint/components/Concept'))
-
-  const getSubConceptStyle = (sc: SubConcept): Record<string, string> => {
-    const positionValues = sc.xy?.split(':')
-    if (positionValues?.length !== 2) return {}
-    return { transform: `translate(calc(-50% + ${positionValues[0]}px), calc(-50% - ${positionValues[1]}px))` }
-  }
 </script>
 
 <template>
@@ -20,6 +16,6 @@
     :concept-name="subConcept.concept.name"
     :wh="subConcept.wh"
     class="absolute"
-    :style="getSubConceptStyle(subConcept)"
+    :style="ui.getSubConceptStyle(subConcept)"
   />
 </template>
