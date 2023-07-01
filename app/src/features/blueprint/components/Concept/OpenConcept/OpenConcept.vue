@@ -8,13 +8,14 @@
   const { concept } = toRefs(props)
   const ui = useUiStore()
 
-  const contentDimensions = ui.getContentDisplayDimensions(concept)
+  const contentEdgePositions = ui.getContentEdgePositions(concept)
+  const contentDimensions = ui.getContentDisplayDimensions(contentEdgePositions)
 </script>
 
 <template>
   <div class="open-concept">
     <BlueprintNode v-if="concept.composition" :content-dimensions="contentDimensions">
-      <ConceptComposition :concept="concept" />
+      <ConceptComposition :concept="concept" :content-edge-positions="contentEdgePositions" />
     </BlueprintNode>
   </div>
 </template>

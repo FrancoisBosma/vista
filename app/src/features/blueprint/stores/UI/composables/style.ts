@@ -60,7 +60,7 @@ export default function setStyleHandling() {
     const cumulativePreviousScale = _getCumulativeContentScale(parentBpNodeId)
     const containerW = bp.value.bpBounding.width.value / cumulativePreviousScale
     const containerH = bp.value.bpBounding.height.value / cumulativePreviousScale
-    const extractedContentDimensions = contentDimensions.value.split(':').map((s) => Number(s))
+    const extractedContentDimensions = getNumbersFromPair(contentDimensions.value)
     const widthNecessaryScale = containerW / extractedContentDimensions[0]
     const heightNecessaryScale = containerH / extractedContentDimensions[1]
     return Math.min(widthNecessaryScale, heightNecessaryScale)

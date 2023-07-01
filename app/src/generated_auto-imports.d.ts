@@ -45,6 +45,7 @@ declare global {
   const genericTapCoords: typeof import('./global/functions/coordinates')['genericTapCoords']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
+  const getNumbersFromPair: typeof import('./global/functions/pairs')['getNumbersFromPair']
   const h: typeof import('vue')['h']
   const hexMultiplication: typeof import('./global/functions/numbers')['hexMultiplication']
   const hexSum: typeof import('./global/functions/numbers')['hexSum']

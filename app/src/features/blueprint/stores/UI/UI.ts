@@ -17,7 +17,7 @@ export const useUiStore = defineStore('UI', () => {
   } = setStyleHandling()
   const { getBlueprintTreeRoot, getBlueprintTreeNode, registerNewBlueprintNode, updateBpSubtree } =
     useBlueprintNodeTree()
-  const { getContentDisplayDimensions, getSubConceptStyle } = useConcept()
+  const { getContentDisplayDimensions, getContentEdgePositions, getSubConceptStyle } = useConcept()
 
   return {
     axes,
@@ -32,6 +32,7 @@ export const useUiStore = defineStore('UI', () => {
     getBlueprintTreeNode,
     getBpInitialContentScale,
     getContentDisplayDimensions,
+    getContentEdgePositions,
     getSubConceptStyle,
     registerNewBlueprintNode,
     updateBpSubtree,
