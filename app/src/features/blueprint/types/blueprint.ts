@@ -1,4 +1,5 @@
 import type { UUID } from '@GLOBAL/functions/uuid'
+import type { MaybeRef } from '@SRC/types'
 
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
@@ -41,7 +42,7 @@ export interface BlueprintElement {
   handlePinch: Function
   handleDrag: Function
   bpBounding: BlueprintBounding
-  contentScale: number
+  contentScale: MaybeRef<number>
 }
 export interface BlueprintNodeProvideData {
   depth: number

@@ -9,7 +9,7 @@
   const getSubConceptStyle = (sc: SubConcept): Record<string, string> => {
     const positionValues = sc.xy?.split(':')
     if (positionValues?.length !== 2) return {}
-    return { transform: `translate(calc(-50% + ${positionValues[0]}px), calc(-50% + ${positionValues[1]}px))` }
+    return { transform: `translate(calc(-50% + ${positionValues[0]}px), calc(-50% - ${positionValues[1]}px))` }
   }
 </script>
 
