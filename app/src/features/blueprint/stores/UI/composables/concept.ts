@@ -13,8 +13,8 @@ export default function useConcept() {
       bottomMost: 0,
     } as EdgePositions
     concept.value.composition?.subConcepts.forEach((subConcept) => {
-      const scXy = getNumbersFromPair(subConcept.xy as Pair<number> | undefined)
-      const scWh = getNumbersFromPair(subConcept.wh as Pair<number> | undefined)
+      const scXy = getNumbersFromPair(subConcept.xy as Pair<number>)
+      const scWh = getNumbersFromPair(subConcept.wh as Pair<number>)
       if (scXy?.length !== 2 || scWh?.length !== 2) return
       output.leftMost = Math.min(output.leftMost, scXy[0] - scWh[0] / 2)
       output.rightMost = Math.max(output.rightMost, scXy[0] + scWh[0] / 2)
@@ -31,7 +31,7 @@ export default function useConcept() {
     vertical: (topMost + bottomMost) / -2,
   })
   const getSubConceptStyle = (contentEdgePositions: EdgePositions, sc: SubConcept): Record<string, string> => {
-    const positionValues = getNumbersFromPair(sc.xy as Pair<number> | undefined)
+    const positionValues = getNumbersFromPair(sc.xy as Pair<number>)
     if (positionValues?.length !== 2) return {}
     const displayOffsets = getDisplayOffsets(contentEdgePositions)
     const transformOffsets = {
