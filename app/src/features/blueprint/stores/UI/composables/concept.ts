@@ -24,7 +24,10 @@ export default function useConcept() {
     return output
   }
   const getContentDisplayDimensions = (edgePositions: EdgePositions): Pair<number> => {
-    return `${edgePositions.rightMost - edgePositions.leftMost}:${edgePositions.topMost - edgePositions.bottomMost}`
+    const displayPadding = 20 * 2 // px
+    const horizontalLength = edgePositions.rightMost - edgePositions.leftMost + displayPadding
+    const verticalLength = edgePositions.topMost - edgePositions.bottomMost + displayPadding
+    return `${horizontalLength}:${verticalLength}`
   }
   const getDisplayOffsets = ({ leftMost, rightMost, topMost, bottomMost }: EdgePositions) => ({
     horizontal: (leftMost + rightMost) / -2,
