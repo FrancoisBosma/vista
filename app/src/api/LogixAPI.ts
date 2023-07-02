@@ -19,9 +19,9 @@ export const ConceptQuery = graphql(`
                 }
               }
             }
+            wh
           }
           xy
-          wh
         }
         connections {
           sourceCustomID
@@ -35,6 +35,7 @@ export const ConceptQuery = graphql(`
           }
         }
       }
+      wh
     }
   }
 `)

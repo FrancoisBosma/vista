@@ -3,9 +3,9 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import type { Concept, SubConcept } from '@API/gql-generated/graphql'
+  import type { Concept } from '@API/gql-generated/graphql'
 
-  const props = defineProps<{ conceptName: Concept['name']; wh?: SubConcept['wh'] }>()
+  const props = defineProps<{ conceptName: Concept['name']; wh?: Concept['wh'] }>()
   const { conceptName, wh } = toRefs(props)
 
   const { fetchConcept } = useConceptStore()

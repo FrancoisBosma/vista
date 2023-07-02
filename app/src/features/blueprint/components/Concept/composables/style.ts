@@ -1,7 +1,7 @@
 import { useUiStore } from '@FEATURES/blueprint/stores'
 import type { setManipulationHandling } from './'
 import type { Dimension } from '@FEATURES/blueprint/types'
-import type { SubConcept } from '@API/gql-generated/graphql'
+import type { Concept } from '@API/gql-generated/graphql'
 
 const ui = useUiStore()
 
@@ -9,7 +9,7 @@ interface StyleArguments {
   isEmpty: ReturnType<typeof eagerComputed<boolean>>
   isHovered: ReturnType<typeof setManipulationHandling>['isHovered']
   closeConceptEl: Ref<HTMLElement | null>
-  wh?: Ref<SubConcept['wh']>
+  wh?: Ref<Concept['wh']>
 }
 
 export default function setStyleHandling({ isEmpty, isHovered, closeConceptEl, wh }: StyleArguments) {

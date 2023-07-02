@@ -14,7 +14,7 @@ export default function useConcept() {
     } as EdgePositions
     concept.value.composition?.subConcepts.forEach((subConcept) => {
       const scXy = getNumbersFromPair(subConcept.xy as Pair<number>)
-      const scWh = getNumbersFromPair(subConcept.wh as Pair<number>)
+      const scWh = getNumbersFromPair(subConcept.concept.wh as Pair<number>)
       if (scXy?.length !== 2 || scWh?.length !== 2) return
       output.leftMost = Math.min(output.leftMost, scXy[0] - scWh[0] / 2)
       output.rightMost = Math.max(output.rightMost, scXy[0] + scWh[0] / 2)
