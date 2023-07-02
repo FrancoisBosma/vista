@@ -54,13 +54,13 @@ export default function setStyleHandling() {
   }
   const getBpInitialContentScale = (
     bp: ShallowRef<BlueprintElement>,
-    contentDimensions: Ref<Pair<number>>,
+    contentDimensions: Pair<number>,
     parentBpNodeId: BpNodeId
   ) => {
     const cumulativePreviousScale = _getCumulativeContentScale(parentBpNodeId)
     const containerW = bp.value.bpBounding.width.value / cumulativePreviousScale
     const containerH = bp.value.bpBounding.height.value / cumulativePreviousScale
-    const extractedContentDimensions = getNumbersFromPair(contentDimensions.value)
+    const extractedContentDimensions = getNumbersFromPair(contentDimensions)
     const widthNecessaryScale = containerW / extractedContentDimensions[0]
     const heightNecessaryScale = containerH / extractedContentDimensions[1]
     return Math.min(widthNecessaryScale, heightNecessaryScale)

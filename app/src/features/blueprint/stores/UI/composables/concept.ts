@@ -41,7 +41,10 @@ export default function useConcept() {
       horizontal: `-50% + ${positionValues[0] + displayOffsets.horizontal}px`,
       vertical: `-50% - ${positionValues[1] + displayOffsets.vertical}px`,
     }
-    return { transform: `translate(calc(${transformOffsets.horizontal}), calc(${transformOffsets.vertical}))` }
+    return {
+      position: 'absolute',
+      transform: `translate(calc(${transformOffsets.horizontal}), calc(${transformOffsets.vertical}))`,
+    }
   }
 
   return { getContentDisplayDimensions, getContentEdgePositions, getDisplayOffsets, getSubConceptStyle }

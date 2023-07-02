@@ -2,11 +2,10 @@
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import type { Concept } from '@API/gql-generated/graphql'
 
-  const props = defineProps<{
+  defineProps<{
     concept: Concept
     contentEdgePositions: ReturnType<ReturnType<typeof useUiStore>['getContentEdgePositions']>
   }>()
-  const { contentEdgePositions } = toRefs(props)
   const ui = useUiStore()
 
   // Lazy loading necessary because of mutual nesting
@@ -18,8 +17,6 @@
     v-for="(subConcept, index) in concept.composition?.subConcepts"
     :key="index"
     :concept-name="subConcept.concept.name"
-    :wh="subConcept.concept.wh"
-    class="absolute"
     :style="ui.getSubConceptStyle(contentEdgePositions, subConcept)"
   />
 </template>

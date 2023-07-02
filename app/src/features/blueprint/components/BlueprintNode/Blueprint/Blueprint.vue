@@ -19,7 +19,7 @@
   const { bgColor, initialContentScale } = toRefs(props)
   const parentBpNodeData = inject(bpNodeProvideKey, { depth: -1, id: undefined })
 
-  const bp = ref<HTMLElement | null>(null)
+  const bp = ref(null) as Ref<HTMLElement | null>
   const gridRefs = ref<Array<InstanceType<typeof Grid>>>([])
 
   const ui = useUiStore()

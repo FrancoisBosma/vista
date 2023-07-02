@@ -7,8 +7,7 @@
   import type { Pair } from '@SRC/types'
   import type { ShallowRef } from 'vue'
 
-  const props = defineProps<{ contentDimensions: Pair<number> }>()
-  const { contentDimensions } = toRefs(props)
+  const { contentDimensions } = defineProps<{ contentDimensions?: Pair<number> }>()
   const ui = useUiStore()
   const bp = shallowRef<BlueprintElement | null>(null)
 
@@ -24,10 +23,13 @@
     if (!bp.value) return
     const parentBpNodeId = parentBpNodeData.id
     ui.registerNewBlueprintNode(uuid, bp.value, parentBpNodeId)
-    initialContentScale.value =
-      !contentDimensions.value || !parentBpNodeId
-        ? 1
-        : ui.getBpInitialContentScale(bp as ShallowRef<BlueprintElement>, contentDimensions, parentBpNodeId)
+    if (contentDimensions && parentBpNodeId) {
+      initialContentScale.value = ui.getBpInitialContentScale(
+        bp as ShallowRef<BlueprintElement>,
+        contentDimensions,
+        parentBpNodeId
+      )
+    }
   })
 </script>
 

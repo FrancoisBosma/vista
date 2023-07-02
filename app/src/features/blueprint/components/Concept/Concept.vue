@@ -5,17 +5,16 @@
   import { setManipulationHandling, setStyleHandling } from './composables'
   import type { Concept } from '@API/gql-generated/graphql'
 
-  const props = defineProps<{ conceptName: Concept['name']; wh?: Concept['wh'] }>()
-  const { conceptName, wh } = toRefs(props)
+  const { conceptName } = defineProps<{ conceptName: Concept['name'] }>()
 
   const { fetchConcept } = useConceptStore()
 
-  const closeConceptEl = ref<HTMLElement | null>(null)
-  const { concept } = fetchConcept(conceptName.value)
+  const closeConceptEl = ref(null) as Ref<HTMLElement | null>
+  const { concept, isDone: isConceptFetched } = fetchConcept(conceptName)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
-  const styleKit = setStyleHandling({ isEmpty, isHovered, closeConceptEl, wh })
+  const styleKit = setStyleHandling({ isEmpty, isHovered, concept, isConceptFetched })
 
   /**
    * DELETEME
