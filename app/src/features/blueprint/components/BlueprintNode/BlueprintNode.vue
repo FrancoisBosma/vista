@@ -3,38 +3,49 @@
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
-  import type { BlueprintElement } from '@FEATURES/blueprint/types'
-  import type { Pair } from '@SRC/types'
-  import type { ShallowRef } from 'vue'
+  import type { ContentIdentification, OffsetSide } from '@FEATURES/blueprint/types'
 
-  const { contentDimensions } = defineProps<{ contentDimensions?: Pair<number> }>()
+  const { contentIdentification } = defineProps<{ contentIdentification?: ContentIdentification }>()
   const ui = useUiStore()
-  const bp = shallowRef<BlueprintElement | null>(null)
 
-  const parentBpNodeData = inject(bpNodeProvideKey, { depth: -1, id: undefined })
+  const bp = shallowRef<InstanceType<typeof Blueprint> & HTMLElement>()
+
+  const parentBpNodeData = inject(bpNodeProvideKey, { depth: -1 })
   const depth = parentBpNodeData.depth + 1
   const uuid = generateUuid()
   provide(bpNodeProvideKey, { depth, id: uuid })
 
   const bgColor = depth % 2 === 0 ? BlueprintBackgroundColor.normal : BlueprintBackgroundColor.stronger
-  const initialContentScale = ref(1)
+
+  const bgExtraOffsets = computed(() => ui.getBlueprintTreeRoot()?.bpRef.contentOffsets ?? { width: 0, height: 0 })
+  const bgExtraPosition = computed(
+    () =>
+      ({
+        left: `calc(50% + ${bgExtraOffsets.value.width}px)`,
+        top: `calc(50% + ${bgExtraOffsets.value.height}px)`,
+      } as Record<OffsetSide, string>)
+  )
 
   watchOnce(bp, async () => {
     if (!bp.value) return
     const parentBpNodeId = parentBpNodeData.id
     ui.registerNewBlueprintNode(uuid, bp.value, parentBpNodeId)
-    if (contentDimensions && parentBpNodeId) {
-      initialContentScale.value = ui.getBpInitialContentScale(
-        bp as ShallowRef<BlueprintElement>,
-        contentDimensions,
-        parentBpNodeId
-      )
-    }
   })
 </script>
 
 <template>
-  <Blueprint ref="bp" :bg-color="bgColor" :initial-content-scale="initialContentScale">
+  <Blueprint ref="bp" :content-identification="contentIdentification">
+    <template v-if="depth === 0" #background-extra>
+      <div :id="`bp-${uuid}`" class="background-extra" />
+    </template>
     <slot />
   </Blueprint>
 </template>
+
+<style scoped lang="postcss">
+  .background-extra {
+    @apply w-full h-full absolute children:(absolute);
+    left: v-bind('bgExtraPosition.left');
+    top: v-bind('bgExtraPosition.top');
+  }
+</style>

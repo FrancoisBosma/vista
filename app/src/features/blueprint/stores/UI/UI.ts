@@ -4,19 +4,9 @@ import useBlueprintNodeTree from './composables/blueprintNodeTree'
 import useConcept from './composables/concept'
 
 export const useUiStore = defineStore('UI', () => {
-  const {
-    dimensions,
-    axes,
-    mouseCoords,
-    gridConfig,
-    zoomTypes,
-    zoomRate,
-    lastDragDistance,
-    isDragging,
-    getBpInitialContentScale,
-  } = setStyleHandling()
-  const { getBlueprintTreeRoot, getBlueprintTreeNode, registerNewBlueprintNode, updateBpSubtree } =
-    useBlueprintNodeTree()
+  const { dimensions, axes, mouseCoords, gridConfig, zoomTypes, zoomRate, lastDragDistance, isDragging } =
+    setStyleHandling()
+  const { getBlueprintTreeRoot, getBlueprintTreeNode, registerNewBlueprintNode } = useBlueprintNodeTree()
   const { getContentDisplayDimensions, getContentEdgePositions, getSubConceptStyle } = useConcept()
 
   return {
@@ -30,12 +20,10 @@ export const useUiStore = defineStore('UI', () => {
     isDragging,
     getBlueprintTreeRoot,
     getBlueprintTreeNode,
-    getBpInitialContentScale,
     getContentDisplayDimensions,
     getContentEdgePositions,
     getSubConceptStyle,
     registerNewBlueprintNode,
-    updateBpSubtree,
   }
 })
 

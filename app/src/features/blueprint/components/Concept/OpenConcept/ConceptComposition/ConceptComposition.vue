@@ -2,14 +2,16 @@
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import type { Concept } from '@API/gql-generated/graphql'
 
-  defineProps<{
+  const { concept } = defineProps<{
     concept: Concept
-    contentEdgePositions: ReturnType<ReturnType<typeof useUiStore>['getContentEdgePositions']>
   }>()
+
   const ui = useUiStore()
 
   // Lazy loading necessary because of mutual nesting
   const ConceptSFC = defineAsyncComponent(() => import('@FEATURES/blueprint/components/Concept'))
+
+  const contentEdgePositions = ui.getContentEdgePositions(concept)
 </script>
 
 <template>

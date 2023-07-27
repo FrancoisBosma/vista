@@ -5,14 +5,14 @@ type EdgePosition = 'leftMost' | 'rightMost' | 'topMost' | 'bottomMost'
 type EdgePositions = Record<EdgePosition, number>
 
 export default function useConcept() {
-  const getContentEdgePositions = (concept: Ref<Concept>): EdgePositions => {
+  const getContentEdgePositions = (concept: Concept): EdgePositions => {
     const output = {
       leftMost: 0,
       rightMost: 0,
       topMost: 0,
       bottomMost: 0,
     } as EdgePositions
-    concept.value.composition?.subConcepts.forEach((subConcept) => {
+    concept.composition?.subConcepts.forEach((subConcept) => {
       const scXy = getNumbersFromPair(subConcept.xy as Pair<number>)
       const scWh = getNumbersFromPair(subConcept.concept.wh as Pair<number>)
       if (scXy?.length !== 2 || scWh?.length !== 2) return

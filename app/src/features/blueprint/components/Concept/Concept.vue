@@ -1,12 +1,15 @@
 <script setup lang="ts">
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
-  import { useConceptStore } from '@FEATURES/blueprint/stores'
+  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
+  import { bpProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
 
   const { conceptName } = defineProps<{ conceptName: Concept['name'] }>()
+  const { contentScale } = inject(bpProvideKey, { contentScale: ref(1) })
 
+  const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
 
   const closeConceptEl = ref(null) as Ref<HTMLElement | null>
@@ -14,7 +17,7 @@
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
-  const styleKit = setStyleHandling({ isEmpty, isHovered, concept, isConceptFetched })
+  const styleKit = setStyleHandling({ isEmpty, isHovered, concept, isConceptFetched, contentScale })
 
   /**
    * DELETEME
@@ -34,7 +37,22 @@
         :is-hovered="isHovered"
         :is-empty="isEmpty"
       />
-      <OpenConcept v-else :concept="concept" :is-empty="isEmpty" />
+      <template v-else>
+        <Teleport :to="`#bp-${ui.getBlueprintTreeRoot()?.id}`">
+          <div
+            :style="{
+              width: styleKit.dimensions.width,
+              height: styleKit.dimensions.height,
+              backgroundColor: 'green',
+              borderRadius: styleKit.conceptRoundness,
+              transform: styleKit.bgDisplay.transform,
+              left: styleKit.bgDisplay.left,
+              top: styleKit.bgDisplay.top,
+            }"
+          />
+        </Teleport>
+        <OpenConcept :concept="concept" :is-empty="isEmpty" />
+      </template>
     </keep-alive>
   </div>
 </template>
@@ -47,8 +65,9 @@
     height: v-bind('styleKit.dimensions.height');
 
     & > * {
-      @apply border-1 rounded-10px;
+      @apply border-1;
       box-shadow: v-bind('styleKit.boxShadow');
+      border-radius: v-bind('styleKit.conceptRoundness');
     }
   }
 </style>

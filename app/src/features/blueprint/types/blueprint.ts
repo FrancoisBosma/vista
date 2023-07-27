@@ -1,5 +1,5 @@
 import type { UUID } from '@GLOBAL/functions/uuid'
-import type { MaybeRef } from '@SRC/types'
+import type { MaybeRef, Pair } from '@SRC/types'
 
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
@@ -7,9 +7,6 @@ export type OffsetSide = 'left' | 'right' | 'top' | 'bottom'
 export type Axes = Record<Dimension, Axis>
 export interface DimensionProperties {
   axis: Axis
-  boundingClientRectProperty: string
-  boxSizeProperty: string
-  offsetSide: OffsetSide
 }
 export type Dimensions = Record<Dimension, DimensionProperties>
 
@@ -29,28 +26,32 @@ export interface GridExposed {
 }
 export type GridRefs = Ref<Array<GridExposed>>
 
-export type BlueprintBounding = ReturnType<typeof useElementBounding>
 export enum BlueprintBackgroundColor {
   normal = 'var(--background)',
   stronger = 'var(--background-stronger)',
 }
-export interface BlueprintNodeElement {
-  uuid: UUID
-}
-export interface BlueprintElement {
+export interface BlueprintExpose {
   handleWheel: Function
   handlePinch: Function
   handleDrag: Function
-  bpBounding: BlueprintBounding
   contentScale: MaybeRef<number>
+  contentOffsets: Offsets
 }
 export interface BlueprintNodeProvideData {
   depth: number
   id?: UUID
 }
-export type BpNodeId = BlueprintNodeElement['uuid']
+export interface BlueprintProvideData {
+  contentScale: Ref<number>
+}
+export type BpNodeId = UUID
 export interface BpNodeWrapper {
-  bpRef: BlueprintElement
+  id: BpNodeId
+  bpRef: BlueprintExpose
   childrenIds: Array<BpNodeId>
   parentId?: BpNodeId
 }
+
+export type ContentType = 'concept'
+export type ContentKey = string
+export type ContentIdentification = Pair<ContentType, ContentKey>

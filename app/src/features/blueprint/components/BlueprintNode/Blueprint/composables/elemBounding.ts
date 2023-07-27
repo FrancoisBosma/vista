@@ -1,20 +1,15 @@
-import { useUiStore } from '@FEATURES/blueprint/stores'
-import type { BlueprintBounding, BlueprintNodeProvideData } from '@FEATURES/blueprint/types'
-
 interface ZoomSetterArguments {
   bp: Ref<HTMLElement | null>
-  parentBpNodeData: BlueprintNodeProvideData
+  isRootBp: boolean
 }
 
-const ui = useUiStore()
-
-export default function setElemBoundingHandling({ bp, parentBpNodeData }: ZoomSetterArguments) {
-  const bpBounding = useElementBounding(bp) as BlueprintBounding
-  const updateBpSubtreeBoundings = () => {
-    ui.updateBpSubtree(parentBpNodeData.id!)
+export default function setElemBoundingHandling({ bp, isRootBp }: ZoomSetterArguments) {
+  const boundingRect = ref<DOMRect | undefined>(undefined)
+  if (isRootBp) {
+    watchOnce(bp, () => (boundingRect.value = bp.value?.getBoundingClientRect()))
   }
+
   return {
-    bpBounding,
-    updateBpSubtreeBoundings,
+    boundingRect,
   }
 }

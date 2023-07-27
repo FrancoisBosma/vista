@@ -7,7 +7,7 @@ export default function useBlueprintNodeTree() {
   const getBlueprintTreeNode = (id: BpNodeId) => blueprintNodeTree.value.get(id)
 
   const _addNewNode = (bpNodeId: BpNodeId, bpRef: BpNodeWrapper['bpRef'], parentBpNodeId?: BpNodeId) => {
-    blueprintNodeTree.value.set(bpNodeId, { bpRef, childrenIds: [], parentId: parentBpNodeId })
+    blueprintNodeTree.value.set(bpNodeId, { id: bpNodeId, bpRef, childrenIds: [], parentId: parentBpNodeId })
     if (!parentBpNodeId) return
     blueprintNodeTree.value.get(parentBpNodeId)?.childrenIds.push(bpNodeId)
   }
@@ -23,21 +23,9 @@ export default function useBlueprintNodeTree() {
     _addNewNode(bpNodeId, bpRef, parentBpNodeId)
   }
 
-  const applyDownwards = (nodeId: BpNodeId, fn: Function) => {
-    const node = blueprintNodeTree.value.get(nodeId)
-    if (!node) return
-    fn(node)
-    node.childrenIds.forEach((childNodeId) => applyDownwards(childNodeId, fn))
-  }
-
-  const updateBpSubtree = (nodeId: BpNodeId) => {
-    applyDownwards(nodeId, (nodeWrapper: BpNodeWrapper) => nodeWrapper.bpRef.bpBounding.update())
-  }
-
   return {
     getBlueprintTreeRoot,
     getBlueprintTreeNode,
     registerNewBlueprintNode,
-    updateBpSubtree,
   }
 }

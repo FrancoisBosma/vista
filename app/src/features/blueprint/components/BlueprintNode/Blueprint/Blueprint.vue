@@ -8,16 +8,17 @@
     setStyleHandling,
     setZoomHandling,
   } from './composables'
-  import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
-  import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
-  import type { BlueprintElement } from '@FEATURES/blueprint/types'
+  import {
+    bpNodeProvideKey,
+    bpProvideKey,
+  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import type { BlueprintExpose, ContentIdentification } from '@FEATURES/blueprint/types'
 
-  const props = withDefaults(defineProps<{ bgColor: BlueprintBackgroundColor; initialContentScale: number }>(), {
-    bgColor: BlueprintBackgroundColor.normal,
-    initialContentScale: 1,
-  })
-  const { bgColor, initialContentScale } = toRefs(props)
-  const parentBpNodeData = inject(bpNodeProvideKey, { depth: -1, id: undefined })
+  const props = defineProps<{ contentIdentification?: ContentIdentification }>()
+  const contentIdentification = toRef(props.contentIdentification)
+
+  const bpNode = inject(bpNodeProvideKey, { depth: -1 })
+  const isRootBp = bpNode.depth === 0
 
   const bp = ref(null) as Ref<HTMLElement | null>
   const gridRefs = ref<Array<InstanceType<typeof Grid>>>([])
@@ -25,27 +26,36 @@
   const ui = useUiStore()
 
   const commonKit = setCommonHandling()
-  const { bpBounding, updateBpSubtreeBoundings } = setElemBoundingHandling({ bp, parentBpNodeData })
-  const shouldDelegateTaskToRoot = parentBpNodeData.depth !== 0
+  const { boundingRect } = setElemBoundingHandling({ bp, isRootBp })
   const { contentScale, handleWheel, handlePinch } = setZoomHandling({
-    bpBounding,
+    boundingRect,
     gridRefs,
-    initialContentScale,
-    shouldDelegateTaskToRoot,
-    updateBpSubtreeBoundings,
+    contentIdentification,
+    isRootBp,
     ...commonKit,
   })
-  const { handleDrag } = setDragHandling({ gridRefs, shouldDelegateTaskToRoot, updateBpSubtreeBoundings, ...commonKit })
+  const { handleDrag } = setDragHandling({ gridRefs, isRootBp, ...commonKit })
   const styleKit = setStyleHandling({ bp, contentScale, ...commonKit })
 
-  defineExpose({ handleWheel, handlePinch, handleDrag, bpBounding, contentScale } satisfies BlueprintElement)
+  provide(bpProvideKey, { contentScale })
+
+  defineExpose({
+    handleWheel,
+    handlePinch,
+    handleDrag,
+    contentOffsets: commonKit.contentOffsets,
+    contentScale,
+  } satisfies BlueprintExpose)
 </script>
 
 <template>
   <div ref="bp" v-drag="handleDrag" v-pinch="handlePinch" class="blueprint" @wheel.stop.prevent="handleWheel">
-    <div class="bp-background">
-      <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" ref="gridRefs" :grid-index="n - 1" />
-    </div>
+    <template v-if="isRootBp">
+      <slot name="background-extra" />
+      <div class="bp-background">
+        <Grid v-for="n in ui.gridConfig.gridAmount" :key="n" ref="gridRefs" :grid-index="n - 1" />
+      </div>
+    </template>
     <div class="bp-content">
       <slot />
     </div>
@@ -56,7 +66,6 @@
   .blueprint {
     @apply relative w-full h-full overflow-hidden;
     cursor: v-bind('styleKit.bpCursor');
-    background-color: v-bind('bgColor');
 
     .bp-background {
       @apply absolute w-full h-full children:(absolute);
