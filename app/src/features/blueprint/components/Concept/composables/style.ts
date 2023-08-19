@@ -1,4 +1,5 @@
 import { useUiStore } from '@FEATURES/blueprint/stores'
+import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
 import type { setManipulationHandling } from './'
 import type { Dimension } from '@FEATURES/blueprint/types'
 import type { Concept } from '@API/gql-generated/graphql'
@@ -12,6 +13,7 @@ interface StyleArguments {
   concept: Ref<Concept>
   isConceptFetched: Ref<boolean>
   contentScale: Ref<number>
+  parentDepth: number
 }
 
 export default function setStyleHandling({
@@ -20,6 +22,7 @@ export default function setStyleHandling({
   concept,
   isConceptFetched,
   contentScale,
+  parentDepth,
 }: StyleArguments) {
   const boxShadow = computed(
     () => `${isHovered.value && !isEmpty.value ? '0 0 3px var(--foreground)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`
@@ -48,7 +51,8 @@ export default function setStyleHandling({
       bgDisplay.transform = `scale(${contentScale.value})`
     })
   })
-
+  const conceptBgColor =
+    (parentDepth + 1) % 2 === 0 ? BlueprintBackgroundColor.normal : BlueprintBackgroundColor.stronger
   const conceptRoundness = '10px'
 
   return reactive({
@@ -56,6 +60,7 @@ export default function setStyleHandling({
     cursor,
     dimensions,
     bgDisplay,
+    conceptBgColor,
     conceptRoundness,
   })
 }

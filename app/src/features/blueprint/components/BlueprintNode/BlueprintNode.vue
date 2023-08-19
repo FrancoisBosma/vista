@@ -2,7 +2,6 @@
   import Blueprint from './Blueprint'
   import { useUiStore } from '@FEATURES/blueprint/stores'
   import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
-  import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
   import type { ContentIdentification, OffsetSide } from '@FEATURES/blueprint/types'
 
   const { contentIdentification } = defineProps<{ contentIdentification?: ContentIdentification }>()
@@ -14,8 +13,6 @@
   const depth = parentBpNodeData.depth + 1
   const uuid = generateUuid()
   provide(bpNodeProvideKey, { depth, id: uuid })
-
-  const bgColor = depth % 2 === 0 ? BlueprintBackgroundColor.normal : BlueprintBackgroundColor.stronger
 
   const bgExtraOffsets = computed(() => ui.getBlueprintTreeRoot()?.bpRef.contentOffsets ?? { width: 0, height: 0 })
   const bgExtraPosition = computed(

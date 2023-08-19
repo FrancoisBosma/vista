@@ -3,11 +3,15 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import { bpProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import {
+    bpNodeProvideKey,
+    bpProvideKey,
+  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
 
   const { conceptName } = defineProps<{ conceptName: Concept['name'] }>()
   const { contentScale } = inject(bpProvideKey, { contentScale: ref(1) })
+  const { depth: parentDepth } = inject(bpNodeProvideKey, { depth: 0 })
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
@@ -17,7 +21,7 @@
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
-  const styleKit = setStyleHandling({ isEmpty, isHovered, concept, isConceptFetched, contentScale })
+  const styleKit = setStyleHandling({ isEmpty, isHovered, concept, isConceptFetched, contentScale, parentDepth })
 
   /**
    * DELETEME
@@ -43,7 +47,7 @@
             :style="{
               width: styleKit.dimensions.width,
               height: styleKit.dimensions.height,
-              backgroundColor: 'green',
+              backgroundColor: styleKit.conceptBgColor,
               borderRadius: styleKit.conceptRoundness,
               transform: styleKit.bgDisplay.transform,
               left: styleKit.bgDisplay.left,
