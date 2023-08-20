@@ -3,4 +3,4 @@ import type { BlueprintNodeProvideData, BlueprintProvideData } from '@FEATURES/b
 
 // Provide/Inject
 export const bpNodeProvideKey = Symbol('BlueprintNode-data') as InjectionKey<BlueprintNodeProvideData>
-export const bpProvideKey = Symbol('BlueprintNode-data') as InjectionKey<BlueprintProvideData>
+export const bpProvideKey = Symbol('Blueprint-data') as InjectionKey<BlueprintProvideData>

@@ -44,7 +44,7 @@
     handlePinch,
     handleDrag,
     contentOffsets: commonKit.contentOffsets,
-    contentScale,
+    getContentScale: () => contentScale.value,
   } satisfies BlueprintExpose)
 </script>
 

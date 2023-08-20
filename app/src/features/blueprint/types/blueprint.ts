@@ -1,5 +1,5 @@
 import type { UUID } from '@GLOBAL/functions/uuid'
-import type { MaybeRef, Pair } from '@SRC/types'
+import type { Pair } from '@SRC/types'
 
 export type Axis = 'x' | 'y'
 export type Dimension = 'width' | 'height'
@@ -34,7 +34,7 @@ export interface BlueprintExpose {
   handleWheel: Function
   handlePinch: Function
   handleDrag: Function
-  contentScale: MaybeRef<number>
+  getContentScale: () => number
   contentOffsets: Offsets
 }
 export interface BlueprintNodeProvideData {
