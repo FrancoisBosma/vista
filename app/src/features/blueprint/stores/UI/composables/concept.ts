@@ -37,13 +37,11 @@ export default function useConcept() {
     const positionValues = getNumbersFromPair(sc.xy as Pair<number>)
     if (positionValues?.length !== 2) return {}
     const displayOffsets = getDisplayOffsets(contentEdgePositions)
-    const transformOffsets = {
-      horizontal: `-50% + ${positionValues[0] + displayOffsets.horizontal}px`,
-      vertical: `-50% - ${positionValues[1] + displayOffsets.vertical}px`,
-    }
     return {
       position: 'absolute',
-      transform: `translate(calc(${transformOffsets.horizontal}), calc(${transformOffsets.vertical}))`,
+      transform: 'translate(-50%, -50%)',
+      left: `${positionValues[0] + displayOffsets.horizontal}px`,
+      top: `${positionValues[1] + displayOffsets.vertical}px`,
     }
   }
 
