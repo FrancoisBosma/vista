@@ -9,7 +9,10 @@
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
 
-  const { conceptName } = defineProps<{ conceptName: Concept['name'] }>()
+  const { conceptName, subConceptStyle } = defineProps<{
+    conceptName: Concept['name']
+    subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
+  }>()
   const { contentScale } = inject(bpProvideKey, { contentScale: ref(1) })
   const { depth: parentDepth } = inject(bpNodeProvideKey, { depth: 0 })
 
@@ -21,7 +24,15 @@
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
-  const styleKit = setStyleHandling({ isEmpty, isHovered, concept, isConceptFetched, contentScale, parentDepth })
+  const styleKit = setStyleHandling({
+    isEmpty,
+    isHovered,
+    concept,
+    isConceptFetched,
+    contentScale,
+    parentDepth,
+    subConceptStyle,
+  })
 
   /**
    * DELETEME
@@ -32,7 +43,7 @@
 </script>
 
 <template>
-  <div class="concept" @click.stop="handleClick">
+  <div class="concept" :style="subConceptStyle" @click.stop="handleClick">
     <keep-alive>
       <CloseConcept
         v-if="!isOpen"

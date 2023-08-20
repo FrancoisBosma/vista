@@ -19,6 +19,6 @@
     v-for="(subConcept, index) in concept.composition?.subConcepts"
     :key="index"
     :concept-name="subConcept.concept.name"
-    :style="ui.getSubConceptStyle(contentEdgePositions, subConcept)"
+    :sub-concept-style="ui.getSubConceptStyle(contentEdgePositions, subConcept)"
   />
 </template>
