@@ -3,18 +3,14 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import {
-    bpNodeProvideKey,
-    bpProvideKey,
-  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
 
   const { conceptName, subConceptStyle } = defineProps<{
     conceptName: Concept['name']
     subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
   }>()
-  const { contentScale } = inject(bpProvideKey, { contentScale: ref(1) })
-  const { depth: parentDepth } = inject(bpNodeProvideKey, { depth: 0 })
+  const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
@@ -29,9 +25,9 @@
     isHovered,
     concept,
     isConceptFetched,
-    contentScale,
     parentDepth,
     subConceptStyle,
+    bpNodeId,
   })
 
   /**

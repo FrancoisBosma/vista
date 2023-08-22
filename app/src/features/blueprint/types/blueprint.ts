@@ -41,9 +41,6 @@ export interface BlueprintNodeProvideData {
   depth: number
   id?: UUID
 }
-export interface BlueprintProvideData {
-  contentScale: Ref<number>
-}
 export type BpNodeId = UUID
 export interface BpNodeWrapper {
   id: BpNodeId

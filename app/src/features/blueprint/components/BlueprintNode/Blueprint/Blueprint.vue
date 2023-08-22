@@ -8,10 +8,7 @@
     setStyleHandling,
     setZoomHandling,
   } from './composables'
-  import {
-    bpNodeProvideKey,
-    bpProvideKey,
-  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { BlueprintExpose, ContentIdentification } from '@FEATURES/blueprint/types'
 
   const props = defineProps<{ contentIdentification?: ContentIdentification }>()
@@ -36,8 +33,6 @@
   })
   const { handleDrag } = setDragHandling({ gridRefs, isRootBp, ...commonKit })
   const styleKit = setStyleHandling({ bp, contentScale, ...commonKit })
-
-  provide(bpProvideKey, { contentScale })
 
   defineExpose({
     handleWheel,

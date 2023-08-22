@@ -1,7 +1,7 @@
 import { useUiStore } from '@FEATURES/blueprint/stores'
 import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
 import type { setManipulationHandling } from './'
-import type { Dimension } from '@FEATURES/blueprint/types'
+import type { BpNodeWrapper, Dimension } from '@FEATURES/blueprint/types'
 import type { Concept } from '@API/gql-generated/graphql'
 import type { Pair } from '@SRC/types'
 
@@ -12,9 +12,9 @@ interface StyleArguments {
   isHovered: ReturnType<typeof setManipulationHandling>['isHovered']
   concept: Ref<Concept>
   isConceptFetched: Ref<boolean>
-  contentScale: Ref<number>
   parentDepth: number
   subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
+  bpNodeId?: BpNodeWrapper['id']
 }
 
 export default function setStyleHandling({
@@ -22,9 +22,9 @@ export default function setStyleHandling({
   isHovered,
   concept,
   isConceptFetched,
-  contentScale,
   parentDepth,
   subConceptStyle,
+  bpNodeId,
 }: StyleArguments) {
   const boxShadow = computed(
     () => `${isHovered.value && !isEmpty.value ? '0 0 3px var(--foreground)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`
@@ -43,8 +43,6 @@ export default function setStyleHandling({
     transform: '',
   }) as Record<string, string>
 
-  const isWithinParentBlueprint = parentDepth === 0
-
   watchOnce(isConceptFetched, () => {
     const conceptDimensions = getNumbersFromPair(concept.value.wh as Pair<number>)
     if (conceptDimensions?.length !== 2) return
@@ -54,10 +52,18 @@ export default function setStyleHandling({
       left: Number(subConceptStyle?.left.split('px')[0]) || 0,
       top: Number(subConceptStyle?.top.split('px')[0]) || 0,
     }
-    const cumulatedContentScale = computed(() => {
-      if (isWithinParentBlueprint) return contentScale.value
-      return contentScale.value * (ui.getBlueprintTreeRoot()?.bpRef.getContentScale() || 1)
-    })
+    const cumulatedContentScale = computedWithControl(
+      () => ui.getBlueprintTreeRoot()?.bpRef.getContentScale(),
+      () => {
+        let output = 1
+        let currentNode = bpNodeId ? ui.getBlueprintTreeNode(bpNodeId) : undefined
+        while (currentNode) {
+          output *= currentNode.bpRef.getContentScale()
+          currentNode = currentNode.parentId ? ui.getBlueprintTreeNode(currentNode.parentId) : undefined
+        }
+        return output
+      }
+    )
     watchEffect(() => {
       bgDisplay.left = `${-conceptDimensions[0] / 2 + subConceptPlacement.left * cumulatedContentScale.value}px`
       bgDisplay.top = `${-conceptDimensions[1] / 2 + subConceptPlacement.top * cumulatedContentScale.value}px`
