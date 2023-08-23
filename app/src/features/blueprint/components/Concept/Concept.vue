@@ -3,22 +3,32 @@
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { setManipulationHandling, setStyleHandling } from './composables'
-  import { bpNodeProvideKey } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
+  import {
+    bpNodeProvideKey,
+    conceptProvideKey,
+  } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
+  // import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
 
   const { conceptName, subConceptStyle } = defineProps<{
     conceptName: Concept['name']
     subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
   }>()
-  const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
-
   const ui = useUiStore()
+  const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
+  const { parentCumulativeSubContentScale } = inject(conceptProvideKey, { parentCumulativeSubContentScale: 1 })
+  // const currentContentScale = bpNodeId ? ui.getBlueprintTreeNode(bpNodeId)?.bpRef.getContentScale() ?? 1 : 1
+  // const currentPosition = {
+  //   left: cumulativeParentsPosition.left + (Number(subConceptStyle?.left.split('px')[0]) || 0) * currentContentScale,
+  //   top: cumulativeParentsPosition.top + (Number(subConceptStyle?.top.split('px')[0]) || 0) * currentContentScale,
+  // } as Position
+  
   const { fetchConcept } = useConceptStore()
-
+  
   const closeConceptEl = ref(null) as Ref<HTMLElement | null>
   const { concept, isDone: isConceptFetched } = fetchConcept(conceptName)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
-
+  
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
   const styleKit = setStyleHandling({
     isEmpty,
@@ -28,8 +38,10 @@
     parentDepth,
     subConceptStyle,
     bpNodeId,
+    parentCumulativeSubContentScale,
   })
 
+  provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
   /**
    * DELETEME
    *
