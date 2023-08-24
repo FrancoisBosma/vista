@@ -3,5 +3,6 @@ export interface Position {
   top: number
 }
 export interface ConceptProvideData {
-  parentCumulativeSubContentScale: number
+  parentsCumulativeSubConceptScale: number
+  parentsCumulativeSubConceptPosition: Position
 }

@@ -2,13 +2,12 @@
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
-  import { setManipulationHandling, setStyleHandling } from './composables'
+  import { setConceptRecursivity, setManipulationHandling, setStyleHandling } from './composables'
   import {
     bpNodeProvideKey,
     conceptProvideKey,
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
-  // import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
 
   const { conceptName, subConceptStyle } = defineProps<{
     conceptName: Concept['name']
@@ -16,32 +15,40 @@
   }>()
   const ui = useUiStore()
   const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
-  const { parentCumulativeSubContentScale } = inject(conceptProvideKey, { parentCumulativeSubContentScale: 1 })
-  // const currentContentScale = bpNodeId ? ui.getBlueprintTreeNode(bpNodeId)?.bpRef.getContentScale() ?? 1 : 1
-  // const currentPosition = {
-  //   left: cumulativeParentsPosition.left + (Number(subConceptStyle?.left.split('px')[0]) || 0) * currentContentScale,
-  //   top: cumulativeParentsPosition.top + (Number(subConceptStyle?.top.split('px')[0]) || 0) * currentContentScale,
-  // } as Position
-  
+  const { parentsCumulativeSubConceptScale, parentsCumulativeSubConceptPosition } = inject(conceptProvideKey, {
+    parentsCumulativeSubConceptScale: 1,
+    parentsCumulativeSubConceptPosition: { left: 0, top: 0 },
+  })
+
   const { fetchConcept } = useConceptStore()
-  
+
   const closeConceptEl = ref(null) as Ref<HTMLElement | null>
   const { concept, isDone: isConceptFetched } = fetchConcept(conceptName)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
-  
+
   const { isHovered, isOpen, handleClick } = setManipulationHandling({ isEmpty, closeConceptEl })
+  const { currentCumulativeSubConceptScale, cumulativeSubConceptPosition, cumulativeConceptScale, rootContentScale } =
+    setConceptRecursivity({
+      subConceptStyle,
+      bpNodeId,
+      parentsCumulativeSubConceptScale,
+      parentsCumulativeSubConceptPosition,
+    })
   const styleKit = setStyleHandling({
     isEmpty,
     isHovered,
     concept,
     isConceptFetched,
     parentDepth,
-    subConceptStyle,
-    bpNodeId,
-    parentCumulativeSubContentScale,
+    rootContentScale,
+    cumulativeConceptScale,
+    cumulativeSubConceptPosition,
   })
 
-  provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
+  provide(conceptProvideKey, {
+    parentsCumulativeSubConceptScale: currentCumulativeSubConceptScale.value,
+    parentsCumulativeSubConceptPosition: cumulativeSubConceptPosition.value,
+  })
   /**
    * DELETEME
    *

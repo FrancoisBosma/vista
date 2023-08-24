@@ -1,7 +1,7 @@
 import { useUiStore } from '@FEATURES/blueprint/stores'
 import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
 import type { setManipulationHandling } from './'
-import type { BpNodeWrapper, Dimension } from '@FEATURES/blueprint/types'
+import type { Dimension } from '@FEATURES/blueprint/types'
 import type { Concept } from '@API/gql-generated/graphql'
 import type { Pair } from '@SRC/types'
 import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
@@ -14,9 +14,9 @@ interface StyleArguments {
   concept: Ref<Concept>
   isConceptFetched: Ref<boolean>
   parentDepth: number
-  subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
-  bpNodeId?: BpNodeWrapper['id']
-  parentCumulativeSubContentScale: number
+  rootContentScale: Ref<number>
+  cumulativeConceptScale: Ref<number>
+  cumulativeSubConceptPosition: Ref<Position>
 }
 
 export default function setStyleHandling({
@@ -25,9 +25,9 @@ export default function setStyleHandling({
   concept,
   isConceptFetched,
   parentDepth,
-  subConceptStyle,
-  bpNodeId,
-  parentCumulativeSubContentScale,
+  rootContentScale,
+  cumulativeConceptScale,
+  cumulativeSubConceptPosition,
 }: StyleArguments) {
   const boxShadow = computed(
     () => `${isHovered.value && !isEmpty.value ? '0 0 3px var(--foreground)' : '0 1px 3px rgba(0, 0, 0, 0.5)'}`
@@ -46,34 +46,19 @@ export default function setStyleHandling({
     transform: '',
   }) as Record<string, string>
 
-  const currentContentScale = computed(() =>
-    bpNodeId ? ui.getBlueprintTreeNode(bpNodeId)?.bpRef.getContentScale() ?? 1 : 1
-  )
-  const currentCumulativeSubContentScale = computed(() => parentCumulativeSubContentScale * currentContentScale.value)
-  const isAtRootLevel = computed(
-    () => bpNodeId && ui.getBlueprintTreeNode(bpNodeId)?.id === ui.getBlueprintTreeRoot()?.id
-  )
-  const cumulatedContentScale = computed(() => {
-    if (isAtRootLevel.value) return currentCumulativeSubContentScale.value
-    return currentCumulativeSubContentScale.value * (ui.getBlueprintTreeRoot()?.bpRef.getContentScale() ?? 1)
-  })
-
   watchOnce(isConceptFetched, () => {
     const conceptDimensions = getNumbersFromPair(concept.value.wh as Pair<number>)
     if (conceptDimensions?.length !== 2) return
     dimensions.width = `${conceptDimensions[0]}px`
     dimensions.height = `${conceptDimensions[1]}px`
-    const subConceptPosition = {
-      left: Number(subConceptStyle?.left.split('px')[0]) || 0,
-      top: Number(subConceptStyle?.top.split('px')[0]) || 0,
-    } as Position
     watchEffect(() => {
-      // TODO: what I'm missing is: Vparent, (diff between -75px and .left) * contentScale
-      bgDisplay.left = `${-conceptDimensions[0] / 2 + subConceptPosition.left * cumulatedContentScale.value}px`
-      bgDisplay.top = `${-conceptDimensions[1] / 2 + subConceptPosition.top * cumulatedContentScale.value}px`
-      bgDisplay.width = `${conceptDimensions[0] * cumulatedContentScale.value}px`
-      bgDisplay.height = `${conceptDimensions[1] * cumulatedContentScale.value}px`
-      bgDisplay.transform = `scale(${cumulatedContentScale.value})`
+      bgDisplay.left = `${
+        -conceptDimensions[0] / 2 + cumulativeSubConceptPosition.value.left * rootContentScale.value
+      }px`
+      bgDisplay.top = `${-conceptDimensions[1] / 2 + cumulativeSubConceptPosition.value.top * rootContentScale.value}px`
+      bgDisplay.width = `${conceptDimensions[0] * cumulativeConceptScale.value}px`
+      bgDisplay.height = `${conceptDimensions[1] * cumulativeConceptScale.value}px`
+      bgDisplay.transform = `scale(${cumulativeConceptScale.value})`
     })
   })
   const conceptBgColor =
@@ -87,6 +72,5 @@ export default function setStyleHandling({
     bgDisplay,
     conceptBgColor,
     conceptRoundness,
-    currentCumulativeSubContentScale,
   })
 }
