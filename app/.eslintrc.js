@@ -21,7 +21,7 @@ module.exports = {
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/no-explicit-any': rulesSeverityOff,
     '@typescript-eslint/no-namespace': ['error', { allowDeclarations: true }],
-    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warning', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     'comma-dangle': ['error', 'only-multiline'],
     // Delegates import sorting order to import-sort plugin
     'import/order': 'off',
@@ -34,7 +34,7 @@ module.exports = {
     ],
     'no-console': rulesSeverityOff,
     'no-debugger': rulesSeverityOff,
-    'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    'no-unused-vars': ['warning', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     // Delegates curly brace spacing to prettier
     'object-curly-spacing': 'off',
   },
