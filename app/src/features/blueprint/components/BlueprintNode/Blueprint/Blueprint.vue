@@ -63,7 +63,7 @@
     cursor: v-bind('styleKit.bpCursor');
 
     .bp-background {
-      @apply absolute w-full h-full children:(absolute);
+      @apply absolute children:(absolute);
       left: v-bind('styleKit.bgDimensions.left');
       width: v-bind('styleKit.bgDimensions.width');
       top: v-bind('styleKit.bgDimensions.top');

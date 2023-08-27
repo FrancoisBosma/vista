@@ -19,5 +19,7 @@ meta:
 </script>
 
 <template>
-  <Blueprint content="concept:Communication" />
+  <div class="w-full h-full">
+    <Blueprint content="concept:Communication" />
+  </div>
 </template>
