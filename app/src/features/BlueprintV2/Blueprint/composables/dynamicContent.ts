@@ -27,7 +27,8 @@ export default function setDynamicAppearance() {
   // const contentScale = computed(() => initialContentScale.value * contentScaleModifier.value)
   const contentScale = ref(1)
   const contentTransform = computed(
-    () => `translate(${contentOffsets.width}px, ${contentOffsets.height}px) scale(${contentScale.value})`
+    () => `translate(calc(-50% + ${contentOffsets.width}px), calc(-50% + ${contentOffsets.height}px))\
+    scale(${contentScale.value})`
   )
   const contentZIndex = 2 * ui.gridConfig.zoom.levelReset + 1
   //
