@@ -1,10 +1,10 @@
-import { useUiStore } from '@FEATURES/BlueprintV2/stores'
+import { useBlueprintStore } from '@FEATURES/BlueprintV2/stores'
 import type { setDynamicContent } from '.'
 import type { DragState } from '@SRC/types'
 import type { Dimension, Offset, Offsets } from '@FEATURES/BlueprintV2/types'
 import type { BlueprintBackgroundSFC } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/types'
 
-const ui = useUiStore()
+const ui = useBlueprintStore()
 
 type DragSetterArguments = {
   bpBackground: Ref<BlueprintBackgroundSFC | null>

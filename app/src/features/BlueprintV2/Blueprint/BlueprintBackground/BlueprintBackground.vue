@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import Grid from './Grid'
-  import { useUiStore } from '@FEATURES/BlueprintV2/stores'
+  import { useBlueprintStore } from '@FEATURES/BlueprintV2/stores'
   import { setDynamicAppearance } from './composables'
   import type { BlueprintSFC, Offsets } from '@FEATURES/BlueprintV2/types'
   import type { BlueprintBackgroundSFC } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/types'
@@ -8,7 +8,7 @@
   const { bpUuid, contentOffsets } = defineProps<{ bpUuid: BlueprintSFC['id'], contentOffsets: Offsets }>()
 
   const gridRefs = ref<Array<InstanceType<typeof Grid>>>([])
-  const ui = useUiStore()
+  const ui = useBlueprintStore()
   const dynamicKit = setDynamicAppearance({ contentOffsets: toRef(contentOffsets) })
 
   defineExpose({ grids: gridRefs.value, ...dynamicKit } satisfies BlueprintBackgroundSFC)

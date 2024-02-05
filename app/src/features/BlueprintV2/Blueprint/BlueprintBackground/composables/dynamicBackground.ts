@@ -1,8 +1,8 @@
-import { useUiStore } from '@FEATURES/BlueprintV2/stores'
+import { useBlueprintStore } from '@FEATURES/BlueprintV2/stores'
 import type { Dimension, Offsets, OffsetSide } from '@FEATURES/BlueprintV2/types'
 import type { GridSFC, Grids } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/Grid/types'
 
-const ui = useUiStore()
+const ui = useBlueprintStore()
 
 interface DynamicAppearanceSetterArguments {
   contentOffsets: Ref<Offsets>

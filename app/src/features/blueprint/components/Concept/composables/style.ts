@@ -41,8 +41,6 @@ export default function setStyleHandling({
   const bgDisplay = reactive({
     left: '0px',
     top: '0px',
-    width: '0px',
-    height: '0px',
     transform: '',
   }) as Record<string, string>
 
@@ -56,8 +54,6 @@ export default function setStyleHandling({
         -conceptDimensions[0] / 2 + cumulativeSubConceptPosition.value.left * rootContentScale.value
       }px`
       bgDisplay.top = `${-conceptDimensions[1] / 2 + cumulativeSubConceptPosition.value.top * rootContentScale.value}px`
-      bgDisplay.width = `${conceptDimensions[0] * cumulativeConceptScale.value}px`
-      bgDisplay.height = `${conceptDimensions[1] * cumulativeConceptScale.value}px`
       bgDisplay.transform = `scale(${cumulativeConceptScale.value})`
     })
   })

@@ -43,7 +43,11 @@ export default defineConfig({
     // https://github.com/antfu/unplugin-auto-import
     AutoImport({
       dts: 'src/generated_auto-imports.d.ts',
-      imports: ['@vueuse/core', '@vueuse/head', 'vitest', 'vue', 'vue-i18n', 'vue-router'],
+      imports: ['@vueuse/core', '@vueuse/head', 'vitest', 'vue', 'vue-i18n', 'vue-router', {
+        from: 'vue',
+        imports: ['ShallowRef'],
+        type: true,
+      }],
       dirs: ['src/global/**'],
     }),
 

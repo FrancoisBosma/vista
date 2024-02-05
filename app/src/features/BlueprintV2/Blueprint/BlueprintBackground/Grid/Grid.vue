@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useUiStore } from '@FEATURES/BlueprintV2/stores'
+import { useBlueprintStore } from '@FEATURES/BlueprintV2/stores'
 import type { ZoomDirectionFactor } from '@FEATURES/BlueprintV2/types'
 import type { GridSFC } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/Grid/types'
 
 const { gridIndex } = defineProps<{ gridIndex: number }>()
 
-const ui = useUiStore()
+const ui = useBlueprintStore()
 const config = ui.gridConfig
 
 const gridId = generateUuid()

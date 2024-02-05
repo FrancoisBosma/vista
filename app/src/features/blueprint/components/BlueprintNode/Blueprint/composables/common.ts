@@ -21,7 +21,7 @@ export default function setCommonHandling() {
     })
   const applyForEveryGrid = (gridRefs: GridRefs, fn: Function) => {
     const outputs: ReturnType<any>[] = []
-    range(ui.gridConfig.gridAmount).forEach((i) => {
+    range(ui.gridConfig.gridAmount).forEach((i) => {+6
       outputs.push(fn(gridRefs.value[i]))
     })
     return outputs

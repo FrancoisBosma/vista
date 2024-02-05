@@ -1,4 +1,4 @@
-import { useUiStore } from '@FEATURES/BlueprintV2/stores'
+import { useBlueprintStore } from '@FEATURES/BlueprintV2/stores'
 import type { setDynamicContent } from '.'
 import type { PinchState } from '@SRC/types'
 import type {
@@ -11,7 +11,7 @@ import type {
 import type { BlueprintBackgroundSFC } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/types'
 import type { GridSFC  } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/Grid/types'
 
-const ui = useUiStore()
+const ui = useBlueprintStore()
 
 type ZoomSetterArguments = {
   boundingRect: ReturnType<typeof useElementBounding>

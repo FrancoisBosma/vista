@@ -1,15 +1,15 @@
 <script setup lang="ts">
   import BlueprintBackground from './BlueprintBackground'
-  import ConceptNode from './ContentNode'
+  import ContentNode from './ContentNode'
   import {
-  setDynamicContent,
-  setDragHandling,
-  setZoomHandling,
-} from './composables'
+    setDynamicContent,
+    setDragHandling,
+    setZoomHandling,
+  } from './composables'
   import type { ContentIdentification } from '@FEATURES/BlueprintV2/types'
   import type { BlueprintBackgroundSFC } from '@FEATURES/BlueprintV2/Blueprint/BlueprintBackground/types'
 
-  const { content } = defineProps<{ content: ContentIdentification }>()
+  defineProps<{ content: ContentIdentification }>()
 
   const bp = shallowRef<HTMLDivElement | null>(null)
   const bpBackground = shallowRef<InstanceType<typeof BlueprintBackground> & BlueprintBackgroundSFC | null>(null)
@@ -23,7 +23,7 @@
 <template>
   <div ref="bp" class="blueprint" v-drag="handleDrag" v-pinch="handlePinch" @wheel.stop.prevent="handleWheel">
     <BlueprintBackground ref="bpBackground" :bp-uuid="uuid" :content-offsets="dynamicKit.contentOffsets" />
-    <ConceptNode class="bpContent" :content="content" />
+    <ContentNode class="bpContent" :content="content" />
   </div>
 </template>
 

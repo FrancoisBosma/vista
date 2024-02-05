@@ -1,3 +1,4 @@
+import { acceptHMRUpdate, defineStore } from 'pinia'
 import type {
   Axes,
   Axis,
@@ -7,7 +8,7 @@ import type {
   ZoomTypes,
 } from '@FEATURES/blueprint/types/'
 
-export default function setStyleHandling() {
+export const useBlueprintStore = defineStore('Blueprint', () => {
   const dimensions: Dimensions = {
     width: { axis: <Axis>'x' },
     height: { axis: <Axis>'y' },
@@ -43,4 +44,6 @@ export default function setStyleHandling() {
     lastDragDistance,
     isDragging,
   }
-}
+})
+
+if (import.meta.hot) import.meta.hot.accept(acceptHMRUpdate(useBlueprintStore, import.meta.hot))
