@@ -40,16 +40,12 @@
 
 <style scoped lang="postcss">
   .concept {
-    @apply select-none;
+    @apply overflow-hidden border-1 select-none;
     cursor: v-bind('styleKit.cursor');
     width: v-bind('styleKit.dimensions.width');
     height: v-bind('styleKit.dimensions.height');
-
-    & > * {
-      @apply border-1;
-      box-shadow: v-bind('styleKit.boxShadow');
-      border-radius: v-bind('styleKit.conceptRoundness');
-      border-color: v-bind('borderColor');
-    }
+    box-shadow: v-bind('styleKit.boxShadow');
+    border-radius: v-bind('styleKit.conceptRoundness');
+    border-color: v-bind('borderColor');
   }
 </style>

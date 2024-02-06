@@ -23,7 +23,9 @@
 <template>
   <div ref="bp" class="blueprint" v-drag="handleDrag" v-pinch="handlePinch" @wheel.stop.prevent="handleWheel">
     <BlueprintBackground ref="bpBackground" :bp-uuid="uuid" :content-offsets="dynamicKit.contentOffsets" />
-    <ContentNode class="bpContent" :content="content" />
+    <div class="bpContent">
+      <ContentNode :content="content" />
+    </div>
   </div>
 </template>
 

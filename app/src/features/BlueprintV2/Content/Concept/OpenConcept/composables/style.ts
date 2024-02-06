@@ -7,13 +7,13 @@ type StyleArguments = {
 export default function setStyleHandling({
   concept,
 }: StyleArguments) {
-  const bgDisplay = reactive({
-    left: '0px',
-    top: '0px',
-    transform: '',
-  }) as Record<string, string>
-  const conceptBgColor =
-    (parentDepth + 1) % 2 === 0 ? BlueprintBackgroundColor.normal : BlueprintBackgroundColor.stronger
+  // const bgDisplay = reactive({
+  //   left: '0px',
+  //   top: '0px',
+  //   transform: '',
+  // }) as Record<string, string>
+  // const conceptBgColor =
+  //   (parentDepth + 1) % 2 === 0 ? BlueprintBackgroundColor.normal : BlueprintBackgroundColor.stronger
 
   const conceptDimensions = getNumbersFromPair(concept.value.wh as Pair<number>)
   if (conceptDimensions?.length !== 2) return
