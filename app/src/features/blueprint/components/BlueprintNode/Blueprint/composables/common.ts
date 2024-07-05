@@ -36,10 +36,12 @@ export default function setCommonHandling() {
       const adjustmentFactor = absoluteValue(floorRoundUp(offsetTest / limit)) + (offsetTest % limit ? 1 : 0)
       return extraOffsetToBe + limit * adjustmentFactor
     }
-    if (offsetTest >= limit) {
-      const adjustmentFactor = floorRoundUp(offsetTest / limit)
-      return extraOffsetToBe - limit * adjustmentFactor
-    }
+    // TODO: fix this: as is, this piece of code would make the grid displayed inconsistently
+    // (try to fix a point, then 4 zoom-ins, then 2 zoom-outs => 'big grid' is not like before)
+    // if (offsetTest >= limit) {
+    //   const adjustmentFactor = floorRoundUp(offsetTest / limit)
+    //   return extraOffsetToBe - limit * adjustmentFactor
+    // }
     return extraOffsetToBe
   }
   return {

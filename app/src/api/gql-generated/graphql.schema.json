@@ -1461,6 +1461,18 @@
             "deprecationReason": null
           },
           {
+            "name": "name",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "ownerConcept",
             "description": "",
             "type": {
@@ -2277,6 +2289,18 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptCompositionRef",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "name",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "defaultValue": null,
@@ -3239,6 +3263,12 @@
           },
           {
             "name": "hash",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "hnsw",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -8702,6 +8732,15 @@
         ]
       },
       {
+        "name": "embedding",
+        "description": "",
+        "isRepeatable": false,
+        "locations": [
+          "FIELD_DEFINITION"
+        ],
+        "args": []
+      },
+      {
         "name": "generate",
         "description": "",
         "isRepeatable": false,
@@ -8781,7 +8820,20 @@
         "locations": [
           "FIELD_DEFINITION"
         ],
-        "args": []
+        "args": [
+          {
+            "name": "interface",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ]
       },
       {
         "name": "include",
@@ -8920,8 +8972,8 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "ENUM",
-                  "name": "DgraphIndex",
+                  "kind": "SCALAR",
+                  "name": "String",
                   "ofType": null
                 }
               }

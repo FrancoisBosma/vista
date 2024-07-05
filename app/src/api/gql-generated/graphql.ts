@@ -218,6 +218,7 @@ export enum ConceptArgumentTypeOrderable {
 
 export type ConceptArgumentTypePatch = {
   capacity?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
   ownerConcept?: InputMaybe<ConceptRef>;
 };
 
@@ -329,6 +330,7 @@ export enum ConceptOrderable {
 export type ConceptPatch = {
   arguments?: InputMaybe<Array<ConceptArgumentTypeRef>>;
   composition?: InputMaybe<ConceptCompositionRef>;
+  name?: InputMaybe<Scalars['String']>;
   wh?: InputMaybe<Scalars['String']>;
 };
 
@@ -453,6 +455,7 @@ export enum DgraphIndex {
   Fulltext = 'fulltext',
   Geo = 'geo',
   Hash = 'hash',
+  Hnsw = 'hnsw',
   Hour = 'hour',
   Int = 'int',
   Int64 = 'int64',
