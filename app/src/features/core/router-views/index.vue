@@ -11,4 +11,5 @@ meta:
 
 <template>
   <a @click="router.push('/blueprint')"> {{ t('Go to Blueprint') }} </a>
+  <PointToPointArrow :from="{ x: 20, y: 20 }" :to="{ x: 100, y: 250 }" />
 </template>
