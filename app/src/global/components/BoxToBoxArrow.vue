@@ -3,7 +3,7 @@
 
   // TODO: '@FEATURES/blueprint/types' is probably not where I should be getting that type from
   import type { Coordinates, Offsets } from '@FEATURES/blueprint/types'
-  type Props = {
+  interface Props {
     from: Coordinates & Offsets
     to: Coordinates & Offsets
   }
@@ -11,34 +11,51 @@
   const props = defineProps<Props>()
   const { from, to } = toRefs(props)
 
+  const ARROW_HEAD_LENGTH = 12
+  const leftMostCoord = Math.min(from.value.x, to.value.x)
+  const rightMostCoord = Math.max(from.value.x + from.value.width, to.value.x + to.value.width)
+  const topMostCoord = Math.min(from.value.y, to.value.y)
+  const bottomMostCoord = Math.max(from.value.y + from.value.height, to.value.y + to.value.height)
+  const boxWidth = Math.abs(rightMostCoord - leftMostCoord)
+  const boxHeight = Math.abs(bottomMostCoord - topMostCoord)
+
   const [startX, startY, centerX, centerY, endX, endY, endArrowAngle, startArrowAngle, centerArrowAngle] =
-  getBoxToBoxArrow(
-    from.value.x,
-    from.value.y,
-    from.value.width,
-    from.value.height,
-    to.value.x,
-    to.value.y,
-    to.value.width,
-    to.value.height,
-    {
-    bow: 0,
-    stretch: 0.2,
-    stretchMin: 0,
-    stretchMax: 1000,
-    padStart: 0,
-    padEnd: 12,
-    flip: false,
-    straights: false,
-  })
+    getBoxToBoxArrow(
+      from.value.x - leftMostCoord,
+      from.value.y - topMostCoord,
+      from.value.width,
+      from.value.height,
+      to.value.x - leftMostCoord,
+      to.value.y - topMostCoord,
+      to.value.width,
+      to.value.height,
+      {
+        bow: 0,
+        stretch: 0.2,
+        stretchMin: 0,
+        stretchMax: 1000,
+        padStart: 0,
+        padEnd: ARROW_HEAD_LENGTH,
+        flip: false,
+        straights: false,
+      }
+    )
 </script>
 
 <template>
-  <svg viewBox="0 0 1000 1000" :style="{ width: '1000px', height: '1000px' }" stroke="#000" fill="#000" strokeWidth="3">
+  <!-- N.B: we use a "style" attr rather than "class" so that not to have issues with css class tree shaking -->
+  <svg
+    class="absolute"
+    :style="{ top: `${topMostCoord}px`, left: `${leftMostCoord}px`, width: `${boxWidth}px`, height: `${boxHeight}px` }"
+    :viewBox="`0 0 ${boxWidth} ${boxHeight}`"
+    stroke="#000"
+    fill="#000"
+    strokeWidth="3"
+  >
     <circle :cx="startX" :cy="startY" r="4" />
     <path :d="`M${startX},${startY} Q${centerX},${centerY} ${endX},${endY}`" fill="none" />
     <polygon
-      points="0,-6 12,0, 0,6"
+      :points="`0,-${ARROW_HEAD_LENGTH / 2} ${ARROW_HEAD_LENGTH},0, 0,${ARROW_HEAD_LENGTH / 2}`"
       :transform="`translate(${endX},${endY}) rotate(${endArrowAngle * (180 / Math.PI)})`"
     />
   </svg>
