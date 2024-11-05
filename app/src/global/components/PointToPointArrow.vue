@@ -3,7 +3,7 @@
 
   // TODO: '@FEATURES/blueprint/types' is probably not where I should be getting that type from
   import type { Coordinates } from '@FEATURES/blueprint/types'
-  type Props = {
+  interface Props {
     from: Coordinates
     to: Coordinates
   }
@@ -11,16 +11,22 @@
   const props = defineProps<Props>()
   const { from, to } = toRefs(props)
 
-  const [startX, startY, centerX, centerY, endX, endY, endArrowAngle, startArrowAngle, centerArrowAngle] = getArrow(from.value.x, from.value.y, to.value.x, to.value.y, {
-    bow: 0,
-    stretch: 0.2,
-    stretchMin: 0,
-    stretchMax: 1000,
-    padStart: 0,
-    padEnd: 0,
-    flip: false,
-    straights: false,
-  })
+  const [startX, startY, centerX, centerY, endX, endY, endArrowAngle, startArrowAngle, centerArrowAngle] = getArrow(
+    from.value.x,
+    from.value.y,
+    to.value.x,
+    to.value.y,
+    {
+      bow: 0,
+      stretch: 0.2,
+      stretchMin: 0,
+      stretchMax: 1000,
+      padStart: 0,
+      padEnd: 0,
+      flip: false,
+      straights: false,
+    }
+  )
 </script>
 
 <template>
