@@ -31,12 +31,12 @@
       to.value.height,
       {
         bow: 0,
-        stretch: 0.2,
+        stretch: 0.1,
         stretchMin: 0,
         stretchMax: 1000,
         padStart: 0,
         padEnd: ARROW_HEAD_LENGTH,
-        flip: false,
+        flip: true,
         straights: false,
       }
     )

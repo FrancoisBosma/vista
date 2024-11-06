@@ -17,7 +17,9 @@
   const contentEdgePositions = ui.getContentEdgePositions(concept)
 
   // WIP
-  const connection = concept.composition?.connections.find((connection) => connection.argumentFeederType === ArgumentFeederType.OtherSubConcept)
+  const connection = concept.composition?.connections.find(
+    (connection) => connection.argumentFeederType === ArgumentFeederType.OtherSubConcept
+  )
   const fedSubConceptKey = connection?.fedSubConceptKey
   const argumentFeederKey = connection?.argumentFeederKey
   const fedSubConceptConceptName = connection?.fedSubConceptArgumentType.name.substring(
