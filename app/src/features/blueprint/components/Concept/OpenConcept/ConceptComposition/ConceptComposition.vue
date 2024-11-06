@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
+  import { ArgumentFeederType } from '@API/gql-generated/graphql'
   import type { Concept } from '@API/gql-generated/graphql'
   import type { Pair } from '@ROOT/src/types'
 
@@ -16,24 +17,25 @@
   const contentEdgePositions = ui.getContentEdgePositions(concept)
 
   // WIP
-  const connection = concept.composition?.connections[0]
-  const sourceXY = connection?.sourceCustomID
-  const targetXY = connection?.targetConceptCustomID
-  const sourceConceptName = connection?.sourceArgumentType.name.substring(
+  const connection = concept.composition?.connections.find((connection) => connection.argumentFeederType === ArgumentFeederType.OtherSubConcept)
+  const fedSubConceptKey = connection?.fedSubConceptKey
+  const argumentFeederKey = connection?.argumentFeederKey
+  const fedSubConceptConceptName = connection?.fedSubConceptArgumentType.name.substring(
     0,
-    connection?.sourceArgumentType.name.lastIndexOf('.')
+    connection?.fedSubConceptArgumentType.name.lastIndexOf('.')
   )
-  const targetConceptName = concept.composition?.subConcepts.find((subConcept) => subConcept.xy === targetXY)?.concept
-    .name
-  const sourceWH = conceptStore.getStoreConcept(sourceConceptName ?? '')?.wh
-  const targetWH = conceptStore.getStoreConcept(targetConceptName ?? '')?.wh
-  const [sourceW, sourceH] = getNumbersFromPair(sourceWH as Pair<number>)
-  const [sourceX, sourceY] = getNumbersFromPair(sourceXY as Pair<number>).map(
-    (coord, idx) => coord - (idx === 0 ? sourceW : sourceH) / 2
+  const argumentFeederConceptName = concept.composition?.subConcepts.find(
+    (subConcept) => subConcept.xy === argumentFeederKey
+  )?.concept.name
+  const fedSubConceptWH = conceptStore.getStoreConcept(fedSubConceptConceptName ?? '')?.wh
+  const argumentFeederWH = conceptStore.getStoreConcept(argumentFeederConceptName ?? '')?.wh
+  const [fedSubConceptW, fedSubConceptH] = getNumbersFromPair(fedSubConceptWH as Pair<number>)
+  const [fedSubConceptX, fedSubConceptY] = getNumbersFromPair(fedSubConceptKey as Pair<number>).map(
+    (coord, idx) => coord - (idx === 0 ? fedSubConceptW : fedSubConceptH) / 2
   )
-  const [targetW, targetH] = getNumbersFromPair(targetWH as Pair<number>)
-  const [targetX, targetY] = getNumbersFromPair(targetXY as Pair<number>).map(
-    (coord, idx) => coord - (idx === 0 ? targetW : targetH) / 2
+  const [argumentFeederW, argumentFeederH] = getNumbersFromPair(argumentFeederWH as Pair<number>)
+  const [argumentFeederX, argumentFeederY] = getNumbersFromPair(argumentFeederKey as Pair<number>).map(
+    (coord, idx) => coord - (idx === 0 ? argumentFeederW : argumentFeederH) / 2
   )
 </script>
 
@@ -45,7 +47,7 @@
     :sub-concept-style="ui.getSubConceptStyle(contentEdgePositions, subConcept)"
   />
   <BoxToBoxArrow
-    :from="{ x: sourceX, y: sourceY, width: sourceW, height: sourceH }"
-    :to="{ x: targetX, y: targetY, width: targetW, height: targetH }"
+    :from="{ x: argumentFeederX, y: argumentFeederY, width: argumentFeederW, height: argumentFeederH }"
+    :to="{ x: fedSubConceptX, y: fedSubConceptY, width: fedSubConceptW, height: fedSubConceptH }"
   />
 </template>

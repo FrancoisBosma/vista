@@ -24,13 +24,13 @@ export const ConceptQuery = graphql(`
           xy
         }
         connections {
-          sourceCustomID
-          sourceArgumentType {
+          fedSubConceptKey
+          fedSubConceptArgumentType {
             name
           }
-          targetConceptType
-          targetConceptCustomID
-          targetConceptArgumentType {
+          argumentFeederType
+          argumentFeederKey
+          argumentFeederArgumentType {
             name
           }
         }

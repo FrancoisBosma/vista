@@ -480,14 +480,38 @@
         "fields": null,
         "inputFields": [
           {
-            "name": "ownerConceptComposition",
+            "name": "argumentFeederArgumentType",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "ConceptArgumentTypeRef",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederKey",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederType",
             "description": "",
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "INPUT_OBJECT",
-                "name": "ConceptCompositionRef",
+                "kind": "ENUM",
+                "name": "ArgumentFeederType",
                 "ofType": null
               }
             },
@@ -496,7 +520,7 @@
             "deprecationReason": null
           },
           {
-            "name": "sourceArgumentType",
+            "name": "fedSubConceptArgumentType",
             "description": "",
             "type": {
               "kind": "NON_NULL",
@@ -512,7 +536,7 @@
             "deprecationReason": null
           },
           {
-            "name": "sourceCustomID",
+            "name": "fedSubConceptKey",
             "description": "",
             "type": {
               "kind": "NON_NULL",
@@ -528,38 +552,14 @@
             "deprecationReason": null
           },
           {
-            "name": "targetConceptArgumentType",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "ConceptArgumentTypeRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomID",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptType",
+            "name": "ownerConceptComposition",
             "description": "",
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "ENUM",
-                "name": "TargetConceptType",
+                "kind": "INPUT_OBJECT",
+                "name": "ConceptCompositionRef",
                 "ofType": null
               }
             },
@@ -801,6 +801,41 @@
         "inputFields": null,
         "interfaces": [],
         "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ArgumentFeederType",
+        "description": "",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": [
+          {
+            "name": "OtherSubConcept",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OtherSubConceptArgument",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "OwnerArgument",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "Self",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
         "possibleTypes": null
       },
       {
@@ -5966,6 +6001,104 @@
         "description": "",
         "fields": [
           {
+            "name": "argumentFeederArgumentType",
+            "description": "",
+            "args": [
+              {
+                "name": "filter",
+                "description": "",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ConceptArgumentTypeFilter",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ConceptArgumentType",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederKey",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederType",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "ENUM",
+                "name": "ArgumentFeederType",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentType",
+            "description": "",
+            "args": [
+              {
+                "name": "filter",
+                "description": "",
+                "type": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "ConceptArgumentTypeFilter",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ConceptArgumentType",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptKey",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "",
             "args": [],
@@ -6009,104 +6142,6 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "sourceArgumentType",
-            "description": "",
-            "args": [
-              {
-                "name": "filter",
-                "description": "",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ConceptArgumentTypeFilter",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ConceptArgumentType",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceCustomID",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptArgumentType",
-            "description": "",
-            "args": [
-              {
-                "name": "filter",
-                "description": "",
-                "type": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "ConceptArgumentTypeFilter",
-                  "ofType": null
-                },
-                "defaultValue": null,
-                "isDeprecated": false,
-                "deprecationReason": null
-              }
-            ],
-            "type": {
-              "kind": "OBJECT",
-              "name": "ConceptArgumentType",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomID",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptType",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "ENUM",
-                "name": "TargetConceptType",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -6120,6 +6155,30 @@
         "description": "",
         "fields": [
           {
+            "name": "argumentFeederKeyMax",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederKeyMin",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "count",
             "description": "",
             "args": [],
@@ -6132,7 +6191,7 @@
             "deprecationReason": null
           },
           {
-            "name": "sourceCustomIDMax",
+            "name": "fedSubConceptKeyMax",
             "description": "",
             "args": [],
             "type": {
@@ -6144,31 +6203,7 @@
             "deprecationReason": null
           },
           {
-            "name": "sourceCustomIDMin",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomIDMax",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomIDMin",
+            "name": "fedSubConceptKeyMin",
             "description": "",
             "args": [],
             "type": {
@@ -6285,37 +6320,37 @@
         "interfaces": null,
         "enumValues": [
           {
+            "name": "argumentFeederArgumentType",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederKey",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederType",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentType",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptKey",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "ownerConceptComposition",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceArgumentType",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceCustomID",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptArgumentType",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomID",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptType",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -6379,13 +6414,13 @@
         "interfaces": null,
         "enumValues": [
           {
-            "name": "sourceCustomID",
+            "name": "argumentFeederKey",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "targetConceptCustomID",
+            "name": "fedSubConceptKey",
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
@@ -6400,71 +6435,71 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "argumentFeederArgumentType",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "ConceptArgumentTypeRef",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederKey",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederType",
+            "description": "",
+            "type": {
+              "kind": "ENUM",
+              "name": "ArgumentFeederType",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentType",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "ConceptArgumentTypeRef",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptKey",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "ownerConceptComposition",
             "description": "",
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptCompositionRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceArgumentType",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "ConceptArgumentTypeRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceCustomID",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptArgumentType",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "ConceptArgumentTypeRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomID",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptType",
-            "description": "",
-            "type": {
-              "kind": "ENUM",
-              "name": "TargetConceptType",
               "ofType": null
             },
             "defaultValue": null,
@@ -6483,6 +6518,66 @@
         "fields": null,
         "inputFields": [
           {
+            "name": "argumentFeederArgumentType",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "ConceptArgumentTypeRef",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederKey",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "argumentFeederType",
+            "description": "",
+            "type": {
+              "kind": "ENUM",
+              "name": "ArgumentFeederType",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentType",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "ConceptArgumentTypeRef",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptKey",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": "",
             "type": {
@@ -6500,66 +6595,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptCompositionRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceArgumentType",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "ConceptArgumentTypeRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "sourceCustomID",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptArgumentType",
-            "description": "",
-            "type": {
-              "kind": "INPUT_OBJECT",
-              "name": "ConceptArgumentTypeRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptCustomID",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "targetConceptType",
-            "description": "",
-            "type": {
-              "kind": "ENUM",
-              "name": "TargetConceptType",
               "ofType": null
             },
             "defaultValue": null,
@@ -6859,41 +6894,6 @@
         ],
         "interfaces": null,
         "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "ENUM",
-        "name": "TargetConceptType",
-        "description": "",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
-        "enumValues": [
-          {
-            "name": "OtherSubConcept",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "OtherSubConceptArgument",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "OwnerArgument",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "Self",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
         "possibleTypes": null
       },
       {

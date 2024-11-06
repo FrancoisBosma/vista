@@ -85,12 +85,12 @@ export type AddConceptPayloadConceptArgs = {
 };
 
 export type AddSubConceptConnectionInput = {
+  argumentFeederArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
+  argumentFeederKey?: InputMaybe<Scalars['String']>;
+  argumentFeederType: ArgumentFeederType;
+  fedSubConceptArgumentType: ConceptArgumentTypeRef;
+  fedSubConceptKey: Scalars['String'];
   ownerConceptComposition: ConceptCompositionRef;
-  sourceArgumentType: ConceptArgumentTypeRef;
-  sourceCustomID: Scalars['String'];
-  targetConceptArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
-  targetConceptCustomID?: InputMaybe<Scalars['String']>;
-  targetConceptType: TargetConceptType;
 };
 
 export type AddSubConceptConnectionPayload = {
@@ -126,6 +126,13 @@ export type AddSubConceptPayloadSubConceptArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order?: InputMaybe<SubConceptOrder>;
 };
+
+export enum ArgumentFeederType {
+  OtherSubConcept = 'OtherSubConcept',
+  OtherSubConceptArgument = 'OtherSubConceptArgument',
+  OwnerArgument = 'OwnerArgument',
+  Self = 'Self'
+}
 
 export type AuthRule = {
   and?: InputMaybe<Array<InputMaybe<AuthRule>>>;
@@ -862,13 +869,23 @@ export type SubConceptAggregateResult = {
 
 export type SubConceptConnection = {
   __typename?: 'SubConceptConnection';
+  argumentFeederArgumentType?: Maybe<ConceptArgumentType>;
+  argumentFeederKey?: Maybe<Scalars['String']>;
+  argumentFeederType: ArgumentFeederType;
+  fedSubConceptArgumentType: ConceptArgumentType;
+  fedSubConceptKey: Scalars['String'];
   id: Scalars['ID'];
   ownerConceptComposition: ConceptComposition;
-  sourceArgumentType: ConceptArgumentType;
-  sourceCustomID: Scalars['String'];
-  targetConceptArgumentType?: Maybe<ConceptArgumentType>;
-  targetConceptCustomID?: Maybe<Scalars['String']>;
-  targetConceptType: TargetConceptType;
+};
+
+
+export type SubConceptConnectionArgumentFeederArgumentTypeArgs = {
+  filter?: InputMaybe<ConceptArgumentTypeFilter>;
+};
+
+
+export type SubConceptConnectionFedSubConceptArgumentTypeArgs = {
+  filter?: InputMaybe<ConceptArgumentTypeFilter>;
 };
 
 
@@ -876,23 +893,13 @@ export type SubConceptConnectionOwnerConceptCompositionArgs = {
   filter?: InputMaybe<ConceptCompositionFilter>;
 };
 
-
-export type SubConceptConnectionSourceArgumentTypeArgs = {
-  filter?: InputMaybe<ConceptArgumentTypeFilter>;
-};
-
-
-export type SubConceptConnectionTargetConceptArgumentTypeArgs = {
-  filter?: InputMaybe<ConceptArgumentTypeFilter>;
-};
-
 export type SubConceptConnectionAggregateResult = {
   __typename?: 'SubConceptConnectionAggregateResult';
+  argumentFeederKeyMax?: Maybe<Scalars['String']>;
+  argumentFeederKeyMin?: Maybe<Scalars['String']>;
   count?: Maybe<Scalars['Int']>;
-  sourceCustomIDMax?: Maybe<Scalars['String']>;
-  sourceCustomIDMin?: Maybe<Scalars['String']>;
-  targetConceptCustomIDMax?: Maybe<Scalars['String']>;
-  targetConceptCustomIDMin?: Maybe<Scalars['String']>;
+  fedSubConceptKeyMax?: Maybe<Scalars['String']>;
+  fedSubConceptKeyMin?: Maybe<Scalars['String']>;
 };
 
 export type SubConceptConnectionFilter = {
@@ -904,12 +911,12 @@ export type SubConceptConnectionFilter = {
 };
 
 export enum SubConceptConnectionHasFilter {
-  OwnerConceptComposition = 'ownerConceptComposition',
-  SourceArgumentType = 'sourceArgumentType',
-  SourceCustomId = 'sourceCustomID',
-  TargetConceptArgumentType = 'targetConceptArgumentType',
-  TargetConceptCustomId = 'targetConceptCustomID',
-  TargetConceptType = 'targetConceptType'
+  ArgumentFeederArgumentType = 'argumentFeederArgumentType',
+  ArgumentFeederKey = 'argumentFeederKey',
+  ArgumentFeederType = 'argumentFeederType',
+  FedSubConceptArgumentType = 'fedSubConceptArgumentType',
+  FedSubConceptKey = 'fedSubConceptKey',
+  OwnerConceptComposition = 'ownerConceptComposition'
 }
 
 export type SubConceptConnectionOrder = {
@@ -919,27 +926,27 @@ export type SubConceptConnectionOrder = {
 };
 
 export enum SubConceptConnectionOrderable {
-  SourceCustomId = 'sourceCustomID',
-  TargetConceptCustomId = 'targetConceptCustomID'
+  ArgumentFeederKey = 'argumentFeederKey',
+  FedSubConceptKey = 'fedSubConceptKey'
 }
 
 export type SubConceptConnectionPatch = {
+  argumentFeederArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
+  argumentFeederKey?: InputMaybe<Scalars['String']>;
+  argumentFeederType?: InputMaybe<ArgumentFeederType>;
+  fedSubConceptArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
+  fedSubConceptKey?: InputMaybe<Scalars['String']>;
   ownerConceptComposition?: InputMaybe<ConceptCompositionRef>;
-  sourceArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
-  sourceCustomID?: InputMaybe<Scalars['String']>;
-  targetConceptArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
-  targetConceptCustomID?: InputMaybe<Scalars['String']>;
-  targetConceptType?: InputMaybe<TargetConceptType>;
 };
 
 export type SubConceptConnectionRef = {
+  argumentFeederArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
+  argumentFeederKey?: InputMaybe<Scalars['String']>;
+  argumentFeederType?: InputMaybe<ArgumentFeederType>;
+  fedSubConceptArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
+  fedSubConceptKey?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
   ownerConceptComposition?: InputMaybe<ConceptCompositionRef>;
-  sourceArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
-  sourceCustomID?: InputMaybe<Scalars['String']>;
-  targetConceptArgumentType?: InputMaybe<ConceptArgumentTypeRef>;
-  targetConceptCustomID?: InputMaybe<Scalars['String']>;
-  targetConceptType?: InputMaybe<TargetConceptType>;
 };
 
 export type SubConceptFilter = {
@@ -978,13 +985,6 @@ export type SubConceptRef = {
   ownerConceptComposition?: InputMaybe<ConceptCompositionRef>;
   xy?: InputMaybe<Scalars['String']>;
 };
-
-export enum TargetConceptType {
-  OtherSubConcept = 'OtherSubConcept',
-  OtherSubConceptArgument = 'OtherSubConceptArgument',
-  OwnerArgument = 'OwnerArgument',
-  Self = 'Self'
-}
 
 export type UpdateConceptArgumentTypeInput = {
   filter: ConceptArgumentTypeFilter;
@@ -1094,7 +1094,7 @@ export type ConceptQueryVariables = Exact<{
 }>;
 
 
-export type ConceptQuery = { __typename?: 'Query', getConcept?: { __typename?: 'Concept', wh: string, arguments: Array<{ __typename?: 'ConceptArgumentType', name: string, capacity: string }>, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', xy?: string | null, concept: { __typename?: 'Concept', name: string, wh: string, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', concept: { __typename?: 'Concept', name: string } }> } | null } }>, connections: Array<{ __typename?: 'SubConceptConnection', sourceCustomID: string, targetConceptType: TargetConceptType, targetConceptCustomID?: string | null, sourceArgumentType: { __typename?: 'ConceptArgumentType', name: string }, targetConceptArgumentType?: { __typename?: 'ConceptArgumentType', name: string } | null }> } | null } | null };
+export type ConceptQuery = { __typename?: 'Query', getConcept?: { __typename?: 'Concept', wh: string, arguments: Array<{ __typename?: 'ConceptArgumentType', name: string, capacity: string }>, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', xy?: string | null, concept: { __typename?: 'Concept', name: string, wh: string, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', concept: { __typename?: 'Concept', name: string } }> } | null } }>, connections: Array<{ __typename?: 'SubConceptConnection', fedSubConceptKey: string, argumentFeederType: ArgumentFeederType, argumentFeederKey?: string | null, fedSubConceptArgumentType: { __typename?: 'ConceptArgumentType', name: string }, argumentFeederArgumentType?: { __typename?: 'ConceptArgumentType', name: string } | null }> } | null } | null };
 
 
-export const ConceptDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"concept"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"conceptName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getConcept"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"conceptName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arguments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}}]}},{"kind":"Field","name":{"kind":"Name","value":"composition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subConcepts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"concept"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"composition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subConcepts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"concept"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wh"}}]}},{"kind":"Field","name":{"kind":"Name","value":"xy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"connections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"sourceCustomID"}},{"kind":"Field","name":{"kind":"Name","value":"sourceArgumentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"targetConceptType"}},{"kind":"Field","name":{"kind":"Name","value":"targetConceptCustomID"}},{"kind":"Field","name":{"kind":"Name","value":"targetConceptArgumentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wh"}}]}}]}}]} as unknown as DocumentNode<ConceptQuery, ConceptQueryVariables>;
+export const ConceptDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"concept"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"conceptName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getConcept"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"conceptName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arguments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}}]}},{"kind":"Field","name":{"kind":"Name","value":"composition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subConcepts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"concept"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"composition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subConcepts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"concept"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wh"}}]}},{"kind":"Field","name":{"kind":"Name","value":"xy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"connections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fedSubConceptKey"}},{"kind":"Field","name":{"kind":"Name","value":"fedSubConceptArgumentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"argumentFeederType"}},{"kind":"Field","name":{"kind":"Name","value":"argumentFeederKey"}},{"kind":"Field","name":{"kind":"Name","value":"argumentFeederArgumentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wh"}}]}}]}}]} as unknown as DocumentNode<ConceptQuery, ConceptQueryVariables>;
