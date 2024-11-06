@@ -27,10 +27,14 @@
     .name
   const sourceWH = conceptStore.getStoreConcept(sourceConceptName ?? '')?.wh
   const targetWH = conceptStore.getStoreConcept(targetConceptName ?? '')?.wh
-  const [sourceX, sourceY] = getNumbersFromPair(sourceXY as Pair<number>)
   const [sourceW, sourceH] = getNumbersFromPair(sourceWH as Pair<number>)
-  const [targetX, targetY] = getNumbersFromPair(targetXY as Pair<number>)
+  const [sourceX, sourceY] = getNumbersFromPair(sourceXY as Pair<number>).map(
+    (coord, idx) => coord - (idx === 0 ? sourceW : sourceH) / 2
+  )
   const [targetW, targetH] = getNumbersFromPair(targetWH as Pair<number>)
+  const [targetX, targetY] = getNumbersFromPair(targetXY as Pair<number>).map(
+    (coord, idx) => coord - (idx === 0 ? targetW : targetH) / 2
+  )
 </script>
 
 <template>
