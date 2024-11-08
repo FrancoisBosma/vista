@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { invoke, until } from '@vueuse/core'
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
@@ -8,6 +9,7 @@
     conceptProvideKey,
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import type { Concept } from '@API/gql-generated/graphql'
+  import type { Pair } from '@ROOT/src/types'
   // import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
 
   const { conceptName, subConceptStyle } = defineProps<{
@@ -43,10 +45,53 @@
    * icons: screen-normal vs fit-screen
    *
    */
+
+  /**
+                                        o
+                                      <--->
+        _____________________________________________________________
+        |                             |   /                          |
+        |                             |a /                           |
+      h |                             |/                             |
+        |                                                            |
+        |                                                            |
+        |____________________________________________________________|
+                                      w
+    */
+  const argumentPositionAngle /* 'a' */ = 0 // degrees
+  const [polygonW, polygonH, polygonTranslateX, polygonTranslateY] = [12, 12, 2, 2]
+  const argumentLeft = ref('-6px')
+  const argumentTop = ref('-14px')
+  invoke(async () => {
+    await until(isConceptFetched).toBe(true)
+    const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
+    const tileCenterX = w / 2
+    const tileCenterY = h / 2
+    const svgCenterOffsetX = -polygonW / 2 - polygonTranslateX
+    const xOffset /* 'o' */ = Math.tan(argumentPositionAngle) * tileCenterY
+    const left = tileCenterX + svgCenterOffsetX + xOffset
+    const top = -(polygonH + polygonTranslateY)
+    argumentLeft.value = `${left}px`
+    argumentTop.value = `${top}px`
+  })
 </script>
 
 <template>
   <div class="concept" :style="subConceptStyle" @click.stop="handleClick">
+    <svg
+      v-if="isConceptFetched"
+      class="absolute w-4 h-4 -z-1"
+      :style="{
+        top: argumentTop,
+        left: argumentLeft,
+      }"
+      viewBox="0 0 16 16"
+      stroke="#000"
+      fill="#000"
+      strokeWidth="1"
+    >
+      <polygon points="0,0 6,10 12,0 12,12 0,12" :transform="`translate(2,2) rotate(${0 * (180 / Math.PI)})`" />
+    </svg>
     <keep-alive>
       <CloseConcept
         v-if="!isOpen"
@@ -82,7 +127,7 @@
     width: v-bind('styleKit.dimensions.width');
     height: v-bind('styleKit.dimensions.height');
 
-    & > * {
+    & > :not(svg) {
       @apply border-1;
       box-shadow: v-bind('styleKit.boxShadow');
       border-radius: v-bind('styleKit.conceptRoundness');

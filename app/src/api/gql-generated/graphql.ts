@@ -454,6 +454,10 @@ export type DeleteSubConceptPayloadSubConceptArgs = {
   order?: InputMaybe<SubConceptOrder>;
 };
 
+export type DgraphDefault = {
+  value?: InputMaybe<Scalars['String']>;
+};
+
 export enum DgraphIndex {
   Bool = 'bool',
   Day = 'day',

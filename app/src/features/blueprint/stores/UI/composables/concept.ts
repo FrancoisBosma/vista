@@ -4,6 +4,8 @@ import type { Pair } from '@SRC/types'
 type EdgePosition = 'leftMost' | 'rightMost' | 'topMost' | 'bottomMost'
 type EdgePositions = Record<EdgePosition, number>
 
+const DISPLAY_PADDING = 100 * 2 // px
+
 export default function useConcept() {
   const getContentEdgePositions = (concept: Concept): EdgePositions => {
     const output = {
@@ -24,9 +26,8 @@ export default function useConcept() {
     return output
   }
   const getContentDisplayDimensions = (edgePositions: EdgePositions): Pair<number> => {
-    const displayPadding = 20 * 2 // px
-    const horizontalLength = edgePositions.rightMost - edgePositions.leftMost + displayPadding
-    const verticalLength = edgePositions.topMost - edgePositions.bottomMost + displayPadding
+    const horizontalLength = edgePositions.rightMost - edgePositions.leftMost + DISPLAY_PADDING
+    const verticalLength = edgePositions.topMost - edgePositions.bottomMost + DISPLAY_PADDING
     return `${horizontalLength}:${verticalLength}`
   }
   const getDisplayOffsets = ({ leftMost, rightMost, topMost, bottomMost }: EdgePositions) => ({

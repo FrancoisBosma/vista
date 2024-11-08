@@ -3253,6 +3253,29 @@
         "possibleTypes": null
       },
       {
+        "kind": "INPUT_OBJECT",
+        "name": "DgraphDefault",
+        "description": "",
+        "fields": null,
+        "inputFields": [
+          {
+            "name": "value",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
         "kind": "ENUM",
         "name": "DgraphIndex",
         "description": "",
@@ -8664,6 +8687,40 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "CustomHTTP",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ]
+      },
+      {
+        "name": "default",
+        "description": "",
+        "isRepeatable": false,
+        "locations": [
+          "FIELD_DEFINITION"
+        ],
+        "args": [
+          {
+            "name": "add",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "DgraphDefault",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "update",
+            "description": "",
+            "type": {
+              "kind": "INPUT_OBJECT",
+              "name": "DgraphDefault",
               "ofType": null
             },
             "defaultValue": null,
