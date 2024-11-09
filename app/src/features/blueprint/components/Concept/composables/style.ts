@@ -1,8 +1,7 @@
 import { useUiStore } from '@FEATURES/blueprint/stores'
 import { BlueprintBackgroundColor } from '@FEATURES/blueprint/types'
 import type { setManipulationHandling } from './'
-import type { BpNodeWrapper, Dimension } from '@FEATURES/blueprint/types'
-import type { Concept } from '@API/gql-generated/graphql'
+import type { BpNodeWrapper, Dimension, MaybeFetchedConcept } from '@FEATURES/blueprint/types'
 import type { Pair } from '@SRC/types'
 import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
 
@@ -11,7 +10,7 @@ const ui = useUiStore()
 interface StyleArguments {
   isEmpty: ReturnType<typeof eagerComputed<boolean>>
   isHovered: ReturnType<typeof setManipulationHandling>['isHovered']
-  concept: Ref<Concept>
+  concept: Ref<MaybeFetchedConcept>
   isConceptFetched: Ref<boolean>
   parentDepth: number
   subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import type { Concept } from '@API/gql-generated/graphql'
+  import type { MaybeFetchedConcept } from '@FEATURES/blueprint/types'
 
-  const props = defineProps<{ concept: Concept; isHovered: Boolean; isEmpty: Boolean }>()
+  const props = defineProps<{ concept: MaybeFetchedConcept; isHovered: Boolean; isEmpty: Boolean }>()
   const { isHovered, isEmpty } = toRefs(props)
 
   const bgColor = computed(() => `var(${isEmpty.value ? '--background-stronger' : '--foreground-contrast'})`)

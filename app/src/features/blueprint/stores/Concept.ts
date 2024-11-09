@@ -3,6 +3,7 @@ import { useQuery } from 'villus'
 import { ConceptQuery } from '@API/LogixAPI'
 import type { Concept } from '@API/gql-generated/graphql'
 import type { Ref } from 'vue'
+import type { MaybeFetchedConcept } from '@FEATURES/blueprint/types'
 
 export const useConceptStore = defineStore('Concept', () => {
   const fetchedConcepts: Ref<Map<Concept['name'], Concept>> = ref(new Map())
@@ -16,7 +17,7 @@ export const useConceptStore = defineStore('Concept', () => {
     })
   }
   const fetchConcept = (conceptName: Concept['name']) => {
-    const output = ref({ name: conceptName }) as Ref<Concept>
+    const output = ref<MaybeFetchedConcept>({ name: conceptName })
     const { isDone } = useQuery({
       query: ConceptQuery,
       variables: { conceptName },

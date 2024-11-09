@@ -8,7 +8,7 @@
     bpNodeProvideKey,
     conceptProvideKey,
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
-  import type { Concept } from '@API/gql-generated/graphql'
+  import { Concept } from '@API/gql-generated/graphql'
   import type { Pair } from '@ROOT/src/types'
   // import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
 
@@ -48,31 +48,84 @@
 
   /**
                                         o
-                                      <--->
+                      zone5           <--->          zone1
         _____________________________________________________________
         |                             |   /                          |
         |                             |a /                           |
-      h |                             |/                             |
+zone4 h |                             |/                             | zone2
         |                                                            |
         |                                                            |
         |____________________________________________________________|
                                       w
+                                    zone3
     */
-  const argumentPositionAngle /* 'a' */ = 0 // degrees
-  const [polygonW, polygonH, polygonTranslateX, polygonTranslateY] = [12, 12, 2, 2]
+  const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(-45) // degrees, within [0, 360]
+  const [polygonW, polygonH] = [14, 14]
   const argumentLeft = ref('-6px')
   const argumentTop = ref('-14px')
+  const argumentAngle = ref(0)
+  const argumentAllowedAngles = computed(() => {
+    if (!isConceptFetched.value) return []
+    const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
+    const tileRadius = Number(styleKit.conceptRoundness.split('px')[0])
+    const [[zone1And5, zone3], [zone2, zone4]] = [false, true].map((doingVerticalSides: boolean) => {
+      const [sideLength, counterSideLength] = doingVerticalSides ? [h, w] : [w, h]
+      const edgeDistance = sideLength / 2 - tileRadius
+      const halfCounterSide = counterSideLength / 2
+      const edgeAngle = toDegrees(Math.atan(edgeDistance / halfCounterSide))
+      return [
+        [-edgeAngle, edgeAngle].map((angle) => (doingVerticalSides ? 90 : 0) + angle),
+        [-edgeAngle, edgeAngle].map((angle) => (doingVerticalSides ? 90 : 0) + angle + 180),
+      ] as [[number, number], [number, number]]
+    })
+    const [zone5, zone1] = [[zone1And5[0], 0].map((angle) => angle + 360), [0, zone1And5[1]]] as [
+      [number, number],
+      [number, number]
+    ]
+    return [zone1, zone2, zone3, zone4, zone5]
+  })
+
   invoke(async () => {
     await until(isConceptFetched).toBe(true)
-    const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
-    const tileCenterX = w / 2
-    const tileCenterY = h / 2
-    const svgCenterOffsetX = -polygonW / 2 - polygonTranslateX
-    const xOffset /* 'o' */ = Math.tan(argumentPositionAngle) * tileCenterY
-    const left = tileCenterX + svgCenterOffsetX + xOffset
-    const top = -(polygonH + polygonTranslateY)
-    argumentLeft.value = `${left}px`
-    argumentTop.value = `${top}px`
+    watch(
+      () => concept.value.wh,
+      () => {
+        const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
+        // left + top computation
+        const tileCenterX = w / 2
+        const tileCenterY = h / 2
+        const svgCenterOffsetX = -polygonW / 2
+        const xOffset /* 'o' */ = Math.tan(toRadians(argumentPositionAngle)) * tileCenterY
+        const left = tileCenterX + svgCenterOffsetX + xOffset
+        const top = -polygonH
+        argumentLeft.value = `${left}px`
+        argumentTop.value = `${top}px`
+        // angle calibration
+        if (
+          (argumentPositionAngle >= argumentAllowedAngles.value[0][0] &&
+            argumentPositionAngle <= argumentAllowedAngles.value[0][1]) ||
+          (argumentPositionAngle >= argumentAllowedAngles.value[4][0] &&
+            argumentPositionAngle <= argumentAllowedAngles.value[4][1])
+        )
+          argumentAngle.value = 0 // zone 1 or 5
+        else if (
+          argumentPositionAngle >= argumentAllowedAngles.value[1][0] &&
+          argumentPositionAngle <= argumentAllowedAngles.value[1][1]
+        )
+          argumentAngle.value = 90 // zone 2
+        else if (
+          argumentPositionAngle >= argumentAllowedAngles.value[2][0] &&
+          argumentPositionAngle <= argumentAllowedAngles.value[2][1]
+        )
+          argumentAngle.value = 180 // zone 3
+        else if (
+          argumentPositionAngle >= argumentAllowedAngles.value[3][0] &&
+          argumentPositionAngle <= argumentAllowedAngles.value[3][1]
+        )
+          argumentAngle.value = 270 // zone 4
+      },
+      { immediate: true }
+    )
   })
 </script>
 
@@ -90,7 +143,7 @@
       fill="#000"
       strokeWidth="1"
     >
-      <polygon points="0,0 6,10 12,0 12,12 0,12" :transform="`translate(2,2) rotate(${0 * (180 / Math.PI)})`" />
+      <polygon points="2,2 8,13 14,2 14,14 2,14" :transform="`rotate(${argumentAngle})`" class="origin-center" />
     </svg>
     <keep-alive>
       <CloseConcept
@@ -114,7 +167,7 @@
             }"
           />
         </Teleport>
-        <OpenConcept :concept="concept" :is-empty="isEmpty" />
+        <OpenConcept v-if="isConceptFetched" :concept="(concept as Concept)" :is-empty="isEmpty" />
       </template>
     </keep-alive>
   </div>

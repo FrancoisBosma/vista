@@ -114,6 +114,8 @@ declare global {
   const test: typeof import('vitest')['test']
   const throttledRef: typeof import('@vueuse/core')['throttledRef']
   const throttledWatch: typeof import('@vueuse/core')['throttledWatch']
+  const toDegrees: typeof import('./global/functions/angle')['toDegrees']
+  const toRadians: typeof import('./global/functions/angle')['toRadians']
   const toRaw: typeof import('vue')['toRaw']
   const toReactive: typeof import('@vueuse/core')['toReactive']
   const toRef: typeof import('vue')['toRef']
