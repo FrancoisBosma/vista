@@ -59,7 +59,7 @@ zone4 h |                             |/                             | zone2
                                       w
                                     zone3
     */
-  const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(-45) // degrees, within [0, 360]
+  const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(90) // degrees, within [0, 360]
   const [polygonW, polygonH] = [14, 14]
   const argumentLeft = ref('-6px')
   const argumentTop = ref('-14px')
@@ -69,8 +69,8 @@ zone4 h |                             |/                             | zone2
     const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
     const tileRadius = Number(styleKit.conceptRoundness.split('px')[0])
     const [[zone1And5, zone3], [zone2, zone4]] = [false, true].map((doingVerticalSides: boolean) => {
-      const [sideLength, counterSideLength] = doingVerticalSides ? [h, w] : [w, h]
-      const edgeDistance = sideLength / 2 - tileRadius
+      const [offsetOffsetSideLength, counterSideLength] = doingVerticalSides ? [h, w] : [w, h]
+      const edgeDistance = offsetOffsetSideLength / 2 - tileRadius - polygonW / 2
       const halfCounterSide = counterSideLength / 2
       const edgeAngle = toDegrees(Math.atan(edgeDistance / halfCounterSide))
       return [
@@ -91,29 +91,33 @@ zone4 h |                             |/                             | zone2
       () => concept.value.wh,
       () => {
         const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
-        // left + top computation
-        const tileCenterX = w / 2
-        const tileCenterY = h / 2
-        const svgCenterOffsetX = -polygonW / 2
-        const xOffset /* 'o' */ = Math.tan(toRadians(argumentPositionAngle)) * tileCenterY
-        const left = tileCenterX + svgCenterOffsetX + xOffset
-        const top = -polygonH
-        argumentLeft.value = `${left}px`
-        argumentTop.value = `${top}px`
+        let tileCenterOffsetSideCoord: number = undefined as never
+        let tileCenterCounterSideCoord: number = undefined as never
+        let svgCenterOffsetSideCoord: number = undefined as never
+        let isOffsetOnLeftAttr = true
         // angle calibration
         if (
           (argumentPositionAngle >= argumentAllowedAngles.value[0][0] &&
             argumentPositionAngle <= argumentAllowedAngles.value[0][1]) ||
           (argumentPositionAngle >= argumentAllowedAngles.value[4][0] &&
             argumentPositionAngle <= argumentAllowedAngles.value[4][1])
-        )
-          argumentAngle.value = 0 // zone 1 or 5
-        else if (
+        ) {
+          // zone 1 or 5
+          argumentAngle.value = 0
+          tileCenterOffsetSideCoord = w / 2
+          tileCenterCounterSideCoord = h / 2
+          svgCenterOffsetSideCoord = polygonW / 2
+        } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[1][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[1][1]
-        )
-          argumentAngle.value = 90 // zone 2
-        else if (
+        ) {
+          // zone 2
+          argumentAngle.value = 90
+          tileCenterOffsetSideCoord = h / 2
+          tileCenterCounterSideCoord = w / 2
+          svgCenterOffsetSideCoord = polygonH / 2
+          isOffsetOnLeftAttr = false
+        } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[2][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[2][1]
         )
@@ -123,6 +127,25 @@ zone4 h |                             |/                             | zone2
           argumentPositionAngle <= argumentAllowedAngles.value[3][1]
         )
           argumentAngle.value = 270 // zone 4
+        else throw new Error("[Concept.vue] concept argument's angle is not allowed")
+        // left + top computation
+        // const tileCenterX = w / 2
+        // const tileCenterY = h / 2
+        // const svgCenterX = polygonW / 2
+        // const xOffset /* 'o' */ = Math.tan(toRadians(argumentPositionAngle)) * tileCenterY
+        // const left = tileCenterX - svgCenterX + xOffset
+        // const top = -polygonH
+        // argumentLeft.value = `${left}px`
+        // argumentTop.value = `${top}px`
+
+        const offset /* 'o' */ =
+          tileCenterOffsetSideCoord -
+          svgCenterOffsetSideCoord +
+          Math.tan(toRadians(argumentPositionAngle - argumentAngle.value)) * tileCenterCounterSideCoord
+        const top = -polygonH
+
+        argumentLeft.value = `${isOffsetOnLeftAttr ? offset : tileCenterCounterSideCoord * 2}px`
+        argumentTop.value = `${isOffsetOnLeftAttr ? top : offset}px`
       },
       { immediate: true }
     )
@@ -133,17 +156,19 @@ zone4 h |                             |/                             | zone2
   <div class="concept" :style="subConceptStyle" @click.stop="handleClick">
     <svg
       v-if="isConceptFetched"
-      class="absolute w-4 h-4 -z-1"
+      class="absolute w-4 h-4 -z-1 origin-center"
       :style="{
         top: argumentTop,
         left: argumentLeft,
+        transform: `rotate(${argumentAngle}deg)`,
       }"
       viewBox="0 0 16 16"
       stroke="#000"
       fill="#000"
       strokeWidth="1"
     >
-      <polygon points="2,2 8,13 14,2 14,14 2,14" :transform="`rotate(${argumentAngle})`" class="origin-center" />
+      <!-- <polygon points="2,2 8,13 14,2 14,14 2,14" :transform="`rotate(${argumentAngle}deg)`" class="origin-bottom-left" /> -->
+      <polygon points="2,2 8,13 14,2 14,14 2,14" />
     </svg>
     <keep-alive>
       <CloseConcept
