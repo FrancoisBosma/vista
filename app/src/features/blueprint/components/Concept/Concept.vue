@@ -44,7 +44,9 @@
    *
    */
 
-  const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(200) // degrees, within [0, 360]
+  function formatPositionAngle(alpha: number) {
+    return ((alpha % 360) + 360) % 360 // degrees, within [0, 360]
+  }
 </script>
 
 <template>
@@ -53,7 +55,7 @@
       <ConceptArgument
         v-for="(argument, idx) in concept.arguments"
         :key="idx"
-        :position-angle="argumentPositionAngle"
+        :position-angle="formatPositionAngle(argument.positionAngle)"
         :concept-w-h="concept.wh"
         :tile-roundness="styleKit.conceptRoundness"
       />

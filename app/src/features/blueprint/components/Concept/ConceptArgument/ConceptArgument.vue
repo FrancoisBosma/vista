@@ -1,14 +1,4 @@
 <script setup lang="ts">
-  import type { Pair } from '@ROOT/src/types'
-
-  interface Props {
-    positionAngle: number
-    conceptWH: Pair<number>
-    tileRoundness: string
-  }
-
-  const props = defineProps<Props>()
-
   /**
                                         o
                       zone5           <--->          zone1
@@ -22,6 +12,15 @@ zone4 h |                          \  |/                             | zone2
                                       w
                                     zone3
     */
+  import type { Pair } from '@ROOT/src/types'
+
+  interface Props {
+    positionAngle: number // 'a' on the ascii diagram
+    conceptWH: Pair<number>
+    tileRoundness: string
+  }
+
+  const props = defineProps<Props>()
 
   const [svgW, svgH] = [16, 16]
   const argumentLeft = ref('')
@@ -88,7 +87,7 @@ zone4 h |                          \  |/                             | zone2
       const tileCenterCounterSideCoord = (isOffsetOnLeftAttr ? h : w) / 2
       const svgCenterOffsetSideCoord = (isOffsetOnLeftAttr ? svgW : svgH) / 2
 
-      const offset /* 'o' */ =
+      const offset /* 'o' on the ascii diagram */ =
         tileCenterOffsetSideCoord -
         svgCenterOffsetSideCoord +
         Math.tan(toRadians(positionAngle - argumentAngle.value)) *
