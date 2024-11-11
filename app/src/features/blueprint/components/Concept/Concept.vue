@@ -90,9 +90,6 @@ zone4 h |                          \  |/                             | zone2
       () => concept.value.wh,
       () => {
         const [w, h] = getNumbersFromPair(concept.value.wh as Pair<number>)
-        let tileCenterOffsetSideCoord: number = undefined as never
-        let tileCenterCounterSideCoord: number = undefined as never
-        let svgCenterOffsetSideCoord: number = undefined as never
         let isOffsetOnLeftAttr = true
         let isInMirrorZone = false
         // angle + positioning calibration
@@ -104,18 +101,12 @@ zone4 h |                          \  |/                             | zone2
         ) {
           // zone 1 or 5
           argumentAngle.value = 0
-          tileCenterOffsetSideCoord = w / 2
-          tileCenterCounterSideCoord = h / 2
-          svgCenterOffsetSideCoord = svgW / 2
         } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[1][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[1][1]
         ) {
           // zone 2
           argumentAngle.value = 90
-          tileCenterOffsetSideCoord = h / 2
-          tileCenterCounterSideCoord = w / 2
-          svgCenterOffsetSideCoord = svgH / 2
           isOffsetOnLeftAttr = false
         } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[2][0] &&
@@ -123,16 +114,20 @@ zone4 h |                          \  |/                             | zone2
         ) {
           // zone 3
           argumentAngle.value = 180
-          tileCenterOffsetSideCoord = w / 2
-          tileCenterCounterSideCoord = h / 2
-          svgCenterOffsetSideCoord = svgW / 2
           isInMirrorZone = true
         } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[3][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[3][1]
-        )
-          argumentAngle.value = 270 // zone 4
-        else throw new Error("[Concept.vue] concept argument's angle is not allowed")
+        ) {
+          // zone 4
+          argumentAngle.value = 270
+          isOffsetOnLeftAttr = false
+          isInMirrorZone = true
+        } else throw new Error("[Concept.vue] concept argument's angle is not allowed")
+
+        const tileCenterOffsetSideCoord = (isOffsetOnLeftAttr ? w : h) / 2
+        const tileCenterCounterSideCoord = (isOffsetOnLeftAttr ? h : w) / 2
+        const svgCenterOffsetSideCoord = (isOffsetOnLeftAttr ? svgW : svgH) / 2
 
         const offset /* 'o' */ =
           tileCenterOffsetSideCoord -
@@ -140,10 +135,10 @@ zone4 h |                          \  |/                             | zone2
           Math.tan(toRadians(argumentPositionAngle - argumentAngle.value)) *
             tileCenterCounterSideCoord *
             (isInMirrorZone ? -1 : 1)
-        const top = isInMirrorZone ? h : -svgH
+        const counterSideOffset = isOffsetOnLeftAttr ? (isInMirrorZone ? h : -svgH) : isInMirrorZone ? -svgW : w
 
-        argumentLeft.value = `${isOffsetOnLeftAttr ? offset : tileCenterCounterSideCoord * 2}px`
-        argumentTop.value = `${isOffsetOnLeftAttr ? top : offset}px`
+        argumentLeft.value = `${isOffsetOnLeftAttr ? offset : counterSideOffset}px`
+        argumentTop.value = `${isOffsetOnLeftAttr ? counterSideOffset : offset}px`
       },
       { immediate: true }
     )
