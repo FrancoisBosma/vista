@@ -49,12 +49,15 @@
 
 <template>
   <div class="concept" :style="subConceptStyle" @click.stop="handleClick">
-    <ConceptArgument
-      v-if="isConceptFetched"
-      :position-angle="argumentPositionAngle"
-      :concept-w-h="concept.wh"
-      :tile-roundness="styleKit.conceptRoundness"
-    />
+    <template v-if="isConceptFetched">
+      <ConceptArgument
+        v-for="(argument, idx) in concept.arguments"
+        :key="idx"
+        :position-angle="argumentPositionAngle"
+        :concept-w-h="concept.wh"
+        :tile-roundness="styleKit.conceptRoundness"
+      />
+    </template>
     <keep-alive>
       <CloseConcept
         v-if="!isOpen"

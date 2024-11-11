@@ -11,7 +11,7 @@
   const props = defineProps<Props>()
   const { from, to } = toRefs(props)
 
-  const ARROW_HEAD_LENGTH = 12
+  const ARROW_HEAD_LENGTH = 10
   const leftMostCoord = Math.min(from.value.x, to.value.x)
   const rightMostCoord = Math.max(from.value.x + from.value.width, to.value.x + to.value.width)
   const topMostCoord = Math.min(from.value.y, to.value.y)
