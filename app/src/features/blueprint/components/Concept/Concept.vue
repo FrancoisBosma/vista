@@ -10,7 +10,6 @@
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   import { Concept } from '@API/gql-generated/graphql'
   import type { Pair } from '@ROOT/src/types'
-  // import type { Position } from '@FEATURES/blueprint/components/Concept/types/Concept'
 
   const { conceptName, subConceptStyle } = defineProps<{
     conceptName: Concept['name']
@@ -40,7 +39,7 @@
 
   provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
   /**
-   * DELETEME
+   * TODO
    *
    * icons: screen-normal vs fit-screen
    *
@@ -60,9 +59,9 @@ zone4 h |                             |/                             | zone2
                                     zone3
     */
   const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(90) // degrees, within [0, 360]
-  const [polygonW, polygonH] = [14, 14]
-  const argumentLeft = ref('-6px')
-  const argumentTop = ref('-14px')
+  const [svgW, svgH] = [16, 16]
+  const argumentLeft = ref('')
+  const argumentTop = ref('')
   const argumentAngle = ref(0)
   const argumentAllowedAngles = computed(() => {
     if (!isConceptFetched.value) return []
@@ -70,7 +69,7 @@ zone4 h |                             |/                             | zone2
     const tileRadius = Number(styleKit.conceptRoundness.split('px')[0])
     const [[zone1And5, zone3], [zone2, zone4]] = [false, true].map((doingVerticalSides: boolean) => {
       const [offsetOffsetSideLength, counterSideLength] = doingVerticalSides ? [h, w] : [w, h]
-      const edgeDistance = offsetOffsetSideLength / 2 - tileRadius - polygonW / 2
+      const edgeDistance = offsetOffsetSideLength / 2 - tileRadius - svgW / 2
       const halfCounterSide = counterSideLength / 2
       const edgeAngle = toDegrees(Math.atan(edgeDistance / halfCounterSide))
       return [
@@ -106,7 +105,7 @@ zone4 h |                             |/                             | zone2
           argumentAngle.value = 0
           tileCenterOffsetSideCoord = w / 2
           tileCenterCounterSideCoord = h / 2
-          svgCenterOffsetSideCoord = polygonW / 2
+          svgCenterOffsetSideCoord = svgW / 2
         } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[1][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[1][1]
@@ -115,7 +114,7 @@ zone4 h |                             |/                             | zone2
           argumentAngle.value = 90
           tileCenterOffsetSideCoord = h / 2
           tileCenterCounterSideCoord = w / 2
-          svgCenterOffsetSideCoord = polygonH / 2
+          svgCenterOffsetSideCoord = svgH / 2
           isOffsetOnLeftAttr = false
         } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[2][0] &&
@@ -128,21 +127,12 @@ zone4 h |                             |/                             | zone2
         )
           argumentAngle.value = 270 // zone 4
         else throw new Error("[Concept.vue] concept argument's angle is not allowed")
-        // left + top computation
-        // const tileCenterX = w / 2
-        // const tileCenterY = h / 2
-        // const svgCenterX = polygonW / 2
-        // const xOffset /* 'o' */ = Math.tan(toRadians(argumentPositionAngle)) * tileCenterY
-        // const left = tileCenterX - svgCenterX + xOffset
-        // const top = -polygonH
-        // argumentLeft.value = `${left}px`
-        // argumentTop.value = `${top}px`
 
         const offset /* 'o' */ =
           tileCenterOffsetSideCoord -
           svgCenterOffsetSideCoord +
           Math.tan(toRadians(argumentPositionAngle - argumentAngle.value)) * tileCenterCounterSideCoord
-        const top = -polygonH
+        const top = -svgH
 
         argumentLeft.value = `${isOffsetOnLeftAttr ? offset : tileCenterCounterSideCoord * 2}px`
         argumentTop.value = `${isOffsetOnLeftAttr ? top : offset}px`
@@ -167,8 +157,7 @@ zone4 h |                             |/                             | zone2
       fill="#000"
       strokeWidth="1"
     >
-      <!-- <polygon points="2,2 8,13 14,2 14,14 2,14" :transform="`rotate(${argumentAngle}deg)`" class="origin-bottom-left" /> -->
-      <polygon points="2,2 8,13 14,2 14,14 2,14" />
+      <path d="M0,0 7,0 7,3 1,3 8,15 15,3 9,3 9,0 16,0 16,16 0,16" />
     </svg>
     <keep-alive>
       <CloseConcept
