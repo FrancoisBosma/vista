@@ -49,16 +49,16 @@
                                         o
                       zone5           <--->          zone1
         _____________________________________________________________
-        |                             |   /                          |
-        |                             |a /                           |
-zone4 h |                             |/                             | zone2
-        |                                                            |
-        |                                                            |
+        |\________________________    |   /                          |
+        |                         \   |a /                           |
+zone4 h |                          \  |/                             | zone2
+        |          mirror zone      \_____________________________   |
+        |                                                          \ |
         |____________________________________________________________|
                                       w
                                     zone3
     */
-  const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(90) // degrees, within [0, 360]
+  const argumentPositionAngle /* 'a' */ = ((alpha) => ((alpha % 360) + 360) % 360)(200) // degrees, within [0, 360]
   const [svgW, svgH] = [16, 16]
   const argumentLeft = ref('')
   const argumentTop = ref('')
@@ -94,7 +94,8 @@ zone4 h |                             |/                             | zone2
         let tileCenterCounterSideCoord: number = undefined as never
         let svgCenterOffsetSideCoord: number = undefined as never
         let isOffsetOnLeftAttr = true
-        // angle calibration
+        let isInMirrorZone = false
+        // angle + positioning calibration
         if (
           (argumentPositionAngle >= argumentAllowedAngles.value[0][0] &&
             argumentPositionAngle <= argumentAllowedAngles.value[0][1]) ||
@@ -119,9 +120,14 @@ zone4 h |                             |/                             | zone2
         } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[2][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[2][1]
-        )
-          argumentAngle.value = 180 // zone 3
-        else if (
+        ) {
+          // zone 3
+          argumentAngle.value = 180
+          tileCenterOffsetSideCoord = w / 2
+          tileCenterCounterSideCoord = h / 2
+          svgCenterOffsetSideCoord = svgW / 2
+          isInMirrorZone = true
+        } else if (
           argumentPositionAngle >= argumentAllowedAngles.value[3][0] &&
           argumentPositionAngle <= argumentAllowedAngles.value[3][1]
         )
@@ -131,8 +137,10 @@ zone4 h |                             |/                             | zone2
         const offset /* 'o' */ =
           tileCenterOffsetSideCoord -
           svgCenterOffsetSideCoord +
-          Math.tan(toRadians(argumentPositionAngle - argumentAngle.value)) * tileCenterCounterSideCoord
-        const top = -svgH
+          Math.tan(toRadians(argumentPositionAngle - argumentAngle.value)) *
+            tileCenterCounterSideCoord *
+            (isInMirrorZone ? -1 : 1)
+        const top = isInMirrorZone ? h : -svgH
 
         argumentLeft.value = `${isOffsetOnLeftAttr ? offset : tileCenterCounterSideCoord * 2}px`
         argumentTop.value = `${isOffsetOnLeftAttr ? top : offset}px`
