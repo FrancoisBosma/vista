@@ -6,6 +6,7 @@
   interface Props {
     from: Coordinates & Offsets
     to: Coordinates & Offsets
+    hasEndArrow?: boolean
   }
 
   const props = defineProps<Props>()
@@ -35,7 +36,7 @@
         stretchMin: 0,
         stretchMax: 1000,
         padStart: 0,
-        padEnd: ARROW_HEAD_LENGTH,
+        padEnd: props.hasEndArrow ? ARROW_HEAD_LENGTH : 0,
         flip: true,
         straights: false,
       }
@@ -55,6 +56,7 @@
     <circle :cx="startX" :cy="startY" r="4" />
     <path :d="`M${startX},${startY} Q${centerX},${centerY} ${endX},${endY}`" fill="none" />
     <polygon
+      v-if="hasEndArrow"
       :points="`0,-${ARROW_HEAD_LENGTH / 2} ${ARROW_HEAD_LENGTH},0, 0,${ARROW_HEAD_LENGTH / 2}`"
       :transform="`translate(${endX},${endY}) rotate(${endArrowAngle * (180 / Math.PI)})`"
     />
