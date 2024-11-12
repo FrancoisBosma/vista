@@ -111,7 +111,7 @@ export type AddSubConceptConnectionPayloadSubConceptConnectionArgs = {
 export type AddSubConceptInput = {
   concept: ConceptRef;
   ownerConceptComposition: ConceptCompositionRef;
-  xy?: InputMaybe<Scalars['String']>;
+  xy: Scalars['String'];
 };
 
 export type AddSubConceptPayload = {
@@ -852,7 +852,7 @@ export type SubConcept = {
   concept: Concept;
   id: Scalars['ID'];
   ownerConceptComposition: ConceptComposition;
-  xy?: Maybe<Scalars['String']>;
+  xy: Scalars['String'];
 };
 
 
@@ -1108,7 +1108,7 @@ export type ConceptQueryVariables = Exact<{
 }>;
 
 
-export type ConceptQuery = { __typename?: 'Query', getConcept?: { __typename?: 'Concept', wh: string, arguments: Array<{ __typename?: 'ConceptArgumentType', name: string, capacity: string }>, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', xy?: string | null, concept: { __typename?: 'Concept', name: string, wh: string, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', concept: { __typename?: 'Concept', name: string } }> } | null } }>, connections: Array<{ __typename?: 'SubConceptConnection', fedSubConceptKey: string, fedSubConceptArgumentPositionAngle: number, argumentFeederType: ArgumentFeederType, argumentFeederKey?: string | null, fedSubConceptArgumentType: { __typename?: 'ConceptArgumentType', name: string }, argumentFeederArgumentType?: { __typename?: 'ConceptArgumentType', name: string } | null }> } | null } | null };
+export type ConceptQuery = { __typename?: 'Query', getConcept?: { __typename?: 'Concept', wh: string, arguments: Array<{ __typename?: 'ConceptArgumentType', name: string, capacity: string }>, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', xy: string, concept: { __typename?: 'Concept', name: string, wh: string, composition?: { __typename?: 'ConceptComposition', subConcepts: Array<{ __typename?: 'SubConcept', concept: { __typename?: 'Concept', name: string } }> } | null } }>, connections: Array<{ __typename?: 'SubConceptConnection', fedSubConceptKey: string, fedSubConceptArgumentPositionAngle: number, argumentFeederType: ArgumentFeederType, argumentFeederKey?: string | null, fedSubConceptArgumentType: { __typename?: 'ConceptArgumentType', name: string }, argumentFeederArgumentType?: { __typename?: 'ConceptArgumentType', name: string } | null }> } | null } | null };
 
 
 export const ConceptDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"concept"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"conceptName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getConcept"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"conceptName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"arguments"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}}]}},{"kind":"Field","name":{"kind":"Name","value":"composition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subConcepts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"concept"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"composition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"subConcepts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"concept"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wh"}}]}},{"kind":"Field","name":{"kind":"Name","value":"xy"}}]}},{"kind":"Field","name":{"kind":"Name","value":"connections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fedSubConceptKey"}},{"kind":"Field","name":{"kind":"Name","value":"fedSubConceptArgumentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"fedSubConceptArgumentPositionAngle"}},{"kind":"Field","name":{"kind":"Name","value":"argumentFeederType"}},{"kind":"Field","name":{"kind":"Name","value":"argumentFeederKey"}},{"kind":"Field","name":{"kind":"Name","value":"argumentFeederArgumentType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"wh"}}]}}]}}]} as unknown as DocumentNode<ConceptQuery, ConceptQueryVariables>;

@@ -3,6 +3,7 @@
   import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
   import { ArgumentFeederType } from '@API/gql-generated/graphql'
   import type { Concept } from '@API/gql-generated/graphql'
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   import type { Pair } from '@ROOT/src/types'
 
   const { concept } = defineProps<{
@@ -62,9 +63,9 @@
     argumentFeederH.value = argumentFeederWH[1]
   })
 
-  // function getSubConceptFeedingConnections(xy: Pair<number>) {
-  //   return concept.composition?.connections.filter((connection) => connection.fedSubConceptKey === xy)
-  // }
+  function getSubConceptFeedingConnections(xy: Pair<number>) {
+    return concept.composition?.connections.filter((connection) => connection.fedSubConceptKey === xy)
+  }
 </script>
 
 <template>
@@ -73,6 +74,7 @@
     :key="index"
     :concept-name="subConcept.concept.name"
     :sub-concept-style="ui.getSubConceptStyle(contentEdgePositions, subConcept)"
+    :feeding-connections="getSubConceptFeedingConnections(subConcept.xy as Pair<number>)"
   />
   <BoxToBoxArrow
     :from="{ x: argumentFeederX, y: argumentFeederY, width: argumentFeederW, height: argumentFeederH }"

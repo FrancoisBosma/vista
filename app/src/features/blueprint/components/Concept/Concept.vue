@@ -8,12 +8,16 @@
     bpNodeProvideKey,
     conceptProvideKey,
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
-  import { Concept } from '@API/gql-generated/graphql'
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  import type { Concept } from '@API/gql-generated/graphql'
 
-  const { conceptName, subConceptStyle } = defineProps<{
+  interface Props {
     conceptName: Concept['name']
     subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
-  }>()
+    feedingConnections?: NonNullable<Concept['composition']>['connections']
+  }
+
+  const { conceptName, subConceptStyle } = defineProps<Props>()
   const ui = useUiStore()
   const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
   const { parentCumulativeSubContentScale } = inject(conceptProvideKey, { parentCumulativeSubContentScale: 1 })
@@ -36,8 +40,8 @@
     parentCumulativeSubContentScale,
   })
 
-  function formatPositionAngle(alpha: number) {
-    return ((alpha % 360) + 360) % 360 // degrees, within [0, 360]
+  function formatPositionAngle(alpha: number /* degrees */) {
+    return ((alpha % 360) + 360) % 360 // alpha returned within [0, 360]
   }
 
   provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
@@ -53,9 +57,9 @@
   <div class="concept" :style="subConceptStyle" @click.stop="handleClick">
     <template v-if="isConceptFetched">
       <ConceptArgument
-        v-for="(argument, idx) in concept.arguments"
+        v-for="(connection, idx) in feedingConnections"
         :key="idx"
-        :position-angle="formatPositionAngle(argument.positionAngle)"
+        :position-angle="formatPositionAngle(connection.fedSubConceptArgumentPositionAngle)"
         :concept-w-h="concept.wh"
         :tile-roundness="styleKit.conceptRoundness"
       />
