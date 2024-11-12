@@ -61,22 +61,6 @@
             "defaultValue": null,
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "positionAngle",
-            "description": "",
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "interfaces": null,
@@ -528,6 +512,22 @@
               "ofType": {
                 "kind": "ENUM",
                 "name": "ArgumentFeederType",
+                "ofType": null
+              }
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngle",
+            "description": "",
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               }
             },
@@ -1233,22 +1233,6 @@
             },
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "positionAngle",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "inputFields": null,
@@ -1316,54 +1300,6 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "positionAngleAvg",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Float",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "positionAngleMax",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "positionAngleMin",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "positionAngleSum",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
               "ofType": null
             },
             "isDeprecated": false,
@@ -1483,12 +1419,6 @@
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "positionAngle",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -1559,12 +1489,6 @@
             "description": "",
             "isDeprecated": false,
             "deprecationReason": null
-          },
-          {
-            "name": "positionAngle",
-            "description": "",
-            "isDeprecated": false,
-            "deprecationReason": null
           }
         ],
         "possibleTypes": null
@@ -1605,18 +1529,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "positionAngle",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
               "ofType": null
             },
             "defaultValue": null,
@@ -1664,18 +1576,6 @@
             "type": {
               "kind": "INPUT_OBJECT",
               "name": "ConceptRef",
-              "ofType": null
-            },
-            "defaultValue": null,
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "positionAngle",
-            "description": "",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Int",
               "ofType": null
             },
             "defaultValue": null,
@@ -6193,6 +6093,22 @@
             "deprecationReason": null
           },
           {
+            "name": "fedSubConceptArgumentPositionAngle",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "fedSubConceptArgumentType",
             "description": "",
             "args": [
@@ -6319,6 +6235,54 @@
           },
           {
             "name": "count",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngleAvg",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Float",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngleMax",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngleMin",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngleSum",
             "description": "",
             "args": [],
             "type": {
@@ -6477,6 +6441,12 @@
             "deprecationReason": null
           },
           {
+            "name": "fedSubConceptArgumentPositionAngle",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "fedSubConceptArgumentType",
             "description": "",
             "isDeprecated": false,
@@ -6559,6 +6529,12 @@
             "deprecationReason": null
           },
           {
+            "name": "fedSubConceptArgumentPositionAngle",
+            "description": "",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "fedSubConceptKey",
             "description": "",
             "isDeprecated": false,
@@ -6603,6 +6579,18 @@
             "type": {
               "kind": "ENUM",
               "name": "ArgumentFeederType",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngle",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null,
@@ -6686,6 +6674,18 @@
             "type": {
               "kind": "ENUM",
               "name": "ArgumentFeederType",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "fedSubConceptArgumentPositionAngle",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Int",
               "ofType": null
             },
             "defaultValue": null,

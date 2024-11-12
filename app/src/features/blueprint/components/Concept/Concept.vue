@@ -36,6 +36,10 @@
     parentCumulativeSubContentScale,
   })
 
+  function formatPositionAngle(alpha: number) {
+    return ((alpha % 360) + 360) % 360 // degrees, within [0, 360]
+  }
+
   provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
   /**
    * TODO
@@ -43,10 +47,6 @@
    * icons: screen-normal vs fit-screen
    *
    */
-
-  function formatPositionAngle(alpha: number) {
-    return ((alpha % 360) + 360) % 360 // degrees, within [0, 360]
-  }
 </script>
 
 <template>

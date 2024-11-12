@@ -7,7 +7,6 @@ export const ConceptQuery = graphql(`
       arguments {
         name
         capacity
-        positionAngle
       }
       composition {
         subConcepts {
@@ -29,6 +28,7 @@ export const ConceptQuery = graphql(`
           fedSubConceptArgumentType {
             name
           }
+          fedSubConceptArgumentPositionAngle
           argumentFeederType
           argumentFeederKey
           argumentFeederArgumentType {

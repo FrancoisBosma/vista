@@ -43,7 +43,7 @@ export default function useConcept() {
       transform: 'translate(-50%, -50%)',
       left: `${positionValues[0] + displayOffsets.horizontal}px`,
       top: `${positionValues[1] + displayOffsets.vertical}px`,
-    }
+    } as const
   }
 
   return { getContentDisplayDimensions, getContentEdgePositions, getDisplayOffsets, getSubConceptStyle }
