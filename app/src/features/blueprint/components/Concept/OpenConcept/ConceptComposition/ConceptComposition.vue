@@ -33,18 +33,14 @@
     )
     const fedSubConceptKey = connection?.fedSubConceptKey
     const argumentFeederKey = connection?.argumentFeederKey
-    const fedSubConceptName = connection?.fedSubConceptArgumentType.name.substring(
-      0,
-      connection?.fedSubConceptArgumentType.name.lastIndexOf('.')
-    )
+    const fedSubConcept = concept.composition?.subConcepts.find((subConcept) => subConcept.xy === fedSubConceptKey)
     const argumentFeederConceptName = concept.composition?.subConcepts.find(
       (subConcept) => subConcept.xy === argumentFeederKey
     )?.concept.name
-    if (!fedSubConceptName || !argumentFeederConceptName) return
-    const fedSubConcept = conceptStore.getStoreConcept(fedSubConceptName)
+    if (!fedSubConcept?.concept.name || !argumentFeederConceptName) return
     const argumentFeederConcept = conceptStore.getStoreConcept(argumentFeederConceptName)
     if (!fedSubConcept || !argumentFeederConcept) return
-    const fedSubConceptWH = getNumbersFromPair(fedSubConcept.wh as Pair<number>)
+    const fedSubConceptWH = getNumbersFromPair(fedSubConcept.concept.wh as Pair<number>)
     const fedSubConceptXY = getNumbersFromPair(fedSubConceptKey as Pair<number>).map(
       (coord, idx) => coord - (idx === 0 ? fedSubConceptWH[0] : fedSubConceptWH[1]) / 2
     )

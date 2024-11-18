@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useTemplateRef } from 'vue'
   import CloseConcept from './CloseConcept'
   import OpenConcept from './OpenConcept'
   import ConceptArgument from './ConceptArgument'
@@ -10,6 +11,8 @@
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   import type { Concept } from '@API/gql-generated/graphql'
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+  import type { Pair } from '@ROOT/src/types'
 
   interface Props {
     conceptName: Concept['name']
@@ -18,13 +21,14 @@
   }
 
   const { conceptName, subConceptStyle } = defineProps<Props>()
-  const ui = useUiStore()
   const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
   const { parentCumulativeSubContentScale } = inject(conceptProvideKey, { parentCumulativeSubContentScale: 1 })
 
+  const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
 
-  const closeConceptEl = ref(null) as Ref<HTMLElement | null>
+  const conceptArgumentSFCs = useTemplateRef('conceptArgumentSFCs')
+  const closeConceptEl = useTemplateRef<HTMLElement>('closeConceptEl')
   const { concept, isDone: isConceptFetched } = fetchConcept(conceptName)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
 
@@ -39,10 +43,6 @@
     bpNodeId,
     parentCumulativeSubContentScale,
   })
-
-  function formatPositionAngle(alpha: number /* degrees */) {
-    return ((alpha % 360) + 360) % 360 // alpha returned within [0, 360]
-  }
 
   provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
   /**
@@ -59,8 +59,11 @@
       <ConceptArgument
         v-for="(connection, idx) in feedingConnections"
         :key="idx"
-        :position-angle="formatPositionAngle(connection.fedSubConceptArgumentPositionAngle)"
-        :concept-w-h="concept.wh"
+        ref="conceptArgumentSFCs"
+        class="concept-argument"
+        :connection="connection"
+        :concept-w-h="(concept.wh as Pair<number>)"
+        :concept-name="conceptName"
         :tile-roundness="styleKit.conceptRoundness"
       />
     </template>
@@ -99,7 +102,7 @@
     width: v-bind('styleKit.dimensions.width');
     height: v-bind('styleKit.dimensions.height');
 
-    & > :not(svg) {
+    & > :not(.concept-argument) {
       @apply border-1;
       box-shadow: v-bind('styleKit.boxShadow');
       border-radius: v-bind('styleKit.conceptRoundness');
