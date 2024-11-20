@@ -10,24 +10,30 @@
     conceptProvideKey,
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  import type { Concept } from '@API/gql-generated/graphql'
+  import type { Concept, SubConceptConnection } from '@API/gql-generated/graphql'
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   import type { Pair } from '@ROOT/src/types'
+  import type { Coordinates } from '@FEATURES/blueprint/types'
 
   interface Props {
     conceptName: Concept['name']
     subConceptStyle?: ReturnType<ReturnType<typeof useUiStore>['getSubConceptStyle']>
     feedingConnections?: NonNullable<Concept['composition']>['connections']
   }
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  type Emits = {
+    'update:argumentsPositions': [positions: Record<SubConceptConnection['id'], Coordinates>]
+  }
 
-  const { conceptName, subConceptStyle } = defineProps<Props>()
+  const { conceptName, subConceptStyle, feedingConnections } = defineProps<Props>()
+  const emit = defineEmits<Emits>()
+
   const { depth: parentDepth, id: bpNodeId } = inject(bpNodeProvideKey, { depth: 0 })
   const { parentCumulativeSubContentScale } = inject(conceptProvideKey, { parentCumulativeSubContentScale: 1 })
 
   const ui = useUiStore()
   const { fetchConcept } = useConceptStore()
 
-  const conceptArgumentSFCs = useTemplateRef('conceptArgumentSFCs')
   const closeConceptEl = useTemplateRef<HTMLElement>('closeConceptEl')
   const { concept, isDone: isConceptFetched } = fetchConcept(conceptName)
   const isEmpty = eagerComputed(() => !concept.value.composition?.subConcepts.length)
@@ -44,6 +50,26 @@
     parentCumulativeSubContentScale,
   })
 
+  const argumentsPositions = reactive<Record<SubConceptConnection['id'], Coordinates>>({})
+
+  function updateArgumentPosition(
+    connectionId: SubConceptConnection['id'],
+    argumentPosition: Coordinates,
+    conceptXY: Pair<number>
+  ) {
+    const [conceptX, conceptY] = getNumbersFromPair(conceptXY)
+    const [conceptW, conceptH] = getNumbersFromPair(concept.value.wh! as Pair<number>)
+
+    // from here we consider coords relative to the center of tiles => the "- wh / 2"
+    const newPosition = {
+      x: conceptX - conceptW / 2 + argumentPosition.x,
+      y: conceptY - conceptH / 2 + argumentPosition.y,
+    }
+    argumentsPositions[connectionId] = newPosition
+  }
+
+  watch(argumentsPositions, (val) => emit('update:argumentsPositions', val))
+
   provide(conceptProvideKey, { parentCumulativeSubContentScale: styleKit.currentCumulativeSubContentScale })
   /**
    * TODO
@@ -59,12 +85,14 @@
       <ConceptArgument
         v-for="(connection, idx) in feedingConnections"
         :key="idx"
-        ref="conceptArgumentSFCs"
         class="concept-argument"
         :connection="connection"
         :concept-w-h="(concept.wh as Pair<number>)"
         :concept-name="conceptName"
         :tile-roundness="styleKit.conceptRoundness"
+        @update:argument-position="
+          (argPosition) => updateArgumentPosition(connection.id, argPosition, connection.fedSubConceptKey as Pair<number>)
+        "
       />
     </template>
     <keep-alive>

@@ -13,6 +13,7 @@ zone4 h |                          \  |/                             | zone2
                                     zone3
     */
   import type { Pair } from '@ROOT/src/types'
+  import type { Coordinates } from '@FEATURES/blueprint/types'
   import type { Concept, SubConceptConnection } from '@API/gql-generated/graphql'
 
   interface Props {
@@ -21,15 +22,20 @@ zone4 h |                          \  |/                             | zone2
     conceptWH: Pair<number>
     tileRoundness: string
   }
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  type Emits = {
+    'update:argumentPosition': [position: Coordinates]
+  }
 
   const props = defineProps<Props>()
+  const emit = defineEmits<Emits>()
 
   const positionAngle /* 'a' on the ascii diagram */ = formatPositionAngle(
     props.connection.fedSubConceptArgumentPositionAngle
   )
   const [svgW, svgH] = [16, 16]
-  const argumentX = ref('')
-  const argumentY = ref('')
+  const argumentX = ref(0)
+  const argumentY = ref(0)
   const argumentAngle = ref(0)
   const argumentAllowedAngles = computed(() => {
     const [w, h] = getNumbersFromPair(props.conceptWH)
@@ -56,74 +62,85 @@ zone4 h |                          \  |/                             | zone2
     props.connection.fedSubConceptArgumentType.name.substring(`${props.conceptName}.`.length)
   )
 
-  watch(
-    [() => props.conceptWH, () => positionAngle],
-    ([wh, positionAngle]) => {
-      const [w, h] = getNumbersFromPair(wh)
-      let isOffsetOnXDimension = true
-      let isInMirrorZone = false
-      // angle + positioning calibration
-      if (
-        (positionAngle >= argumentAllowedAngles.value[0][0] && positionAngle <= argumentAllowedAngles.value[0][1]) ||
-        (positionAngle >= argumentAllowedAngles.value[4][0] && positionAngle <= argumentAllowedAngles.value[4][1])
-      ) {
-        // zone 1 or 5
-        argumentAngle.value = 0
-        flexDirection.value = 'flex-col-reverse'
-        labelOffset.y = -svgH / 2
-      } else if (
-        positionAngle >= argumentAllowedAngles.value[1][0] &&
-        positionAngle <= argumentAllowedAngles.value[1][1]
-      ) {
-        // zone 2
-        argumentAngle.value = 90
-        isOffsetOnXDimension = false
-        flexDirection.value = 'flex-row'
-        labelOffset.x = svgW
-      } else if (
-        positionAngle >= argumentAllowedAngles.value[2][0] &&
-        positionAngle <= argumentAllowedAngles.value[2][1]
-      ) {
-        // zone 3
-        argumentAngle.value = 180
-        isInMirrorZone = true
-        flexDirection.value = 'flex-col'
-        labelOffset.y = svgH
-      } else if (
-        positionAngle >= argumentAllowedAngles.value[3][0] &&
-        positionAngle <= argumentAllowedAngles.value[3][1]
-      ) {
-        // zone 4
-        argumentAngle.value = 270
-        isOffsetOnXDimension = false
-        isInMirrorZone = true
-        flexDirection.value = 'flex-row-reverse'
-        labelOffset.x = -svgW
-      } else throw new Error("[Concept.vue] concept argument's angle is not allowed")
-
-      const tileCenterOffsetSideCoord = (isOffsetOnXDimension ? w : h) / 2
-      const tileCenterCounterSideCoord = (isOffsetOnXDimension ? h : w) / 2
-      const svgCenterOffsetSideCoord = (isOffsetOnXDimension ? svgW : svgH) / 2
-
-      const offset /* 'o' on the ascii diagram */ =
-        tileCenterOffsetSideCoord -
-        svgCenterOffsetSideCoord +
-        Math.tan(toRadians(positionAngle - argumentAngle.value)) *
-          tileCenterCounterSideCoord *
-          (isInMirrorZone ? -1 : 1)
-      const counterSideOffset = isOffsetOnXDimension ? (isInMirrorZone ? h : -svgH) : isInMirrorZone ? -svgW : w
-
-      argumentX.value = `${isOffsetOnXDimension ? offset : counterSideOffset}px`
-      argumentY.value = `${isOffsetOnXDimension ? counterSideOffset : offset}px`
-    },
-    { immediate: true }
-  )
-
   function formatPositionAngle(alpha: number /* degrees */) {
     return ((alpha % 360) + 360) % 360 // alpha returned within [0, 360]
   }
 
-  defineExpose({ argumentX, argumentY })
+  watchEffect(() => {
+    const [w, h] = getNumbersFromPair(props.conceptWH)
+    let isOffsetOnXDimension = true
+    let isInMirrorZone = false
+    // offsets so to target the "entrance" of the argument, relative to the top-left corer
+    let argumentEntranceOffsetX: number
+    let argumentEntranceOffsetY: number
+    // angle + positioning calibration
+    if (
+      (positionAngle >= argumentAllowedAngles.value[0][0] && positionAngle <= argumentAllowedAngles.value[0][1]) ||
+      (positionAngle >= argumentAllowedAngles.value[4][0] && positionAngle <= argumentAllowedAngles.value[4][1])
+    ) {
+      // zone 1 or 5
+      argumentAngle.value = 0
+      isOffsetOnXDimension = true
+      isInMirrorZone = false
+      flexDirection.value = 'flex-col-reverse'
+      labelOffset.y = -svgH / 2
+      argumentEntranceOffsetX = svgW / 2
+      argumentEntranceOffsetY = 0
+    } else if (
+      positionAngle >= argumentAllowedAngles.value[1][0] &&
+      positionAngle <= argumentAllowedAngles.value[1][1]
+    ) {
+      // zone 2
+      argumentAngle.value = 90
+      isOffsetOnXDimension = false
+      isInMirrorZone = false
+      flexDirection.value = 'flex-row'
+      labelOffset.x = svgW
+      argumentEntranceOffsetX = svgW
+      argumentEntranceOffsetY = svgH / 2
+    } else if (
+      positionAngle >= argumentAllowedAngles.value[2][0] &&
+      positionAngle <= argumentAllowedAngles.value[2][1]
+    ) {
+      // zone 3
+      argumentAngle.value = 180
+      isOffsetOnXDimension = true
+      isInMirrorZone = true
+      flexDirection.value = 'flex-col'
+      labelOffset.y = svgH
+      argumentEntranceOffsetX = svgW / 2
+      argumentEntranceOffsetY = svgH
+    } else if (
+      positionAngle >= argumentAllowedAngles.value[3][0] &&
+      positionAngle <= argumentAllowedAngles.value[3][1]
+    ) {
+      // zone 4
+      argumentAngle.value = 270
+      isOffsetOnXDimension = false
+      isInMirrorZone = true
+      flexDirection.value = 'flex-row-reverse'
+      labelOffset.x = -svgW
+      argumentEntranceOffsetX = 0
+      argumentEntranceOffsetY = svgH / 2
+    } else throw new Error("[Concept.vue] concept argument's angle is not allowed")
+
+    const tileCenterOffsetSideCoord = (isOffsetOnXDimension ? w : h) / 2
+    const tileCenterCounterSideCoord = (isOffsetOnXDimension ? h : w) / 2
+    const svgCenterOffsetSideCoord = (isOffsetOnXDimension ? svgW : svgH) / 2
+
+    const offset /* 'o' on the ascii diagram */ =
+      tileCenterOffsetSideCoord -
+      svgCenterOffsetSideCoord +
+      Math.tan(toRadians(positionAngle - argumentAngle.value)) * tileCenterCounterSideCoord * (isInMirrorZone ? -1 : 1)
+    const counterSideOffset = isOffsetOnXDimension ? (isInMirrorZone ? h : -svgH) : isInMirrorZone ? -svgW : w
+
+    argumentX.value = isOffsetOnXDimension ? offset : counterSideOffset
+    argumentY.value = isOffsetOnXDimension ? counterSideOffset : offset
+    emit('update:argumentPosition', {
+      x: argumentX.value + argumentEntranceOffsetX,
+      y: argumentY.value + argumentEntranceOffsetY,
+    })
+  })
 </script>
 
 <template>
@@ -131,8 +148,8 @@ zone4 h |                          \  |/                             | zone2
     class="absolute flex items-center justify-center"
     :class="[flexDirection]"
     :style="{
-      top: argumentY,
-      left: argumentX,
+      top: `${argumentY}px`,
+      left: `${argumentX}px`,
     }"
   >
     <svg

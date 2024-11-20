@@ -10,6 +10,7 @@ export const ConceptQuery = graphql(`
       }
       composition {
         subConcepts {
+          id
           concept {
             name
             composition {
@@ -24,6 +25,7 @@ export const ConceptQuery = graphql(`
           xy
         }
         connections {
+          id
           fedSubConceptKey
           fedSubConceptArgumentType {
             name
