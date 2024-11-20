@@ -83,6 +83,7 @@
   <BoxToBoxArrow
     v-for="(connection, idx) in feedingConnections"
     :key="idx"
+    class="-z-1"
     :from="{
       x: connection.argumentFeederX,
       y: connection.argumentFeederY,

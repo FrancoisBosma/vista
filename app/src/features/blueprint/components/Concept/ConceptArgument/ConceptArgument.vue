@@ -145,7 +145,7 @@ zone4 h |                          \  |/                             | zone2
 
 <template>
   <div
-    class="absolute flex items-center justify-center"
+    class="-z-1 absolute flex items-center justify-center"
     :class="[flexDirection]"
     :style="{
       top: `${argumentY}px`,
@@ -153,7 +153,7 @@ zone4 h |                          \  |/                             | zone2
     }"
   >
     <svg
-      class="-z-1 w-4 h-4 origin-center"
+      class="w-4 h-4 origin-center"
       :style="{
         transform: `rotate(${argumentAngle}deg)`,
       }"
@@ -165,7 +165,7 @@ zone4 h |                          \  |/                             | zone2
       <path d="M0,0 7,0 7,2 1,2 8,15 15,2 9,2 9,0 16,0 16,16 0,16" />
     </svg>
     <p
-      class="-z-2 absolute text-[10px]"
+      class="absolute text-[10px]"
       :style="{
         left: `${labelOffset.x}px`,
         top: `${labelOffset.y}px`,

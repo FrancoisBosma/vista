@@ -91,7 +91,11 @@
         :concept-name="conceptName"
         :tile-roundness="styleKit.conceptRoundness"
         @update:argument-position="
-          (argPosition) => updateArgumentPosition(connection.id, argPosition, connection.fedSubConceptKey as Pair<number>)
+          (argPosition) => updateArgumentPosition(
+            connection.id,
+            argPosition,
+            connection.fedSubConceptKey as Pair<number>
+          )
         "
       />
     </template>
