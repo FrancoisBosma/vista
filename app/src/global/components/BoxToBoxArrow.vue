@@ -38,8 +38,8 @@
     svgData.rightMostCoord = Math.max(from.value.x + from.value.width, to.value.x + to.value.width)
     svgData.topMostCoord = Math.min(from.value.y, to.value.y)
     svgData.bottomMostCoord = Math.max(from.value.y + from.value.height, to.value.y + to.value.height)
-    svgData.boxWidth = Math.abs(svgData.rightMostCoord - svgData.leftMostCoord)
-    svgData.boxHeight = Math.abs(svgData.bottomMostCoord - svgData.topMostCoord)
+    svgData.boxWidth = Math.max(16, Math.abs(svgData.rightMostCoord - svgData.leftMostCoord))
+    svgData.boxHeight = Math.max(16, Math.abs(svgData.bottomMostCoord - svgData.topMostCoord))
 
     const arrowData = getBoxToBoxArrow(
       from.value.x - svgData.leftMostCoord,

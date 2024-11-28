@@ -10,10 +10,10 @@
     conceptProvideKey,
   } from '@FEATURES/blueprint/components/BlueprintNode/Blueprint/constants/symbols'
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  import type { Concept, SubConceptConnection } from '@API/gql-generated/graphql'
+  import type { Concept } from '@API/gql-generated/graphql'
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   import type { Pair } from '@ROOT/src/types'
-  import type { Coordinates } from '@FEATURES/blueprint/types'
+  import type { Coordinates, SubConceptArgumentKey } from '@FEATURES/blueprint/types'
 
   interface Props {
     conceptName: Concept['name']
@@ -22,7 +22,7 @@
   }
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   type Emits = {
-    'update:argumentsPositions': [positions: Record<SubConceptConnection['id'], Coordinates>]
+    'update:argumentsPositions': [positions: Record<SubConceptArgumentKey, Coordinates>]
   }
 
   const { conceptName, subConceptStyle, feedingConnections } = defineProps<Props>()
@@ -50,10 +50,10 @@
     parentCumulativeSubContentScale,
   })
 
-  const argumentsPositions = reactive<Record<SubConceptConnection['id'], Coordinates>>({})
+  const argumentsPositions = reactive<Record<SubConceptArgumentKey, Coordinates>>({})
 
   function updateArgumentPosition(
-    connectionId: SubConceptConnection['id'],
+    argumentKey: SubConceptArgumentKey,
     argumentPosition: Coordinates,
     conceptXY: Pair<number>
   ) {
@@ -65,7 +65,7 @@
       x: conceptX - conceptW / 2 + argumentPosition.x,
       y: conceptY - conceptH / 2 + argumentPosition.y,
     }
-    argumentsPositions[connectionId] = newPosition
+    argumentsPositions[argumentKey] = newPosition
   }
 
   watch(argumentsPositions, (val) => emit('update:argumentsPositions', val))
@@ -92,7 +92,7 @@
         :tile-roundness="styleKit.conceptRoundness"
         @update:argument-position="
           (argPosition) => updateArgumentPosition(
-            connection.id,
+            `${connection.fedSubConceptArgumentType.name}@${connection.fedSubConceptKey as Pair<number>}`,
             argPosition,
             connection.fedSubConceptKey as Pair<number>
           )

@@ -1,74 +1,78 @@
 <script setup lang="ts">
-  import { useConceptStore, useUiStore } from '@FEATURES/blueprint/stores'
+  import { useUiStore } from '@FEATURES/blueprint/stores'
   import { ArgumentFeederType } from '@API/gql-generated/graphql'
-  import type { Concept, SubConceptConnection } from '@API/gql-generated/graphql'
+  import { getNumbersFromPair } from '@GLOBAL/functions/pairs'
+  import type { Concept } from '@API/gql-generated/graphql'
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   import type { Pair } from '@ROOT/src/types'
-  import type { Coordinates } from '@FEATURES/blueprint/types'
+  import type { Coordinates, SubConceptArgumentKey } from '@FEATURES/blueprint/types'
 
   const { concept } = defineProps<{
     concept: Concept
   }>()
 
+  const DEFAULT_ARGUMENT_POSITION = { x: -1, y: -1 } as const
+
   const ui = useUiStore()
-  const conceptStore = useConceptStore()
 
   // Lazy loading necessary because of mutual nesting
   const ConceptSFC = defineAsyncComponent(() => import('@FEATURES/blueprint/components/Concept'))
 
+  const isReadyToShowConnections = ref(false)
   const contentEdgePositions = ui.getContentEdgePositions(concept)
-  const feedingConnections = reactive(
-    (
-      concept.composition?.connections.filter(
-        (connection) => connection.argumentFeederType === ArgumentFeederType.OtherSubConcept
-      ) ?? []
-    ).map((connection) => {
-      const fedSubConceptKey = connection?.fedSubConceptKey
-      const argumentFeederKey = connection?.argumentFeederKey
-      const fedSubConcept = concept.composition?.subConcepts.find((subConcept) => subConcept.xy === fedSubConceptKey)
-      const argumentFeederConceptName = concept.composition?.subConcepts.find(
-        (subConcept) => subConcept.xy === argumentFeederKey
-      )?.concept.name
-      if (!fedSubConcept?.concept.name || !argumentFeederConceptName) return undefined as never
-      const argumentFeederConcept = conceptStore.getStoreConcept(argumentFeederConceptName)
-      if (!argumentFeederConcept) return undefined as never
-      const fedSubConceptWH = getNumbersFromPair(fedSubConcept.concept.wh as Pair<number>)
-      const fedSubConceptXY = getNumbersFromPair(fedSubConceptKey as Pair<number>).map(
-        (coord, idx) => coord - (idx === 0 ? fedSubConceptWH[0] : fedSubConceptWH[1]) / 2
-      )
-      const argumentFeederWH = getNumbersFromPair(argumentFeederConcept.wh as Pair<number>)
-      const argumentFeederXY = getNumbersFromPair(argumentFeederKey as Pair<number>).map(
-        (coord, idx) => coord - (idx === 0 ? argumentFeederWH[0] : argumentFeederWH[1]) / 2
-      )
 
-      return {
-        id: connection.id,
-        fedSubConceptX: fedSubConceptXY[0],
-        fedSubConceptY: fedSubConceptXY[1],
-        fedSubConceptW: fedSubConceptWH[0],
-        fedSubConceptH: fedSubConceptWH[1],
-        argumentFeederX: argumentFeederXY[0],
-        argumentFeederY: argumentFeederXY[1],
-        argumentFeederW: argumentFeederWH[0],
-        argumentFeederH: argumentFeederWH[1],
-      }
-    })
+  // const conceptsPositions = reactive<Record<ConceptArgumentKey, Coordinates>>()
+  const conceptsArgumentsPositions = reactive<Record<SubConceptArgumentKey, Coordinates>>(
+    concept.composition
+      ? Object.fromEntries(
+          concept.composition.connections.map((connection) => {
+            const fedSubConceptArgumentKey = getArgumentKey(
+              connection.fedSubConceptArgumentType.name,
+              connection.fedSubConceptKey as Pair<number>
+            )
+            return [fedSubConceptArgumentKey, { ...DEFAULT_ARGUMENT_POSITION }]
+          })
+        )
+      : {}
   )
+
+  function getArgumentKey(argumentName: string, subArgumentKey: Pair<number>): SubConceptArgumentKey {
+    return `${argumentName}@${subArgumentKey}`
+  }
 
   function getSubConceptFeedingConnections(xy: Pair<number>) {
     return concept.composition?.connections.filter((connection) => connection.fedSubConceptKey === xy)
   }
 
-  function handleUpdateArgumentsPositions(positions: Record<SubConceptConnection['id'], Coordinates>) {
-    Object.entries(positions).forEach(([connectionId, { x: fedSubConceptX, y: fedSubConceptY }]) => {
-      const feedingConnection = feedingConnections.find((feedingConnection) => feedingConnection.id === connectionId)
-      if (!feedingConnection) return
-      feedingConnection.fedSubConceptX = fedSubConceptX
-      feedingConnection.fedSubConceptY = fedSubConceptY
-      feedingConnection.fedSubConceptW = 1
-      feedingConnection.fedSubConceptH = 1
+  function getSubConceptWh(xy: Pair<number>) {
+    return getNumbersFromPair(
+      concept.composition!.subConcepts.find((subConcept) => subConcept.xy === xy)!.concept.wh as Pair<number>
+    )
+  }
+
+  function formatSubConceptCoordsForArrow(xy: Pair<number>) {
+    const [x, y] = getNumbersFromPair(xy)
+    const [subConceptW, subConceptH] = getSubConceptWh(xy)
+    return [x - subConceptW / 2, y - subConceptH / 2]
+  }
+
+  function handleUpdateArgumentsPositions(positions: Record<SubConceptArgumentKey, Coordinates>) {
+    Object.entries(positions).forEach(([argumentKey, { x: fedSubConceptX, y: fedSubConceptY }]) => {
+      conceptsArgumentsPositions[argumentKey as SubConceptArgumentKey].x = fedSubConceptX
+      conceptsArgumentsPositions[argumentKey as SubConceptArgumentKey].y = fedSubConceptY
     })
   }
+
+  const { stop } = watch(conceptsArgumentsPositions, (updatedPositions) => {
+    if (
+      Object.values(updatedPositions).some(
+        (position) => position.x === DEFAULT_ARGUMENT_POSITION.x && position.y === DEFAULT_ARGUMENT_POSITION.y
+      )
+    )
+      return
+    isReadyToShowConnections.value = true
+    stop()
+  })
 </script>
 
 <template>
@@ -80,21 +84,56 @@
     :feeding-connections="getSubConceptFeedingConnections(subConcept.xy as Pair<number>)"
     @update:arguments-positions="handleUpdateArgumentsPositions"
   />
-  <BoxToBoxArrow
-    v-for="(connection, idx) in feedingConnections"
-    :key="idx"
-    class="-z-1"
-    :from="{
-      x: connection.argumentFeederX,
-      y: connection.argumentFeederY,
-      width: connection.argumentFeederW,
-      height: connection.argumentFeederH,
-    }"
-    :to="{
-      x: connection.fedSubConceptX,
-      y: connection.fedSubConceptY,
-      width: connection.fedSubConceptW,
-      height: connection.fedSubConceptH,
-    }"
-  />
+  <template v-if="isReadyToShowConnections">
+    <BoxToBoxArrow
+      v-for="(connection, idx) in concept.composition?.connections.filter(
+        (connection) => connection.argumentFeederType === ArgumentFeederType.OtherSubConcept
+      )"
+      :key="idx"
+      class="-z-1"
+      :from="{
+        x: formatSubConceptCoordsForArrow(connection.argumentFeederKey as Pair<number>)[0],
+        y: formatSubConceptCoordsForArrow(connection.argumentFeederKey as Pair<number>)[1],
+        width: getSubConceptWh(connection.argumentFeederKey as Pair<number>)[0],
+        height: getSubConceptWh(connection.argumentFeederKey as Pair<number>)[1],
+      }"
+      :to="{
+        x: conceptsArgumentsPositions[
+          getArgumentKey(connection.fedSubConceptArgumentType.name, connection.fedSubConceptKey as Pair<number>)
+        ].x,
+        y: conceptsArgumentsPositions[
+          getArgumentKey(connection.fedSubConceptArgumentType.name, connection.fedSubConceptKey as Pair<number>)
+        ].y,
+        width: 1,
+        height: 1,
+      }"
+    />
+    <BoxToBoxArrow
+      v-for="(connection, idx) in concept.composition?.connections.filter(
+        (connection) => connection.argumentFeederType === ArgumentFeederType.OtherSubConceptArgument
+      )"
+      :key="idx"
+      class="-z-1"
+      :from="{
+        x: conceptsArgumentsPositions[
+          getArgumentKey(connection.argumentFeederArgumentType!.name, connection.argumentFeederKey as Pair<number>)
+        ].x,
+        y: conceptsArgumentsPositions[
+          getArgumentKey(connection.argumentFeederArgumentType!.name, connection.argumentFeederKey as Pair<number>)
+        ].y,
+        width: 1,
+        height: 1,
+      }"
+      :to="{
+        x: conceptsArgumentsPositions[
+          getArgumentKey(connection.fedSubConceptArgumentType.name, connection.fedSubConceptKey as Pair<number>)
+        ].x,
+        y: conceptsArgumentsPositions[
+          getArgumentKey(connection.fedSubConceptArgumentType.name, connection.fedSubConceptKey as Pair<number>)
+        ].y,
+        width: 1,
+        height: 1,
+      }"
+    />
+  </template>
 </template>
